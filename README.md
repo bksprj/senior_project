@@ -15,3 +15,7 @@ Sage 9/30/18:
 - Packages that will be needed are pymongo, pprint, and urllib.
 
 - Working with Atlas means that its using Mongo 4.x. To work with that, we’ll need to use python 3.7 to avoid possible problems.
+
+- Also, as much as I like the idea of forking and pull requests, it seems that
+we are not allowed to fork a repository you own. So far I've just updated the
+master repo, but I think I'll be working with branches as I add to the database manipulation.
