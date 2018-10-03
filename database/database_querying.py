@@ -11,4 +11,8 @@ client = pymongo.MongoClient("mongodb://%s:%s@cluster0-shard-00-00-mhqmc.mongodb
 
 db = client.test_database
 test_database = db.test_database
+
+# Methods for querying
+# db.collection.find()
+    # you can limit the results with .limit(num) appended
 pprint.pprint(test_database.find_one({"project":"senior project"}))
