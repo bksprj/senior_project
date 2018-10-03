@@ -15,4 +15,6 @@ test_database = db.test_database
 # Methods for querying
 # db.collection.find()
     # you can limit the results with .limit(num) appended
-pprint.pprint(test_database.find_one({"project":"senior project"}))
+data_received = test_database.find_one({"project":"senior project"})
+pprint.pprint(data_received)
+# print(type(data_received))  # type: dict
