@@ -7,6 +7,7 @@ function onSignIn(googleUser) {
 	$("#email").text(profile.getEmail());
 }
 
+
 // Used to sign out of profile
 function signOut() {
 	var auth2 = gapi.auth2.getAuthInstance();
@@ -17,5 +18,5 @@ function signOut() {
 		} else {
 			// Does nothing
 		}
-	}
+	})
 }
