@@ -9,7 +9,7 @@
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="index.js"></script>
-	<script type=text/javascript>
+	<!--<script type=text/javascript>
 		$(function() {
 			$.getJSON('/dbret'
 			function(data) {
@@ -17,22 +17,26 @@
 			});
 			return false;
 		});
-	</script>
+	</script>-->
 	<style>
-		.g-signin2{
-			margin-left:500px;
-			margin-top:200px;
+		.g-signin2 {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 		}
-		.data{
+		.data {
 			display:none;
+		}
+		#pic {
+			float: right;
 		}
 	</style>
 </head>
 <body>
-	<div class="g-signin2" data-onsuccess="onSignIn"></div>
+	<div class="g-signin2" data-onsuccess="onSignIn()"></div>
 	<div class="data">
-		<p>Profile</p>
-		<img id="pic" class="img-circle" width="50" height="50"/>
+		<img id="pic" class="img-circle" width="10" height="10"/>
 		<p>Signed in with...</p>
 		<p id="email" class="alert alert-danger"></p>
 		<p id=info></p>
