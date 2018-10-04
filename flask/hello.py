@@ -1,10 +1,11 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_pymongo import PyMongo
 import pymongo  #document-oriented database
 import pprint  # "pretty print", allowing us a nicer format printed
 import urllib  # in coordination with an RFC
 import json
 from bson import ObjectId
+
 
 app = Flask(__name__)
 
@@ -29,6 +30,10 @@ def dbret():
     hello_world = test_database.find_one({"project":"senior project"})
     hello_world = JSONEncoder().encode(hello_world)
     return hello_world
+
+@app.route("/index")
+def index():
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug = True)
