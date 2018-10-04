@@ -5,6 +5,7 @@ function onSignIn(googleUser) {
 	$(".data").css("display","block");
 	$("#pic").attr('src',profile.getImageUrl());
 	$("#email").text(profile.getEmail());
+	$('#name').text(profile.getName());
 }
 
 
@@ -20,3 +21,23 @@ function signOut() {
 		}
 	})
 }
+
+
+function addL() {
+	//First things first, we need our text:
+	var text = document.getElementById("item").value; //.value gets input values
+
+	//Now construct a quick list element
+	var li = "<li>" + text + "</li>";
+
+	//Now use appendChild and add it to the list!
+	document.getElementById("list").appendChild(li);
+}
+
+/*(function($){
+	$('#myform').submit(function(e){
+		var val = $('#in').val();
+		$('ul.list').append('<li>' + val + '</li>');
+		e.preventDefault();
+	});
+})(jQuery);*/
