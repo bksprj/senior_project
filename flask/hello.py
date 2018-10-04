@@ -4,6 +4,7 @@ import pymongo  #document-oriented database
 import pprint  # "pretty print", allowing us a nicer format printed
 import urllib  # in coordination with an RFC
 import json
+from bson import ObjectId
 
 app = Flask(__name__)
 
@@ -16,21 +17,18 @@ db = client.test_database
 test_database = db.test_database
 pprint.pprint(test_database.find_one({"project":"senior project"}))
 
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+
 @app.route("/")
 def dbret():
+
     hello_world = test_database.find_one({"project":"senior project"})
-    # jsonify(hello_world)
-
-    # test_obj = {"test": 69}
-    # whatever = json.loads(test_obj)
-    # print(type(whatever))
-    
-    return json.dumps(hello_world)
-
-
-
-# username = urllib.parse.quote_plus('debrsa01')
-# password = urllib.parse.quote_plus('imdaBEST65')
+    hello_world = JSONEncoder().encode(hello_world)
+    return hello_world
 
 if __name__ == '__main__':
     app.run(debug = True)
