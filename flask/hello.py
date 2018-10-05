@@ -34,8 +34,8 @@ def dbret():
 @app.route("/index")
 def index():
     result_dict = test_database.find_one({"project":"senior project"})
-    result_encoded = JSONEncoder().encode(result_dict)
-    return render_template('index.html', result=result_encoded)
+    # result_encoded = JSONEncoder().encode(result_dict)
+    return render_template('index.html', result=result_dict)
 
 if __name__ == '__main__':
     app.run(debug = True)
