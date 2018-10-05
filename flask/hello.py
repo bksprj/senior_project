@@ -26,9 +26,10 @@ class JSONEncoder(json.JSONEncoder):
 
 @app.route("/")
 def dbret():
-    hello_world_dict = test_database.find_one({"project":"senior project"})
-    hello_world_encoded = JSONEncoder().encode(hello_world_dict)
-    return hello_world_encoded
+
+    hello_world = test_database.find_one({"project":"senior project"})
+    hello_world = JSONEncoder().encode(hello_world)
+    return hello_world
 
 @app.route("/index")
 def index():
