@@ -46,9 +46,14 @@
 			<!--<p id=info></p>-->
 			<button onclick="signOut()" class="btn btn-primary">Sign Out</button>
 		</div>
-		<div class="data">
+		<div>
 			<!-- Where we will put the hello world object -->
-			<p id="hello"></p>
+			<h3>Database objects are displayed below:</h3>
+				{% for key, value in result.items() %}
+					<p> {{ key }} </p>
+					<p> {{ value }} </p>
+				{% endfor %}
+			<h3>End</h3>
 		</div>
 	</body>
 </html>
