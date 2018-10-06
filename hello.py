@@ -26,5 +26,9 @@ def index():
     result_dict = test_database.find_one({"project":"senior project"})
     return render_template('index.html', result=result_dict)
 
+@app.route("/google08f628c29bd0d05f.html")
+def aftersignin():
+    return render_template('google08f628c29bd0d05f.html')
+
 if __name__ == '__main__':
     app.run(debug = True)
