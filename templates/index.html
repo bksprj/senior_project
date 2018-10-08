@@ -73,7 +73,7 @@
 		<section class="data">
 			<!-- Where we will put the hello world object -->
 			<h3>Database objects are displayed below:</h3>
-				{% for key, value in result.items() %}
+				{% for value, key in result.items() %}
 					<p> {{ value }} </p>
 				{% endfor %}
 			<h3>End</h3>
