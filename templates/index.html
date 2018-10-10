@@ -58,7 +58,19 @@
 			}
 		</style>
 	</head>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light" style="width: 100%">
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container" style="float:left; width: 50%;">
+			<p class="navbar-brand">Data Sense</p>
+			<a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+			<a class="nav-item nav-link" href="/about.html">About</a>
+		</div>
+		<div class="container" style="float:right; width: 50%;">
+			<p id="name"></p>
+			<img id="pic" class="img-circle" width="35" height="35"/>
+			<button onclick="signOut()" class="btn btn-primary">Sign Out</button>
+		</div>
+	</nav>
+	<!--<nav class="navbar navbar-expand-lg navbar-light bg-light" style="width: 100%">
 		<p class="navbar-brand">Data Sense</p>
 		<div class="navbar-nav">
 			<a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
@@ -69,7 +81,7 @@
 				<button onclick="signOut()" class="btn btn-primary" style="padding-right:5px;">Sign Out</button>
 			</div>
 		</div>
-	</nav>
+	</nav>-->
 
 	<body>
 		<div class="g-signin2" data-onsuccess="onSignIn"></div>
