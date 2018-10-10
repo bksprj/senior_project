@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Data Sense</title>
+		<!--<meta charset="utf-8" />-->
+		<meta name="google-signin-client_id" content="798265448710-nqo7h881abf59cn9oghng9erq841tbq1.apps.googleusercontent.com">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script type=text/javascript>
+			/*$(function() {
+				$.getJSON('/index'
+				function(data) {
+			  		$("#info").text(data.info);
+				});
+				//return false;
+			});*/
+			
+			// Used to sign in to Google Profile
+			function onSignIn(googleUser) {
+				var profile = googleUser.getBasicProfile();
+				$(".g-signin2").css("display","none");
+				$(".data").css("display","block");
+				$("#pic").attr('src',profile.getImageUrl());
+				$("#email").text(profile.getEmail());
+				$('#name').text(profile.getName());
+			}
+			
+			
+			// Used to sign out of profile
+			function signOut() {
+				var auth2 = gapi.auth2.getAuthInstance();
+				auth2.signOut().then(function() {
+					if (confirm('Are you sure you want to sign out?')) {
+						$(".g-signin2").css("display","block");
+						$(".data").css("display","none");
+					} else {
+						// Does nothing
+					}
+				})
+			}
+		</script>
+		<style>
+			.g-signin2 {
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+			.data {
+				display: none;
+			}
+			body {
+				padding-top: 5px;
+				padding-left: 5px;
+			}
+		</style>
+	</head>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="#">Navbar</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+		  <div class="navbar-nav">
+			<a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+			<a class="nav-item nav-link" href="/about.html">About</a>
+		  </div>
+		</div>
+	  </nav>
+
+	<body>
+		<p>You are in the about page!</p>
+	</body>
+</html>
