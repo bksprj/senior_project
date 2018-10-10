@@ -60,16 +60,17 @@
 	</head>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<a class="navbar-brand" href="#">Navbar</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-		  <span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-		  <div class="navbar-nav">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+		<div class="navbar-nav">
 			<a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
 			<a class="nav-item nav-link" href="/about.html">About</a>
-		  </div>
+			<div class="data" style="position:fixed; float:right;">
+				<p id="name"></p>
+				<img id="pic" class="img-circle" width="40" height="40"/>
+				<button onclick="signOut()" class="btn btn-primary">Sign Out</button>
+			</div>
 		</div>
-	  </nav>
+	</nav>
 
 	<body>
 		<p>You are in the about page!</p>
