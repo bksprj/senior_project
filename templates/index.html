@@ -58,18 +58,6 @@
 			}
 		</style>
 	</head>
-	<nav class="navbar navbar-default navbar-fixed-top">
-		<div class="container" style="width: 50%; float:left;">
-			<p class="navbar-brand">Data Sense</p>
-			<a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
-			<a class="nav-item nav-link" href="/about.html">About</a>
-		</div>
-		<div class="container" style="width: 50%; float:right;">
-			<p id="name"></p>
-			<img id="pic" class="img-circle" width="35" height="35"/>
-			<button onclick="signOut()" class="btn btn-primary">Sign Out</button>
-		</div>
-	</nav>
 	<!--<nav class="navbar navbar-expand-lg navbar-light bg-light" style="width: 100%">
 		<p class="navbar-brand">Data Sense</p>
 		<div class="navbar-nav">
@@ -83,15 +71,36 @@
 		</div>
 	</nav>-->
 
-	<body>
-		<div class="g-signin2" data-onsuccess="onSignIn"></div>
-		<div class="data">
-			<p id="name"></p>
-			<h3>Here are your files</h3>
-				{% for key, value in result.items() %}
-					<p> {{ value }} </p>
-				{% endfor %}
-			<h3>End</h3>
-		</div>
-	</body>
+    <body>
+        <nav class="navbar navbar-fixed-top admin-menu" role="navigation">
+            <div class="navbar-header">...</div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="http://stackoverflow.com/">Stack Overflow <b class="caret"></b></a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/page2">Page2</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">I DO WORK</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <div class="data">
+            <p id="name"></p>
+            <h3>Here are your files</h3>
+            {% for key, value in result.items() %}
+            <p> {{ value }} </p>
+            {% endfor %}
+            <h3>End</h3>
+        </div>
+    </body>
 </html>
