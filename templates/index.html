@@ -77,14 +77,16 @@
 
     <body>
         <nav class="navbar navbar-fixed-top admin-menu" role="navigation">
-            <p class="navbar-brand">Data Sense</p>
+            <a class="navbar-brand" href="/">Data Sense</a>
             <!-- Collect the nav links, forms, and other content for toggling -->
+            <a class="nav-item nav-link" href="/about.html">About</a>
             <div class="collapse navbar-collapse data" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown"><img id="pic" class="img-circle" width="35" height="35"/>
+                    <li class="dropdown">
+                        <img id="pic" class="img-circle" width="35" height="35" />
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="/profile">Profile Settings</a>
+                                <a href="/profile.html">Profile Settings</a>
                             </li>
                             <li>
                                 <button onclick="signOut()" class="btn btn-primary" style="padding-right:5px;">Sign Out</button>
