@@ -56,10 +56,6 @@
                 padding-top: 70px;
                 padding-left: 5px;
 			}
-
-            ul.nav li.dropdown:hover ul.dropdown-menu {
-                display: block;
-            }
 		</style>
 	</head>
 	<!--<nav class="navbar navbar-expand-lg navbar-light bg-light" style="width: 100%">
@@ -80,9 +76,9 @@
             <p class="navbar-brand">Data Sense</p>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right: 15px;">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown"><img id="pic" class="img-circle" width="35" height="35"/>
-                        <ul class="dropdown-menu">
+                <ul class="nav navbar-nav navbar-right" style="padding-top:5px; padding-right:5px;">
+                    <li style="display:block;"><img id="pic" class="img-circle" width="35" height="35"/>
+                        <ul style="display:block;">
                             <li>
                                 <a href="/profile">Profile Settings</a>
                             </li>
