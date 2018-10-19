@@ -6,7 +6,7 @@ import json
 from bson import ObjectId
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 username = "debrsa01"
 password = "imdaBEST65"
