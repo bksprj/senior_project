@@ -30,8 +30,9 @@ def index():
 def aftersignin():
     return render_template('google08f628c29bd0d05f.html')
 
-@app.route("/about")
+@app.route("/about.html")
 def about():
+
     return render_template('about.html')
 
 if __name__ == '__main__':
