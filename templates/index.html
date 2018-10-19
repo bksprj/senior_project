@@ -115,7 +115,7 @@
 	</head>
 
     <body>
-        <nav class="navbar navbar-fixed-top admin-menu bg-primary" role="navigation">
+        <nav class="navbar navbar-fixed-top admin-menu bg-light" role="navigation">
             <a class="navbar-brand" href="/">Data Sense</a>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <a class="nav-item nav-link" href="/about.html">About</a>
@@ -139,15 +139,14 @@
         <div class="g-signin2" data-onsuccess="onSignIn"></div>
         <div class="data">
 			<p id="name"></p>
-			<form method="post" enctype="multipart/form-data">
-				<div>
-				  	<label for="file_uploads">Choose a .xlsx or .csv file to upload</label>
-				  	<input type="file" id="file_uploads" name="file_uploads" accept=".xlsx, .csv" multiple>
-				</div>
-				<div>
-				  	<button class="btn btn-primary" style="padding-top:5px;">Upload</button>
+			<form method="post" enctype="multipart/form-data"></form>
+				<div class="panel panel-primary">
+					<div class="panel-heading"><label for="file_uploads">Choose a .xlsx or .csv file to upload</label></div>
+					<div class="panel-body"><input type="file" id="file_uploads" name="file_uploads" accept=".xlsx, .csv" multiple></div>
+					<div><button class="btn btn-primary" style="padding-top:5px;">Upload</button></div>
 				</div>
 			</form>
+			
             <h3>Here are your files</h3>
             {% for key, value in result.items() %}
             <p> {{ value }} </p>
