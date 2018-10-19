@@ -106,12 +106,21 @@
             body {
                 padding-top: 70px;
                 padding-left: 5px;
-				background-image: url('https://data-sense.herokuapp.com/static/img/what-the-hex.png')
+				background-image: url('https://data-sense.herokuapp.com/static/img/what-the-hex.png');
 			}
-
             ul.nav li.dropdown:hover ul.dropdown-menu {
                 display: block;
             }
+			.column {
+				float: left;
+				width: 33.33%;
+				padding: 15px;
+			}
+			.row:after {
+				content: "";
+				display: table;
+				clear: both;
+			}
 		</style>
 	</head>
 
@@ -137,14 +146,20 @@
             </div>
         </nav>
 
-        <div class="g-signin2" data-onsuccess="onSignIn"></div>
-        <div>
-			<h3>Sage</h3>
-			<img src="{{url_for('static', filename='img/debrsa01.jpg')}}" class="img-circle" width="200" height="200"/>
-			<h3>Brian</h3>
-			<img src="{{url_for('static', filename='img/ramibr01.jpg')}}" class="img-circle" width="200" height="200"/>
-			<h3>Keegan</h3>
-			<img src="{{url_for('static', filename='img/husoke01.jpg')}}" class="img-circle" width="200" height="200"/>
-        </div>
+		<div class="g-signin2" data-onsuccess="onSignIn"></div>
+		<div class="row">
+			<div class="column">
+				<h2 class="text-primary">Sage</h2>
+				<img src="{{url_for('static', filename='img/debrsa01.jpg')}}" class="img-circle" width="200" height="200"/>
+			</div>
+			<div class="column">
+				<h2 class="text-primary">Brian</h2>
+				<img src="{{url_for('static', filename='img/ramibr01.jpg')}}" class="img-circle" width="200" height="200"/>
+			</div>
+			<div class="column">
+				<h2 class="text-primary">Keegan</h2>
+				<img src="{{url_for('static', filename='img/husoke01.jpg')}}" class="img-circle" width="200" height="200"/>
+			</div>
+		</div>
     </body>
 </html>
