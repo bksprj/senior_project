@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 from flask_pymongo import PyMongo
 import pymongo  #document-oriented database
 # import urllib  # in coordination with an RFC
@@ -30,9 +30,8 @@ def index():
 def aftersignin():
     return render_template('google08f628c29bd0d05f.html')
 
-@app.route("/about.html")
+@app.route("/about.html", methods=['GET', 'POST'])
 def about():
-
     return render_template('about.html')
 
 if __name__ == '__main__':
