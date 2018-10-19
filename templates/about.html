@@ -10,13 +10,6 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script type=text/javascript>
-			/*$(function() {
-				$.getJSON('/index'
-				function(data) {
-			  		$("#info").text(data.info);
-				});
-				//return false;
-			});*/
 			
 			// Used to sign in to Google Profile
 			function onSignIn(googleUser) {
@@ -64,13 +57,13 @@
             <a class="navbar-brand" href="/">Data Sense</a>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <a class="nav-item nav-link" href="/about.html">About</a>
-            <div class="collapse navbar-collapse data" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <img id="pic" class="img-circle" width="35" height="35" />
+                        <img id="pic" class="img-circle data" width="35" height="35" />
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="/profile">Profile Settings</a>
+                                <a href="/profile.html">Profile Settings</a>
                             </li>
                             <li>
                                 <button onclick="signOut()" class="btn btn-primary" style="padding-right:5px;">Sign Out</button>
@@ -79,7 +72,7 @@
                     </li>
                 </ul>
             </div>
-		</nav>
+        </nav>
 		<p>Hello World</p>
 
         
