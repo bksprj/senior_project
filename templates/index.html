@@ -109,6 +109,9 @@
             ul.nav li.dropdown:hover ul.dropdown-menu {
                 display: block;
             }
+			nav {
+				background-color: white;
+			}
 		</style>
 	</head>
 
@@ -118,9 +121,9 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <a class="nav-item nav-link" href="/about.html">About</a>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
-				<div class="g-signin2" data-onsuccess="onSignIn"></div>
+				<div class="g-signin2" data-onsuccess="onSignIn" style="float: right;"></div>
                 <ul class="nav navbar-nav navbar-right">
-					<li>
+					<li class="data">
 						<p id="name" style="padding-right: 5px;"></p>
 					</li>
                     <li class="dropdown">
