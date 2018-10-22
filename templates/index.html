@@ -111,23 +111,26 @@
 			nav {
 				background-color: white;
 			}
+			#centered {
+				padding-top: 50%;
+			}
 		</style>
 	</head>
 
     <body>
         <nav class="navbar navbar-fixed-top admin-menu bg-light" role="navigation">
-            <a class="navbar-brand" href="/">Data Sense</a>
+            <a class="navbar-brand" href="/" id="centered">Data Sense</a>
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <a class="nav-item nav-link" href="/about.html">About</a>
+            <a class="nav-item nav-link" href="/about.html" id="centered">About</a>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
                 <ul class="nav navbar-nav navbar-right">
 					<li>
-						<div class="g-signin2" data-onsuccess="onSignIn"></div>
+						<div class="g-signin2" data-onsuccess="onSignIn" id="centered" style="padding-right:5px;"></div>
 					</li>
 					<li class="data">
-						<h4 class="text-primary" id="name" style="padding-right: 5px;"></h4>
+						<h4 class="text-primary" id="name centered" style="padding-right: 5px;"></h4>
 					</li>
-                    <li class="dropdown">
+                    <li class="dropdown" id="centered">
                         <img id="pic" class="img-circle data" width="35" height="35" />
                         <ul class="dropdown-menu">
                             <li style="float: right;">
