@@ -95,8 +95,7 @@
 		</script>
 		<style>
 			.g-signin2 {
-				position: fixed;
-				transform: translate(-50%, -50%);
+				float: right;
 			}
 			.data {
 				display: none;
@@ -121,10 +120,12 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <a class="nav-item nav-link" href="/about.html">About</a>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
-				<div class="g-signin2" data-onsuccess="onSignIn" style="float: right;"></div>
                 <ul class="nav navbar-nav navbar-right">
+					<li>
+						<div class="g-signin2" data-onsuccess="onSignIn"></div>
+					</li>
 					<li class="data">
-						<p id="name" style="padding-right: 5px;"></p>
+						<h4 class="text-primary" id="name" style="padding-right: 5px;"></h4>
 					</li>
                     <li class="dropdown">
                         <img id="pic" class="img-circle data" width="35" height="35" />
