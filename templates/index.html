@@ -96,6 +96,7 @@
 		<style>
 			.g-signin2 {
 				position: fixed;
+				transform: translate(-50%, -50%);
 			}
 			.data {
 				display: none;
@@ -116,13 +117,11 @@
             <a class="navbar-brand" href="/">Data Sense</a>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <a class="nav-item nav-link" href="/about.html">About</a>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
+				<div class="g-signin2" data-onsuccess="onSignIn"></div>
                 <ul class="nav navbar-nav navbar-right">
 					<li>
-						<div class="g-signin2" data-onsuccess="onSignIn"></div>
-					</li>
-					<li class="data">
-						<p id="name"></p>
+						<p id="name" style="padding-right: 5px;"></p>
 					</li>
                     <li class="dropdown">
                         <img id="pic" class="img-circle data" width="35" height="35" />
@@ -140,6 +139,7 @@
         </nav>
 
         <div class="data">
+			<p id="name"></p>
 			<form method="post" enctype="multipart/form-data" style="width: 33.33%">
 				<div class="panel panel-primary">
 					<div class="panel-heading"><label for="file_uploads">Choose a .xlsx or .csv file to upload</label></div>
