@@ -1,10 +1,10 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 from flask_pymongo import PyMongo
 import pymongo  #document-oriented database
 # import urllib  # in coordination with an RFC
 import json
 from bson import ObjectId
-
+from werkzeug import secure_filename
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -25,6 +25,13 @@ class JSONEncoder(json.JSONEncoder):
 def index():
     result_dict = test_database.find_one({"project":"senior project"})
     return render_template('index.html', result=result_dict)
+
+@app.route('/uploader', methods = ['GET', 'POST'])
+def upload_file():
+   if request.method == 'POST':
+      f = request.files['file']
+      f.save(secure_filename(f.filename))
+      return 'file uploaded successfully'
 
 @app.route("/google08f628c29bd0d05f.html")
 def aftersignin():
