@@ -30,7 +30,7 @@ def index():
 def upload_file():
    if request.method == 'POST':
       f = request.files['file']
-      f.save(secure_filename(f.filename))
+      file1 = f.save(secure_filename(f.filename))
       return 'file uploaded successfully'
 
 @app.route("/google08f628c29bd0d05f.html")
