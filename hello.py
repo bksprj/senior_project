@@ -80,7 +80,7 @@ def uploaded_file(filename):
 def aftersignin():
     return render_template('google08f628c29bd0d05f.html')
 
-@app.route("/about.html", methods=['GET', 'POST'])
+@app.route("/about", methods=['GET', 'POST'])
 def about():
     return render_template('about.html')
 
