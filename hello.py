@@ -31,8 +31,9 @@ class JSONEncoder(json.JSONEncoder):
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
-    result_dict = test_database.find_one({"project":"senior project"})
-    return render_template('index.html', result=result_dict)
+    x = send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    #result_dict = test_database.find_one({"project":"senior project"})
+    return render_template('index.html', result=x)
 
 
 # working with uploads
