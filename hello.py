@@ -75,7 +75,7 @@ def upload_file():
 # let's try some rank checking
 @app.route('/rankinput')
 def my_form():
-    return render_template('rankcheck.html')
+    return render_template('rankinput.html')
 
 @app.route("/rankinput", methods=['POST'])
 def rank_check():
