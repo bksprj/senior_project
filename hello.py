@@ -1,14 +1,14 @@
 from flask import Flask, render_template, url_for, request, flash, redirect, send_from_directory
 from flask_pymongo import PyMongo
 import pymongo  #document-oriented database
-# import urllib  # in coordination with an RFC
+import urllib  # in coordination with an RFC
 import json
 from bson import ObjectId
 from werkzeug import secure_filename
 import os
 
 UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'xml', 'csv'])
 
 app = Flask(__name__, static_url_path='/static')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -71,7 +71,49 @@ def upload_file():
       <input type=submit value=Upload>
     </form>
     '''
-@app.route('/uploads/<filename>')
+
+# let's try some rank checking
+@app.route('/rankinput')
+def my_form():
+    return render_template('rankinput.html')
+
+@app.route("/rankinput", methods=['POST'])
+def rank_check():
+    username = urllib.parse.quote_plus('debrsa01')
+    password = urllib.parse.quote_plus('imdaBEST65')
+    client = pymongo.MongoClient("mongodb://%s:%s@cluster0-shard-00-00-mhqmc.mongodb.net:27017,cluster0-shard-00-01-mhqmc.mongodb.net:27017,cluster0-shard-00-02-mhqmc.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true" % (username, password))
+    db = client.groups
+    # dictionary for all the groups that we have
+    group_dict = {"aniministry":db.aniministry,"bigbrother":db.bigbrother}
+    # let' get the text from the input box
+    text = request.form['text']
+    group,email = text.split(",")
+    # print("group, email:", group, email)
+
+    # Now let's see if the user is in the group
+    if group_dict[group].find_one():
+        check_group = group_dict[group].find_one()
+        if email in check_group['Senpai']:
+            result = "You are a Senpai"
+        elif email in check_group['Kouhai']:
+            result = "You are a Kouhai"
+        elif email in check_group['Senpai'] and email in check_group['Kouhai']:
+            # We don't yet have a way to prevent names from being in both, so this'll be our reminder
+            result = "Somehow, you are both a senpai AND a kouhai. We should probably get that fixed."
+        else:
+            result = "You are not registered in this group"
+    else:
+        result = "Group name not found"
+
+    return result
+    # aniministry = db.aniministry
+    # if group.find_one({"Senpai":["debrsa01@luther.edu"]}):
+    #     result = group.find_one({"Kouhai":["debrsa01@luther.edu"]})
+    # if group.find_one({"Senpai":["debrsa01@luther.edu"]}):
+    #     result = group.find_one({"Senpai":["debrsa01@luther.edu"]})
+
+
+@app.route("/uploads/<filename>")
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
