@@ -24,7 +24,7 @@
 				$(".data").css("display","block");
 				$("#pic").attr('src',profile.getImageUrl());
 				$.post( "/postmethod", {
-					javascript_data: text(profile.getEmail())
+					javascript_data: profile.getEmail()
 				});
 				//$("#email").text(profile.getEmail());
 				$('#name').text(profile.getName());
