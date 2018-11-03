@@ -100,13 +100,13 @@
 			}	
 			}
 
-			document.getElementById('button').addEventListener("click", function() {
-				document.querySelector('.bg-modal').style.display = "flex";
-			});
+			function on() {
+				document.getElementById("overlay").style.display = "block";
+			}
 
-			document.querySelector('.close').addEventListener("click", function() {
-				document.querySelector('.bg-modal').style.display = "none";
-			});
+			function off() {
+				document.getElementById("overlay").style.display = "none";
+			}
 		</script>
 		<style>
 			.g-signin2 {
@@ -126,43 +126,17 @@
 			nav {
 				background-color: white;
 			}
-
-			.bg-modal {
-				background-color: rgba(0, 0, 0, 0.8);
-				width: 100%;
-				height: 100%;
-				position: absolute;
-				top: 0;
+			
+			#overlay {
+				position: fixed;
 				display: none;
-				justify-content: center;
-				align-items: center;
-			}
-
-			.modal-contents {
-				height: 300px;
-				width: 500px;
-				background-color: white;
-				text-align: center;
-				padding: 20px;
-				position: relative;
-				border-radius: 4px;
-			}
-
-			input {
-				margin: 15px auto;
-				display: block;
-				width: 50%;
-				padding: 8px;
-				border: 1px solid gray;
-			}
-
-			.close {
-				position: absolute;
+				width: 15%;
 				top: 0;
-				right: 10px;
-				font-size: 42px;
-				color: #333;
-				transform: rotate(45deg);
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background-color: rgba(0,0,0,0.5);
+				z-index: 2;
 				cursor: pointer;
 			}
 		</style>
@@ -207,15 +181,18 @@
 			<ul>
 
 			</ul>
-			<a href="/" id="button">Form a Group</a>
-			<div class="bg-modal">
-				<div class="modal-contents">
-					<div class="close">+</div>
-					<form action="">
-						<input type="text" placeholder="Group Name">
-						<a href="/" class="btn btn-primary">Assemble the Group!</a>
-					</form>
-				</div>
+			<div id="overlay" onclick="off()">
+				<form>
+					<h4 class="text-primary">Form a Group!</h4>
+					<img src="{{url_for('static', filename='img/makegroup.jpg')}}">
+					<input type="text" placeholder="Group Name">
+					<p>Add members</p>
+					<button class="btn btn-primary">Assemble the Group!</button>
+				</form>
+			</div>
+			  
+			<div>
+				<button class="btn btn-primary" onclick="on()">Form a Group</button>
 			</div>
 		</div>
 		<div class="data" style="background-color:white;float:right;padding-right:5px;" width="35%">
