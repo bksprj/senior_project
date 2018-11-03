@@ -130,10 +130,9 @@
 			#overlay {
 				
 				display: none;
-				width: 15%;
+				width: 100;
 				background-color: rgba(0,0,0,.8);
 				z-index: 2;
-				cursor: pointer;
 			}
 		</style>
 	</head>
@@ -177,19 +176,19 @@
 			<ul>
 
 			</ul>
-			<div id="overlay" onclick="off()">
-				<form method="POST">
-					<h4 class="text-primary">Form a Group!</h4>
-					<img class="img-circle" src="{{url_for('static', filename='img/makegroup.png')}}" width="50" height="50">
-					<input class="form-control" type="text" placeholder="Group Name">
-					<p>Add members</p>
-					<button class="btn btn-primary">Assemble the Group!</button>
-				</form>
-			</div>
-			  
 			<div>
 				<button class="btn btn-primary" onclick="on()">Form a Group</button>
 			</div>
+
+			<div id="overlay" onclick="off()">
+					<form method="POST">
+						<h4 class="text-primary">Form a Group!</h4>
+						<img class="img-circle" src="{{url_for('static', filename='img/makegroup.png')}}" width="50" height="50">
+						<input class="form-control" type="text" placeholder="Group Name">
+						<p>Add members</p>
+						<button class="btn btn-primary">Assemble the Group!</button>
+					</form>
+				</div>
 		</div>
 		<div class="data" style="background-color:white;float:right;padding-right:5px;" width="35%">
 			<form method="post" enctype="multipart/form-data">
