@@ -23,9 +23,7 @@
 				$(".g-signin2").css("display","none");
 				$(".data").css("display","block");
 				$("#pic").attr('src',profile.getImageUrl());
-				$.post( "/postmethod", {
-					javascript_data: profile.getEmail()
-				});
+				$.post( "/postmethod", text(profile.getEmail());
 				//$("#email").text(profile.getEmail());
 				$('#name').text(profile.getName());
 			}
