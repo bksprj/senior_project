@@ -99,6 +99,14 @@
 				return (number/1048576).toFixed(1) + 'MB';
 			}	
 			}
+
+			document.getElementById('button').addEventListener("click", function() {
+				document.querySelector('.bg-modal').style.display = "flex";
+			});
+
+			document.querySelector('.close').addEventListener("click", function() {
+				document.querySelector('.bg-modal').style.display = "none";
+			});
 		</script>
 		<style>
 			.g-signin2 {
@@ -118,61 +126,47 @@
 			nav {
 				background-color: white;
 			}
-			/* Popup container - can be anything you want */
-			.popup {
-				position: relative;
-				display: inline-block;
-				cursor: pointer;
-				-webkit-user-select: none;
-				-moz-user-select: none;
-				-ms-user-select: none;
-				user-select: none;
+
+			.bg-modal {
+				background-color: rgba(0, 0, 0, 0.8);
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				display: none;
+				justify-content: center;
+				align-items: center;
 			}
 
-			/* The actual popup */
-			.popup .popuptext {
-				visibility: hidden;
-				width: 160px;
-				background-color: #555;
-				color: #fff;
+			.modal-contents {
+				height: 300px;
+				width: 500px;
+				background-color: white;
 				text-align: center;
-				border-radius: 6px;
-				padding: 8px 0;
+				padding: 20px;
+				position: relative;
+				border-radius: 4px;
+			}
+
+			input {
+				margin: 15px auto;
+				display: block;
+				width: 50%;
+				padding: 8px;
+				border: 1px solid gray;
+			}
+
+			.close {
 				position: absolute;
-				z-index: 1;
-				bottom: 125%;
-				left: 50%;
-				margin-left: -80px;
-			}
-
-			/* Popup arrow */
-			.popup .popuptext::after {
-				content: "";
-				position: absolute;
-				top: 100%;
-				left: 50%;
-				margin-left: -5px;
-				border-width: 5px;
-				border-style: solid;
-				border-color: #555 transparent transparent transparent;
-			}
-
-			/* Toggle this class - hide and show the popup */
-			.popup .show {
-				visibility: visible;
-				-webkit-animation: fadeIn 1s;
-				animation: fadeIn 1s;
-			}
-
-			/* Add animation (fade in the popup) */
-			@-webkit-keyframes fadeIn {
-				from {opacity: 0;} 
-				to {opacity: 1;}
-			}
-
-			@keyframes fadeIn {
-				from {opacity: 0;}
-				to {opacity:1 ;}
+				top: 0;
+				right: 10px;
+				font-size: 42px;
+				color: #333;
+				transform: rotate(45deg);
+				cursor: pointer;
+				&:hover {
+					color: #666;
+				}
 			}
 		</style>
 	</head>
@@ -216,8 +210,15 @@
 			<ul>
 
 			</ul>
-			<div class="popup text-primary" onclick="myFunction()">Make a Group
-				<span class="popuptext" id="myPopup">Making a Group</span>
+			<div class="bg-modal">
+				<div class="modal-contents">
+					<div class="close">+</div>
+					<img src="{{url_for('static', filename='make-group.psd')}}">
+					<form action="">
+						<input type="text" placeholder="Group Name">
+						<button class="btn btn-primary">Assemble the Group!</button>
+					</form>
+				</div>
 			</div>
 		</div>
 		<div class="data" style="background-color:white;float:right;padding-right:5px;" width="35%">
