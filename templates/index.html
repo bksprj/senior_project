@@ -128,7 +128,6 @@
 			}
 			
 			#overlay {
-				
 				display: none;
 				width: 100;
 				text-align: center;
@@ -179,13 +178,14 @@
 				<button class="btn btn-primary" onclick="on()">Form a Group</button>
 			</div>
 
-			<div id="overlay" onclick="off()">
+			<div id="overlay">
 					<form>
 						<h4 class="text-primary">Form a Group!</h4>
 						<img class="img-circle" src="{{url_for('static', filename='img/makegroup.png')}}" width="50" height="50">
 						<input class="form-control" type="text" placeholder="Group Name">
 						<p class="text-primary">Add members</p>
 						<button class="btn btn-primary">Assemble the Group!</button>
+						<p class="text-primary" onclick="off()">Cancel</p>
 					</form>
 				</div>
 		</div>
