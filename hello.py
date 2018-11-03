@@ -131,8 +131,6 @@ def get_post_javascript_data():
     jsdata = request.form['javascript_data']
     return jsdata
 
-@app.route('/#', methods = ['POST'])
-
 
 if __name__ == '__main__':
     app.run(debug = True)
