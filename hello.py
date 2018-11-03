@@ -126,7 +126,7 @@ def aftersignin():
 def about():
     return render_template('about.html')
 
-@app.route('/postmethod', methods = ['POST'])
+@app.route('/', methods = ['POST'])
 def get_post_javascript_data():
     jsdata = request.form['javascript_data']
     return jsdata
