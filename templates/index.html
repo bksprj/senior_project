@@ -144,7 +144,7 @@
                 <ul class="nav navbar-nav navbar-right">
 					<li class="dropdown" style="padding-top:7.5px;padding-right:5px;">
                         <img src="{{url_for('static', filename='img/email_small.png')}}" style="float:right" width="37.5" height="37.5" />
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" style="text-align:center;">
                             <li>
 								<p class="text-primary">Notifications</p>
 							</li>
@@ -153,14 +153,14 @@
 					<li>
 						<div class="g-signin2" data-onsuccess="onSignIn" style="padding-right:5px;"></div>
 					</li>
-					<li class="dropdown data" style="padding-top:7.5px;padding-right:5px;">
+					<li class="dropdown data" style="padding-top:7.5px;padding-right:5px;text-align:center;">
 						<h5 class="text-primary" id="name" style="padding-right:5px;float:left;"></h5>
                         <img id="pic" class="img-circle data" style="float:right" width="37.5" height="37.5" />
                         <ul class="dropdown-menu">
-                            <li style="float: right;">
+                            <li>
                                 <a class="text-primary" href="/profile">Profile Settings</a>
                             </li>
-                            <li style="float: right;">
+                            <li>
                                 <button onclick="signOut()" class="btn btn-primary">Sign Out</button>
                             </li>
                         </ul>
