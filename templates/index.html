@@ -131,7 +131,6 @@
 				
 				display: none;
 				width: 100;
-				z-index: 2;
 			}
 		</style>
 	</head>
@@ -180,7 +179,7 @@
 			</div>
 
 			<div id="overlay" onclick="off()">
-					<form method="POST">
+					<form>
 						<h4 class="text-primary">Form a Group!</h4>
 						<img class="img-circle" src="{{url_for('static', filename='img/makegroup.png')}}" width="50" height="50">
 						<input class="form-control" type="text" placeholder="Group Name">
