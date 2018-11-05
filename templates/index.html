@@ -147,22 +147,19 @@
             <a class="navbar-brand" href="/">Data Sense</a>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <a class="navbar-brand" href="/about">About</a>
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
+			<div class="collapse navbar-collapse data" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
                 <ul class="nav navbar-nav navbar-right">
-					<li class="dropdown data" style="padding-top:7.5px;padding-right:5px;">
+					<li class="dropdown" style="padding-top:7.5px;padding-right:5px;">
                         <img src="{{url_for('static', filename='img/new_blue.png')}}" style="float:right" width="37.5" height="37.5" />
-                        <ul class="dropdown-menu data" style="text-align:center;">
+                        <ul class="dropdown-menu" style="text-align:center;">
                             <li>
 								<p class="text-primary">Notifications</p>
 							</li>
                         </ul>
                     </li>
-					<li>
-						<div class="g-signin2" data-onsuccess="onSignIn" style="padding-right:5px;"></div>
-					</li>
-					<li class="dropdown data" style="padding-top:7.5px;padding-right:5px;">
+					<li class="dropdown" style="padding-top:7.5px;padding-right:5px;">
 						<h5 class="text-primary" id="name" style="padding-right:5px;float:left;"></h5>
-                        <img id="pic" class="img-circle data" style="float:right" width="37.5" height="37.5" />
+                        <img id="pic" class="img-circle" style="float:right" width="37.5" height="37.5" />
                         <ul class="dropdown-menu" style="text-align:center;">
                             <li>
                                 <a class="text-primary" href="/profile">Profile Settings</a>
@@ -179,6 +176,7 @@
 		<div class="goaway">
 			<h3>Welcome to Data Sense!</h3>
 			<h5>Please Sign In</h5>
+			<div class="g-signin2" data-onsuccess="onSignIn" style="padding-right:5px;"></div>
 			<img src="{{url_for('static', filename='img/ds_logo.png')}}" width="200" height="200"/>
 		</div>
 
