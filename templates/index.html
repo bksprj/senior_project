@@ -186,23 +186,20 @@
 
         <div class="data" style="background-color:white;float:left;" width="10%">
 			<h3 class="text-primary" style="text-align:center;">Groups</h3>
-			<ul>
-
-			</ul>
 			<div style="text-align:center;">
 				<a class="text-primary" onclick="on()">Form a Group</a>
 			</div>
 
 			<div id="overlay">
-					<form>
-						<h4 class="text-primary">Form a Group!</h4>
-						<img class="img-circle" src="{{url_for('static', filename='img/makegroup.png')}}" width="50" height="50">
-						<input class="form-control" type="text" placeholder="Group Name">
-						<a class="text-primary">Add members</a>
-						<button class="btn btn-primary">Assemble the Group!</button>
-						<a class="text-primary" onclick="off()">Cancel</a>
-					</form>
-				</div>
+				<form>
+					<h4 class="text-primary">Form a Group!</h4>
+					<img class="img-circle" src="{{url_for('static', filename='img/makegroup.png')}}" width="50" height="50">
+					<input class="form-control" type="text" placeholder="Group Name">
+					<a class="text-primary">Add members</a>
+					<button class="btn btn-primary">Assemble the Group!</button>
+					<a class="text-primary" onclick="off()">Cancel</a>
+				</form>
+			</div>
 		</div>
 		<div class="data" style="float:right;padding-right:5px;" width="35%">
 			<form method="post" enctype="multipart/form-data">
