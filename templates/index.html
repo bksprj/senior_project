@@ -23,6 +23,7 @@
 				var profile = googleUser.getBasicProfile();
 				$(".g-signin2").css("display","none");
 				$(".data").css("display","block");
+				$(".goaway").css("display","none");
 				$("#pic").attr('src',profile.getImageUrl());
 				$.post( "/", profile.getEmail());
 				$("#email").text(profile.getEmail());
@@ -117,6 +118,11 @@
 			.data {
 				display: none;
 			}
+			.goaway {
+				display: block;
+				padding-top: 50px;
+				text-align: center;
+			}
             body {
                 padding-top: 65px;
                 padding-left: 5px;
@@ -168,7 +174,13 @@
                     </li>
                 </ul>
             </div>
-        </nav>
+		</nav>
+		
+		<div class="goaway">
+			<h3>Welcome to Data Sense!</h3>
+			<h5>Please Sign In</h5>
+			<img src="{{url_for('static', filename='img/new_blue.png')}}" width="200" height="200"/>
+		</div>
 
         <div class="data" style="background-color:white;float:left;" width="15%">
 			<h3 class="text-primary" style="text-align:center;">Groups</h3>
