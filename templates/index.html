@@ -112,8 +112,8 @@
 		</script>
 		<style>
 			.g-signin2 {
-				display: block;
-				padding-top: 5px;
+				float: right;
+				padding-top: 7.5px;
 			}
 			.data {
 				display: none;
@@ -151,12 +151,15 @@
                 <ul class="nav navbar-nav navbar-right">
 					<li class="dropdown data" style="padding-top:7.5px;padding-right:5px;">
                         <img class="data" src="{{url_for('static', filename='img/new_blue.png')}}" style="float:right" width="37.5" height="37.5" />
-                        <ul class="dropdown-menu" style="text-align:center;">
+                        <ul class="dropdown-menu data" style="text-align:center;">
                             <li>
 								<p class="text-primary">Notifications</p>
 							</li>
                         </ul>
                     </li>
+					<li>
+						<div class="g-signin2" data-onsuccess="onSignIn" style="padding-right:5px;"></div>
+					</li>
 					<li class="dropdown data" style="padding-top:7.5px;padding-right:5px;">
 						<h5 class="text-primary" id="name" style="padding-right:5px;float:left;"></h5>
                         <img id="pic" class="img-circle data" style="float:right" width="37.5" height="37.5" />
@@ -176,7 +179,6 @@
 		<div class="goaway">
 			<h3>Welcome to Data Sense!</h3>
 			<h5>Please Sign In</h5>
-			<div class="g-signin2" data-onsuccess="onSignIn" style="text-align:center;"></div>
 			<img src="{{url_for('static', filename='img/ds_logo.png')}}" width="200" height="200"/>
 		</div>
 
