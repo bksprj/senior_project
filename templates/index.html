@@ -72,16 +72,8 @@
 				</form>
 			</div>
 		</div>
-		<div class="data" style="float:right;padding-right:5px;" width="35%">
-			<form method="post" enctype="multipart/form-data">
-				<div class="panel panel-primary">
-					<div class="panel-heading"><label for="file_uploads">Choose a .xlsx or .csv file to upload</label></div>
-					<div class="panel-body"><input type="file" id="file_uploads" name="file_uploads" accept=".xlsx, .csv" multiple></div>
-					<div><button class="btn btn-primary" style="padding-top:5px;">Upload</button></div>
-				</div>
-			</form>
-			
-            <h3>Here are your files</h3>
+		<div class="data" style="float:left;padding-left:5px;" width="35%">
+			<h3>Here are your files</h3>
             {% for key, value in result.items() %}
             <p> {{ value }} </p>
             {% endfor %}
