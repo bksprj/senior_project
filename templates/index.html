@@ -1,85 +1,35 @@
-﻿<!DOCTYPE html>
+﻿ {% extends 'base.html' %}
 
-<html>
-	<head>
-		<title>Data Sense</title>
-		<!--<meta charset="utf-8" />-->
-		<meta name="google-signin-client_id" content="798265448710-nqo7h881abf59cn9oghng9erq841tbq1.apps.googleusercontent.com">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<script src="https://apis.google.com/js/platform.js" async defer></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<link rel="icon" href="{{url_for('static', filename='img/ds_logo.png')}}">
-		<script src="{{url_for('static', filename='index.js')}}"></script>
-		<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" />
+ <body>
+	<div class="goaway">
+		<h3 class="text-primary">Welcome to Data Sense!</h3>
+		<h5 class="text-primary">Please Sign In</h5>
+		<img src="{{url_for('static', filename='img/ds_logo.png')}}" width="400" height="400"/>
+		<p class="text-primary">Please note that users *NEED* a Google acount to use this application...</p>
+	</div>
 
-	</head>
-	<header>
-		<nav class="navbar navbar-fixed-top admin-menu bg-light" role="navigation">
-			<a class="navbar-brand" href="/">Data Sense</a>
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<a class="navbar-brand" href="/about">About</a>
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
-				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown" style="padding-top:7.5px;padding-right:5px;">
-						<img class="data" src="{{url_for('static', filename='img/new_blue.png')}}" style="float:right" width="37.5" height="37.5" />
-						<ul class="dropdown-menu" style="text-align:center;">
-							<li>
-								<p class="text-primary">Notifications</p>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<div class="g-signin2" data-onsuccess="onSignIn" style="padding-right:5px;"></div>
-					</li>
-					<li class="dropdown data" style="padding-top:7.5px;padding-right:5px;">
-						<h5 class="text-primary" id="name" style="padding-right:5px;float:left;"></h5>
-						<img id="pic" class="img-circle data" style="float:right" width="37.5" height="37.5" />
-						<ul class="dropdown-menu" style="text-align:center;">
-							<li>
-								<a class="text-primary" href="/profile">Profile Settings</a>
-							</li>
-							<li>
-								<a onclick="signOut()" class="text-primary">Sign Out</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</nav>
-	</header>
-
-    <body>
-		<div class="goaway">
-			<h3 class="text-primary">Welcome to Data Sense!</h3>
-			<h5 class="text-primary">Please Sign In</h5>
-			<img src="{{url_for('static', filename='img/ds_logo.png')}}" width="400" height="400"/>
-			<p class="text-primary">Please note that users *NEED* a Google acount to use this application...</p>
+    <div class="data" style="background-color:white;float:left;" width="7.5%">
+		<h3 class="text-primary" style="text-align:center;">Groups</h3>
+		<div style="text-align:center;">
+			<a class="text-primary" onclick="on()">Form a Group</a>
 		</div>
 
-        <div class="data" style="background-color:white;float:left;" width="7.5%">
-			<h3 class="text-primary" style="text-align:center;">Groups</h3>
-			<div style="text-align:center;">
-				<a class="text-primary" onclick="on()">Form a Group</a>
-			</div>
-
-			<div id="overlay">
-				<form>
-					<h4 class="text-primary">Form a Group!</h4>
-					<img class="img-circle" src="{{url_for('static', filename='img/makegroup.png')}}" width="50" height="50">
-					<input class="form-control" type="text" placeholder="Group Name">
-					<a class="text-primary">Add members</a>
-					<button class="btn btn-primary">Assemble the Group!</button>
-					<a class="text-primary" onclick="off()">Cancel</a>
-				</form>
-			</div>
+		<div id="overlay">
+			<form>
+				<h4 class="text-primary">Form a Group!</h4>
+				<img class="img-circle" src="{{url_for('static', filename='img/makegroup.png')}}" width="50" height="50">
+				<input class="form-control" type="text" placeholder="Group Name">
+				<a class="text-primary">Add members</a>
+				<button class="btn btn-primary">Assemble the Group!</button>
+				<a class="text-primary" onclick="off()">Cancel</a>
+			</form>
 		</div>
-		<div class="data" style="float:left;padding-left:5px;" width="35%">
-			<h3>Here are your files</h3>
-            {% for key, value in result.items() %}
-            <p> {{ value }} </p>
-            {% endfor %}
-            <h3>End</h3>
-		</div>
-    </body>
-</html>
+	</div>
+	<div class="data" style="float:left;padding-left:5px;" width="35%">
+		<h3>Here are your files</h3>
+        {% for key, value in result.items() %}
+        <p> {{ value }} </p>
+        {% endfor %}
+        <h3>End</h3>
+	</div>
+</body>
