@@ -11,36 +11,7 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<link rel="icon" href="{{url_for('static', filename='img/ds_logo.png')}}">
 		<script src="{{url_for('static', filename='index.js')}}"></script>
-		<style>
-			.g-signin2 {
-				float: right;
-				padding-top: 7.5px;
-			}
-			.data {
-				display: none;
-			}
-			.goaway {
-				display: block;
-				padding-top: 50px;
-				text-align: center;
-			}
-            body {
-                padding-top: 65px;
-                padding-left: 5px;
-			}
-            ul.nav li.dropdown:hover ul.dropdown-menu {
-                display: block;
-            }
-			nav {
-				background-color: white;
-			}
-			
-			#overlay {
-				display: none;
-				width: 100%;
-				text-align: center;
-			}
-		</style>
+		<link ... href="{{ url_for('static', filename='index.css') }}" />
 	</head>
 
     <body>
