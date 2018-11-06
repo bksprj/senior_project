@@ -1,6 +1,6 @@
-﻿ {% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 
- <body>
+{% block content %}
 	<div class="goaway">
 		<h3 class="text-primary">Welcome to Data Sense!</h3>
 		<h5 class="text-primary">Please Sign In</h5>
@@ -32,4 +32,4 @@
         {% endfor %}
         <h3>End</h3>
 	</div>
-</body>
+{% endblock %}
