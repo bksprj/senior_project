@@ -12,42 +12,44 @@
 		<link rel="icon" href="{{url_for('static', filename='img/ds_logo.png')}}">
 		<script src="{{url_for('static', filename='index.js')}}"></script>
 		<link ... href="{{ url_for('static', filename='index.css') }}" />
-	</head>
 
-    <body>
-        <nav class="navbar navbar-fixed-top admin-menu bg-light" role="navigation">
-            <a class="navbar-brand" href="/">Data Sense</a>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <a class="navbar-brand" href="/about">About</a>
+	</head>
+	<header>
+		<nav class="navbar navbar-fixed-top admin-menu bg-light" role="navigation">
+			<a class="navbar-brand" href="/">Data Sense</a>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<a class="navbar-brand" href="/about">About</a>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
-                <ul class="nav navbar-nav navbar-right">
+				<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown" style="padding-top:7.5px;padding-right:5px;">
-                        <img class="data" src="{{url_for('static', filename='img/new_blue.png')}}" style="float:right" width="37.5" height="37.5" />
-                        <ul class="dropdown-menu" style="text-align:center;">
-                            <li>
+						<img class="data" src="{{url_for('static', filename='img/new_blue.png')}}" style="float:right" width="37.5" height="37.5" />
+						<ul class="dropdown-menu" style="text-align:center;">
+							<li>
 								<p class="text-primary">Notifications</p>
 							</li>
-                        </ul>
-                    </li>
+						</ul>
+					</li>
 					<li>
 						<div class="g-signin2" data-onsuccess="onSignIn" style="padding-right:5px;"></div>
 					</li>
 					<li class="dropdown data" style="padding-top:7.5px;padding-right:5px;">
 						<h5 class="text-primary" id="name" style="padding-right:5px;float:left;"></h5>
-                        <img id="pic" class="img-circle data" style="float:right" width="37.5" height="37.5" />
-                        <ul class="dropdown-menu" style="text-align:center;">
-                            <li>
-                                <a class="text-primary" href="/profile">Profile Settings</a>
-                            </li>
-                            <li>
-                                <button onclick="signOut()" class="btn btn-primary">Sign Out</button>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+						<img id="pic" class="img-circle data" style="float:right" width="37.5" height="37.5" />
+						<ul class="dropdown-menu" style="text-align:center;">
+							<li>
+								<a class="text-primary" href="/profile">Profile Settings</a>
+							</li>
+							<li>
+								<button onclick="signOut()" class="btn btn-primary">Sign Out</button>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
 		</nav>
-		
+	</header>
+
+    <body>
 		<div class="goaway">
 			<h3 class="text-primary">Welcome to Data Sense!</h3>
 			<h5 class="text-primary">Please Sign In</h5>
