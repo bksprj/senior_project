@@ -35,8 +35,8 @@ nav {
 .column {
 	float: left;
 	width: 33.33%;
-	padding: 10px;
-	text-align: center;
+    padding: 10px;
+    text-align: center;
 }
 
 .row:after {
