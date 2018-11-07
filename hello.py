@@ -29,7 +29,7 @@ class JSONEncoder(json.JSONEncoder):
 
 
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/index", methods=['GET', 'POST'])
 def index():
     result_dict = test_database.find_one({"project":"senior project"})
     return render_template('index.html', result=result_dict)
