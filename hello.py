@@ -6,10 +6,6 @@ import json
 from bson import ObjectId
 from werkzeug import secure_filename
 import os
-# more tech to use! update requirements.txt
-from flask_wtf import FlaskForm
-from wtforms import StringField
-from wtforms.validators import DataRequired
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'xml', 'csv'])
@@ -25,44 +21,18 @@ client = pymongo.MongoClient("mongodb://%s:%s@cluster0-shard-00-00-mhqmc.mongodb
 db = client.test_database
 test_database = db.test_database
 
-# Classes that we'll need to define
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
         return json.JSONEncoder.default(self, o)
 
-class GroupForm(FlaskForm):
-    group = StringField('group', validators=[DataRequired()])
-    email = StringField('email', validators=[DataRequired()])
 
 
-# routes
 @app.route("/", methods=['GET', 'POST'])
 def index():
-    # result_dict = test_database.find_one({"project":"senior project"})
-    groupform = GroupForm(csrf_enabled=False)
-    if groupform.validate_on_submit():
-        print("just checking to see everything is ok")
-        # print("Attempting to create new group")
-        # db = client.groups
-        # names = db.list_collection_names()
-        # if group_name not in names:
-        #     new_group = db[group_name]
-        #     new_group.insert_one({"Group creation":"Completed"})
-        #     print("New group created")
-        # else:
-        #     print("That group already exists!")
-        return redirect('/')
-
-
-    return render_template('index.html', groupform=groupform)
-
-@app.route('/', methods = ['POST'])
-def get_post_javascript_data():
-    jsdata = request.form['javascript_data']
-    return jsdata
-
+    result_dict = test_database.find_one({"project":"senior project"})
+    return render_template('index.html', result=result_dict)
 
 
 # working with uploads
@@ -147,6 +117,7 @@ def rank_check():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+
 @app.route("/google08f628c29bd0d05f.html")
 def aftersignin():
     return render_template('google08f628c29bd0d05f.html')
@@ -155,7 +126,10 @@ def aftersignin():
 def about():
     return render_template('about.html')
 
-
+@app.route('/', methods = ['POST'])
+def get_post_javascript_data():
+    jsdata = request.form['javascript_data']
+    return jsdata
 
 
 if __name__ == '__main__':
