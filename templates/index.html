@@ -9,9 +9,9 @@
 	</div>
 
     <div class="data" style="background-color:white;float:left;" width="7.5%">
-		<h3 class="text-primary" style="text-align:center;">Groups</h3>
+		<h3 class="text-primary" style="text-align:center;">Teams</h3>
 		<div style="text-align:center;">
-			<a class="text-primary" onclick="on()">Form a Group</a>
+			<a class="text-primary" onclick="on()">Form a Team</a>
 		</div>
 
 		<div id="overlay">
@@ -19,7 +19,7 @@
 		</div>
 	</div>
 	<div class="data" style="float:left;padding-left:5px;" width="35%">
-		<h3>Here are your files</h3>
+		<h4>Your Team</h4>
         {% for key, value in result.items() %}
         <p> {{ value }} </p>
         {% endfor %}
