@@ -15,14 +15,7 @@
 		</div>
 
 		<div id="overlay">
-			<form>
-				<h4 class="text-primary">Form a Group!</h4>
-				<img class="img-circle" src="{{url_for('static', filename='img/makegroup.png')}}" width="50" height="50">
-				<input class="form-control" type="text" placeholder="Group Name">
-				<a class="text-primary">Add members</a>
-				<button class="btn btn-primary">Assemble the Group!</button>
-				<a class="text-primary" onclick="off()">Cancel</a>
-			</form>
+			{% inclued 'mkgroup.html' %}
 		</div>
 	</div>
 	<div class="data" style="float:left;padding-left:5px;" width="35%">
