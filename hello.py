@@ -29,7 +29,7 @@ class JSONEncoder(json.JSONEncoder):
 
 
 
-@app.route("/index", methods=['GET', 'POST'])
+@app.route("/", methods=['GET', 'POST'])
 def index():
     result_dict = test_database.find_one({"project":"senior project"})
     return render_template('index.html', result=result_dict)
@@ -126,7 +126,7 @@ def aftersignin():
 def about():
     return render_template('about.html')
 
-@app.route('/index', methods = ['POST'])
+@app.route('/', methods = ['POST'])
 def get_post_javascript_data():
     jsdata = request.form['javascript_data']
     return jsdata
