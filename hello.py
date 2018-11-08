@@ -39,7 +39,7 @@ class MyOtherForm(FlaskForm):
     email = StringField('email', validators=[DataRequired()])
 
 def read_csv_file(file):
-    with open('uploads/test.csv', newline='') as csvfile:
+    with open('uploads/' + file, newline='') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',')
 
         testDict = {}
