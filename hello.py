@@ -92,6 +92,10 @@ def upload_file():
     </form>
     '''
 
+@app.route("/uploads/<filename>")
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 # let's try some rank checking
 @app.route('/rankinput')
 def my_form():
@@ -133,9 +137,7 @@ def rank_check():
     #     result = group.find_one({"Senpai":["debrsa01@luther.edu"]})
 
 
-@app.route("/uploads/<filename>")
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 
 
 @app.route("/google08f628c29bd0d05f.html")
