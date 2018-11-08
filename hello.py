@@ -34,7 +34,7 @@ class MyOtherForm(FlaskForm):
     class Meta:
         csrf = False
         locales = ('en_US', 'en')
-    group = StringField('group', validators=[DataRequired()])
+    group_name = StringField('group', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired()])
 
 
@@ -42,7 +42,15 @@ class MyOtherForm(FlaskForm):
 def index():
     otherform = MyOtherForm()
     if otherform.validate_on_submit():
-        print("otherform was validated")
+        db = client.groups
+        names = db.list_collection_names()
+        if otherform.group_name.data not in names:
+            print("We'll have to create the group")
+            print("type of group_name is: ", type(otherform.group_name.data))
+            new_group = db[otherform.group_name.data]
+            new_group.insert_one({"Senpai":[otherform.email.data], "Kouhai":[]})
+        else:
+            print("That group already exists!")
         return redirect('/')
     return render_template('index.html', otherform=otherform)
 

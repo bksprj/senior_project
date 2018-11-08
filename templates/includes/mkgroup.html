@@ -11,7 +11,7 @@
 	<form method="POST" action="/">
 		  <h4 class="text-primary">Form a Team</h4>
 			<img class="img-circle" src="{{url_for('static', filename='img/makegroup.png')}}" width="50" height="50">
-	    {{ otherform.group.label }} {{ otherform.group(size=20) }}
+	    {{ otherform.group_name.label }} {{ otherform.group_name(size=20) }}
 	    {{ otherform.email.label }} {{ otherform.email(size=20) }}
 	    <input type="submit" value="Go">
 	</form>
