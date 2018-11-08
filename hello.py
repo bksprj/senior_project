@@ -6,6 +6,9 @@ import json
 from bson import ObjectId
 from werkzeug import secure_filename
 import os
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.validators import DataRequired
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'xml', 'csv'])
@@ -27,12 +30,21 @@ class JSONEncoder(json.JSONEncoder):
             return str(o)
         return json.JSONEncoder.default(self, o)
 
+class MyOtherForm(FlaskForm):
+    class Meta:
+        csrf = False
+        locales = ('en_US', 'en')
+    group = StringField('group', validators=[DataRequired()])
+    email = StringField('email', validators=[DataRequired()])
 
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
-    result_dict = test_database.find_one({"project":"senior project"})
-    return render_template('index.html', result=result_dict)
+    otherform = MyOtherForm()
+    if otherform.validate_on_submit():
+        print("otherform was validated")
+        return redirect('/')
+    return render_template('index.html', otherform=otherform)
 
 
 # working with uploads
