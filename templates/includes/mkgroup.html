@@ -1,0 +1,25 @@
+﻿{% block content %}
+
+	<!-- <form>
+		<h4 class="text-primary">Form a Group!</h4>
+=======
+
+	<form>
+		<h4 class="text-primary">Form a Team</h4>
+>>>>>>> 5ffdbead71d6a3766fd6b15e039966a11eb537b5
+		<img class="img-circle" src="{{url_for('static', filename='img/makegroup.png')}}" width="50" height="50">
+		<input class="form-control" type="text" placeholder="Team Name">
+		<a class="text-primary">Add members</a>
+		<button class="btn btn-primary">Make Team</button>
+		<a class="text-primary" onclick="off()">Cancel</a>
+	</form> -->
+	<form method="POST" action="/">
+		<h4 class="text-primary">Form a Team</h4>
+		<img class="img-circle" src="{{url_for('static', filename='img/makegroup.png')}}" width="50" height="50">
+	    {{ otherform.group_name.label }} {{ otherform.group_name(size=20) }}
+	    {{ otherform.email.label }} {{ otherform.email(size=20) }}
+	    <input class="btn btn-primary" type="submit" value="Go">
+		<a class="text-primary" onclick="off()">Cancel</a>
+	</form>
+
+{% endblock %}
