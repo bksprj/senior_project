@@ -117,7 +117,6 @@ def rank_check():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-
 @app.route("/google08f628c29bd0d05f.html")
 def aftersignin():
     return render_template('google08f628c29bd0d05f.html')
@@ -125,6 +124,16 @@ def aftersignin():
 @app.route("/about", methods=['GET', 'POST'])
 def about():
     return render_template('about.html')
+
+# @app.route('/getmethod/<jsdata>')
+# def get_javascript_data(jsdata):
+
+#     return jsdata
+
+# @app.route('/test')
+# def get_request_form():
+#     text = request.form['text']
+#     return 
 
 if __name__ == '__main__':
     app.run(debug = True)

@@ -57,6 +57,7 @@ if(curFiles.length === 0) {
 	list.appendChild(listItem);
 	}
 }
+
 }var fileTypes = [
 'file/xlsx',
 'file/csv'
