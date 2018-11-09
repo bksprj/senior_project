@@ -16,6 +16,7 @@
 body {
 	padding-top: 20px;
 	padding-left: 5px;
+	padding-right:5px;
 }
 
 ul.nav li.dropdown:hover ul.dropdown-menu {

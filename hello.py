@@ -65,6 +65,9 @@ def index():
         return redirect('/')
     return render_template('index.html', otherform=otherform)
 
+@app.route("/profile", methods=['GET', 'POST'])
+def profile():
+	return render_template('profile.html')
 
 # working with uploads
 
