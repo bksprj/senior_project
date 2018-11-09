@@ -35,8 +35,8 @@ class MyOtherForm(FlaskForm):
     class Meta:
         csrf = False
         locales = ('en_US', 'en')
-    group_name = StringField('group', validators=[DataRequired()])
-    email = StringField('email', validators=[DataRequired()])
+    group_name = StringField('Team', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
 
 def read_csv_file(file):
     with open('uploads/' + file, newline='') as csvfile:
@@ -56,12 +56,12 @@ def index():
         db = client.groups
         names = db.list_collection_names()
         if otherform.group_name.data not in names:
-            print("We'll have to create the group")
-            print("type of group_name is: ", type(otherform.group_name.data))
+            print("We'll have to create the team")
+            print("type of team_name is: ", type(otherform.group_name.data))
             new_group = db[otherform.group_name.data]
             new_group.insert_one({"Senpai":[otherform.email.data], "Kouhai":[]})
         else:
-            print("That group already exists!")
+            print("That team already exists!")
         return redirect('/')
     return render_template('index.html', otherform=otherform)
 
