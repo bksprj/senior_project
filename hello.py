@@ -140,12 +140,15 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # print(filename[-3:])
+            db = client.group_data
+            groupDataCollection = db[group_name]
             if filename[-3:] == "csv":
                 processfile = read_csv_file(filename)  # type is a dictionary
 
                 # put in database
-
+                groupDataCollection.insert_one(processfile)
                 # print(processfile)
+                
                 return redirect(url_for('index'))
             # return redirect(url_for('uploaded_file',filename=filename)) # perhaps we don't need to redirect again
     return render_template('uploader.html')
