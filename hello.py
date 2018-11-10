@@ -110,15 +110,7 @@ def upload_file():
             if filename[-3:] == "csv":
                 processfile = read_csv_file(filename)
             return redirect(url_for('uploaded_file',filename=filename))
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    '''
+    return render_template('uploader.html')
 
 @app.route("/uploads/<filename>")
 def uploaded_file(filename):
@@ -180,7 +172,7 @@ def about():
 @app.route('/getemail', methods = ['POST'])
 def get_post_javascript_data():
     jsdata = request.form['myData']
-    print("Hey, what is this?  ->  ", jsdata)
+    print(jsdata, "has logged in")
     return jsdata
 
 
