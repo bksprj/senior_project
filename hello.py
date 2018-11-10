@@ -35,8 +35,8 @@ class MyOtherForm(FlaskForm):
     class Meta:
         csrf = False
         locales = ('en_US', 'en')
-    group_name = StringField('group', validators=[DataRequired()])
-    email = StringField('email', validators=[DataRequired()])
+    group_name = StringField('Team', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
 
 def read_csv_file(file):
     with open('uploads/' + file, newline='') as csvfile:
@@ -66,10 +66,13 @@ def index():
             new_group = db[otherform.group_name.data]
             new_group.insert_one({"Group creation":"Completed"})
         else:
-            print("That group already exists!")
+            print("That team already exists!")
         return redirect('/')
     return render_template('index.html', otherform=otherform)
 
+@app.route("/profile", methods=['GET', 'POST'])
+def profile():
+	return render_template('profile.html')
 
 # working with uploads
 
