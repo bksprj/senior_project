@@ -56,10 +56,15 @@ def index():
         db = client.groups
         names = db.list_collection_names()
         if otherform.group_name.data not in names:
+            # We'll want to create the group in the groups database
             print("We'll have to create the group")
             print("type of group_name is: ", type(otherform.group_name.data))
             new_group = db[otherform.group_name.data]
             new_group.insert_one({"Senpai":[otherform.email.data], "Kouhai":[]})
+            # Then we'll want to create a collection for that new group's data in the group_data database
+            db = client.group_data
+            new_group = db[otherform.group_name.data]
+            new_group.insert_one({"Group creation":"Completed"})
         else:
             print("That group already exists!")
         return redirect('/')
