@@ -71,6 +71,9 @@ def read_csv_file(file):
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
+    global useremail
+    retrieve_data = "Not allowed to see this group's data"
+    # forms
     otherform = MyOtherForm()
     getdataforgroupform = GetDataForGroupForm()
     if otherform.validate_on_submit():
@@ -90,13 +93,41 @@ def index():
             print("That team already exists!")
         return redirect('/')
     elif getdataforgroupform.validate_on_submit():
-        db = client.group_data
+        # first, let's check for permissions
+        allowed_to_see_data = False  # start off as False
+        db = client.groups
+        names = db.list_collection_names()
+        group_name = getdataforgroupform.group_name.data
+        if group_name not in names:
+            retrieve_data = "The group: ", group_name, "doesn't exist."
+        else:
+            print("Group exists, moving on to the next check.")
+        # Okay, so the group exists
+        # Now, let's check to see if the person has the permission to add data
+        group_collection = db[group_name]
+        if useremail == "No user":
+            retrieve_data = "You need to be logged in."
+            return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
+        else:
+            print("Useremail to check is: ", useremail)
+            if useremail in group_collection.find_one()["Senpai"]:
+                print("You are a Senpai in the group")
+                allowed_to_see_data = True
+            elif useremail in group_collection.find_one()["Kouhai"]:
+                print("You are a Kouhai in the group")
+                allowed_to_see_data = True
+            else:
+                retrieve_data = "You are not a part of the group."
+                return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
 
-        group_collection = db[getdataforgroupform.group_name.data]
-        retrieve_data = group_collection.find_one()
-        print(retrieve_data)
-        return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
-
+        if allowed_to_see_data:
+            db = client.group_data
+            group_collection = db[getdataforgroupform.group_name.data]
+            retrieve_data = group_collection.find_one()
+            del retrieve_data['_id']
+            return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
+        else:
+            return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
     return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform)
 
 @app.route("/profile", methods=['GET', 'POST'])
