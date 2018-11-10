@@ -53,6 +53,7 @@ def read_csv_file(file):
             # print(row)
             testDict[row[0]] = row[1]
         print(testDict)
+        return testDict
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -107,7 +108,7 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # print(filename[-3:])
             if filename[-3:] == "csv":
-                read_csv_file(filename)
+                processfile = read_csv_file(filename)
             return redirect(url_for('uploaded_file',filename=filename))
     return '''
     <!doctype html>
