@@ -25,6 +25,11 @@ client = pymongo.MongoClient("mongodb://%s:%s@cluster0-shard-00-00-mhqmc.mongodb
 db = client.test_database
 test_database = db.test_database
 
+useremail = "No user"
+
+
+
+
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
@@ -170,9 +175,11 @@ def aftersignin():
 def about():
     return render_template('about.html')
 
-@app.route('/', methods = ['POST'])
+# when you log in, we will get that email address here
+@app.route('/getemail', methods = ['POST'])
 def get_post_javascript_data():
-    jsdata = request.form['javascript_data']
+    jsdata = request.form['myData']
+    print("Hey, what is this?  ->  ", jsdata)
     return jsdata
 
 
