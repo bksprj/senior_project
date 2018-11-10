@@ -141,7 +141,12 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # print(filename[-3:])
             if filename[-3:] == "csv":
-                processfile = read_csv_file(filename)
+                processfile = read_csv_file(filename)  # type is a dictionary
+
+                # put in database
+
+                # print(processfile)
+                return redirect(url_for('index'))
             # return redirect(url_for('uploaded_file',filename=filename)) # perhaps we don't need to redirect again
     return render_template('uploader.html')
 
