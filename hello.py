@@ -28,6 +28,14 @@ test_database = db.test_database
 useremail = "No user"
 
 
+# when you log in, we will get that email address here
+@app.route('/getemail', methods = ['POST'])
+def get_post_javascript_data():
+    jsdata = request.form['myData']
+    print(jsdata, "has logged in")
+    global useremail
+    useremail = jsdata
+    return jsdata
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -81,19 +89,43 @@ def profile():
 	return render_template('profile.html')
 
 # working with uploads
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
-   # if request.method == 'POST':
-   #    f = request.files['file']
-   #    file1 = f.save(secure_filename(f.filename))
-   #    return 'file uploaded successfully'
+    global useremail
     if request.method == 'POST':
-    # check if the post request has the file part
+        print("Let's do some checking first")
+        # first, check to see if the user is even allowed to post to this group
+        allowed_to_add_data = False  # start off as False
+        group_name = request.form['group_insert']
+        db = client.groups
+        names = db.list_collection_names()
+        if group_name not in names:
+            print("The group: ", group_name, "doesn't exist.")
+            return render_template('uploader.html')
+        else:
+            print("Group exists, moving on to the next check.")
+        # Okay, so the group exists
+        # Now, let's check to see if the person has the permission to add data
+        group_collection = db[group_name]
+        if useremail == "No user":
+            print("The user needs to be logged in.")
+            return render_template('uploader.html')
+        else:
+            print("Useremail to check is: ", useremail)
+            if useremail in group_collection.find_one()["Senpai"]:
+                print("The user is a Senpai in the group")
+                allowed_to_add_data = True
+            elif useremail in group_collection.find_one()["Kouhai"]:
+                print("The user is a Kouhai in the group")
+                allowed_to_add_data = True
+            else:
+                print("The user is not a part of the group.")
+                return render_template('uploader.html')
+        # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
@@ -103,13 +135,14 @@ def upload_file():
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        if file and allowed_file(file.filename):
+        if file and allowed_file(file.filename) and allowed_to_add_data:
+            print("Everything checks out, let's get the data")
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # print(filename[-3:])
             if filename[-3:] == "csv":
                 processfile = read_csv_file(filename)
-            return redirect(url_for('uploaded_file',filename=filename))
+            # return redirect(url_for('uploaded_file',filename=filename)) # perhaps we don't need to redirect again
     return render_template('uploader.html')
 
 @app.route("/uploads/<filename>")
@@ -150,15 +183,6 @@ def rank_check():
         result = "Group name not found"
 
     return result
-    # aniministry = db.aniministry
-    # if group.find_one({"Senpai":["debrsa01@luther.edu"]}):
-    #     result = group.find_one({"Kouhai":["debrsa01@luther.edu"]})
-    # if group.find_one({"Senpai":["debrsa01@luther.edu"]}):
-    #     result = group.find_one({"Senpai":["debrsa01@luther.edu"]})
-
-
-
-
 
 @app.route("/google08f628c29bd0d05f.html")
 def aftersignin():
@@ -168,12 +192,7 @@ def aftersignin():
 def about():
     return render_template('about.html')
 
-# when you log in, we will get that email address here
-@app.route('/getemail', methods = ['POST'])
-def get_post_javascript_data():
-    jsdata = request.form['myData']
-    print(jsdata, "has logged in")
-    return jsdata
+
 
 
 if __name__ == '__main__':
