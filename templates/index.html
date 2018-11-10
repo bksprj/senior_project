@@ -19,12 +19,15 @@
 		<div id="overlay" style="float:left;">
 			{% include 'includes/mkgroup.html' %}
 		</div>
-		<div class="data" width="35%">
+		<div class="data">
 
 			<a href="/uploader">Upload</a>
 			<h4 class="text-primary">Sage put group name here followed by a list of team members and files</h4>
-			<!-- Sage put your code here and look ^. Delete this comment when done. Thank you!-->
 
+			{% include 'includes/retrieve_data.html' %}
+
+			{{ retrieve_data }}
+			
 		</div>
 	</div>
 

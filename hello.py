@@ -51,6 +51,12 @@ class MyOtherForm(FlaskForm):
     group_name = StringField('Team', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
 
+class GetDataForGroupForm(FlaskForm):
+    class Meta:
+        csrf = False
+        locales = ('en_US', 'en')
+    group_name = StringField('Group', validators=[DataRequired()])
+
 def read_csv_file(file):
     with open('uploads/' + file, newline='') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',')
@@ -66,6 +72,7 @@ def read_csv_file(file):
 @app.route("/", methods=['GET', 'POST'])
 def index():
     otherform = MyOtherForm()
+    getdataforgroupform = GetDataForGroupForm()
     if otherform.validate_on_submit():
         db = client.groups
         names = db.list_collection_names()
@@ -82,7 +89,15 @@ def index():
         else:
             print("That team already exists!")
         return redirect('/')
-    return render_template('index.html', otherform=otherform)
+    elif getdataforgroupform.validate_on_submit():
+        db = client.group_data
+
+        group_collection = db[getdataforgroupform.group_name.data]
+        retrieve_data = group_collection.find_one()
+        print(retrieve_data)
+        return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
+
+    return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform)
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
@@ -148,7 +163,7 @@ def upload_file():
                 # put in database
                 groupDataCollection.insert_one(processfile)
                 # print(processfile)
-                
+
                 return redirect(url_for('index'))
             # return redirect(url_for('uploaded_file',filename=filename)) # perhaps we don't need to redirect again
     return render_template('uploader.html')

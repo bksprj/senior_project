@@ -1,0 +1,11 @@
+{% block content %}
+
+<form method="POST" action="/">
+
+{{ getdataforgroupform.group_name.label }} {{ getdataforgroupform.group_name(size=20) }}
+
+<input class="btn btn-primary" type="submit" value="Go">
+
+</form>
+
+{% endblock %}
