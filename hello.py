@@ -59,10 +59,10 @@ class GetDataForGroupForm(FlaskForm):
 
 def read_csv_file(file):
     with open('uploads/' + file, newline='') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=',')
+        file_reader = csv.reader(csvfile, delimiter=',')
 
         testDict = {}
-        for row in spamreader:
+        for row in file_reader:
             # print(', '.join(row))
             # print(row)
             testDict[row[0]] = row[1]
