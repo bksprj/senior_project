@@ -31,10 +31,14 @@ if not overseer.find_one({"Admin":["yasiro01@luther.edu"]}):
     Overseer = {"Admin":["yasiro01@luther.edu"], "Standard":["ramibr01@luther.edu","husoke01@luther.edu","debrsa01@luther.edu"]}
     Overseer = overseer.insert_one(Overseer).inserted_id
 
-pprint.pprint(senior_project_group.find_one({"Admin":["debrsa01@luther.edu"]}))
+# pprint.pprint(senior_project_group.find_one({"Admin":["debrsa01@luther.edu"]}))
 
+db = client.group_data
+overseer = db.overseer
+overseer.insert_one({"Group Creation":"Completed"})
 
-
+senior_project_group = db.senior_project_group
+senior_project_group.insert_one({"Group Creation":"Completed"})
 
 
 
