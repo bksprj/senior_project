@@ -1,0 +1,2 @@
+- attach group_data creation upon group creation
+- check for admin, allow group deletion and member addition+deletion capabilities 

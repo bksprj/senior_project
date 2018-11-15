@@ -85,7 +85,7 @@ def index():
             print("We'll have to create the group")
             print("type of group_name is: ", type(otherform.group_name.data))
             new_group = db[otherform.group_name.data]
-            new_group.insert_one({"Senpai":[otherform.email.data], "Kouhai":[]})
+            new_group.insert_one({"Admin":[otherform.email.data], "Standard":[]})
             # Then we'll want to create a collection for that new group's data in the group_data database
             db = client.group_data
             new_group = db[otherform.group_name.data]
@@ -111,21 +111,26 @@ def index():
             return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
         else:
             print("Useremail to check is: ", useremail)
-            if useremail in group_collection.find_one()["Senpai"]:
-                print("You are a Senpai in the group")
+            if useremail in group_collection.find_one()["Admin"]:
+                print("You are a Admin in the group")
                 allowed_to_see_data = True
-            elif useremail in group_collection.find_one()["Kouhai"]:
-                print("You are a Kouhai in the group")
+            elif useremail in group_collection.find_one()["Standard"]:
+                print("You are a Standard in the group")
                 allowed_to_see_data = True
             else:
                 retrieve_data = "You are not a part of the group."
                 return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
 
         if allowed_to_see_data:
+            retrieve_data = []
             db = client.group_data
             group_collection = db[getdataforgroupform.group_name.data]
-            retrieve_data = group_collection.find_one()
-            del retrieve_data['_id']
+            info_list = []
+            # print(group_collection)
+            for item in group_collection.find():
+                retrieve_data.append(item)
+            # print("retrieve_data is: ", retrieve_data)
+            #del retrieve_data['_id']
             return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
         else:
             return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
@@ -163,11 +168,11 @@ def upload_file():
             return render_template('uploader.html')
         else:
             print("Useremail to check is: ", useremail)
-            if useremail in group_collection.find_one()["Senpai"]:
-                print("The user is a Senpai in the group")
+            if useremail in group_collection.find_one()["Admin"]:
+                print("The user is a Admin in the group")
                 allowed_to_add_data = True
-            elif useremail in group_collection.find_one()["Kouhai"]:
-                print("The user is a Kouhai in the group")
+            elif useremail in group_collection.find_one()["Standard"]:
+                print("The user is a Standard in the group")
                 allowed_to_add_data = True
             else:
                 print("The user is not a part of the group.")
@@ -225,13 +230,13 @@ def rank_check():
     # Now let's see if the user is in the group
     if group_dict[group].find_one():
         check_group = group_dict[group].find_one()
-        if email in check_group['Senpai']:
-            result = "You are a Senpai"
-        elif email in check_group['Kouhai']:
-            result = "You are a Kouhai"
-        elif email in check_group['Senpai'] and email in check_group['Kouhai']:
+        if email in check_group['Admin']:
+            result = "You are a Admin"
+        elif email in check_group['Standard']:
+            result = "You are a Standard"
+        elif email in check_group['Admin'] and email in check_group['Standard']:
             # We don't yet have a way to prevent names from being in both, so this'll be our reminder
-            result = "Somehow, you are both a senpai AND a kouhai. We should probably get that fixed."
+            result = "Somehow, you are both an Admin AND a Standard. We should probably get that fixed."
         else:
             result = "You are not registered in this group"
     else:
