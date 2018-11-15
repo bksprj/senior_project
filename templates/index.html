@@ -26,7 +26,11 @@
 			<h3 class="text-primary">Please input a group to see the data (if you are a member)</h3>
 			{% include 'includes/retrieve_data.html' %}
 			<h5 class="text-primary">Here is the data for the group that you have input</h5>
-			{{ retrieve_data }}
+			<ul id="navigation">
+	    {% for item in retrieve_data %}
+	        <li>{{ item }}</li>
+	    {% endfor %}
+	    </ul>
 
 		</div>
 	</div>
