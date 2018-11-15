@@ -121,10 +121,15 @@ def index():
                 return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
 
         if allowed_to_see_data:
+            retrieve_data = []
             db = client.group_data
             group_collection = db[getdataforgroupform.group_name.data]
-            retrieve_data = group_collection.find_one()
-            del retrieve_data['_id']
+            info_list = []
+            # print(group_collection)
+            for item in group_collection.find():
+                retrieve_data.append(item)
+            # print("retrieve_data is: ", retrieve_data)
+            #del retrieve_data['_id']
             return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
         else:
             return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
