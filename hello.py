@@ -63,10 +63,11 @@ def read_csv_file(file):
 
         testDict = {}
         for row in file_reader:
-            # print(', '.join(row))
             # print(row)
-            testDict[row[0]] = row[1]
-        print(testDict)
+            testDict[row[0]] = row[1:]
+        # print(testDict)
+        for key,value in testDict.items():
+            print(key,value)
         return testDict
 
 @app.route("/", methods=['GET', 'POST'])
