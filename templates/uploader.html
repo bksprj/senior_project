@@ -2,12 +2,12 @@
 
 {% block content %}
 
-<h4>Upload File Data</h4>
+<h4 class="text-primary">Upload File Data</h4>
 <form method=post enctype=multipart/form-data>
-  <p>What group would you like to insert data for?</p>
+  <p class="text-primary">What group would you like to insert data for?</p>
   <input type=text name=group_insert>
-  <p>Click browse to find the file to upload</p>
+  <p class="text-primary">Click browse to find the file to upload</p>
   <input type=file name=file>
-  <input type=submit value=Upload>
+  <input class="btn btn-primary" type=submit value=Upload>
 </form>
 {% endblock %}
