@@ -73,7 +73,7 @@ def read_csv_file(file):
 @app.route("/", methods=['GET', 'POST'])
 def index():
     global useremail
-    retrieve_data = "Not allowed to see this group's data"
+    retrieve_data = ["Not allowed to see this group's data"]
     # forms
     otherform = MyOtherForm()
     getdataforgroupform = GetDataForGroupForm()
@@ -107,7 +107,7 @@ def index():
         # Now, let's check to see if the person has the permission to add data
         group_collection = db[group_name]
         if useremail == "No user":
-            retrieve_data = "You need to be logged in."
+            retrieve_data = ["You need to be logged in."]
             return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
         else:
             print("Useremail to check is: ", useremail)
@@ -118,7 +118,7 @@ def index():
                 print("You are a Standard in the group")
                 allowed_to_see_data = True
             else:
-                retrieve_data = "You are not a part of the group."
+                retrieve_data = ["You are not a part of the group."]
                 return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
 
         if allowed_to_see_data:
@@ -128,6 +128,8 @@ def index():
             info_list = []
             # print(group_collection)
             for item in group_collection.find():
+                print("Item is: ", item, type(item))
+                del item["_id"]
                 retrieve_data.append(item)
             # print("retrieve_data is: ", retrieve_data)
             #del retrieve_data['_id']
