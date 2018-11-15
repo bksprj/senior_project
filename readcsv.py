@@ -1,6 +1,6 @@
 import csv
 
-with open('uploads/data_test.csv', newline='') as csvfile:
+with open('uploads/data_test.csv') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',')
 
     testDict = {}

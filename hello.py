@@ -58,16 +58,16 @@ class GetDataForGroupForm(FlaskForm):
     group_name = StringField('Group', validators=[DataRequired()])
 
 def read_csv_file(file):
-    with open('uploads/' + file, newline='') as csvfile:
+    with open('uploads/' + file) as csvfile:
         file_reader = csv.reader(csvfile, delimiter=',')
 
         testDict = {}
         for row in file_reader:
             # print(row)
             testDict[row[0]] = row[1:]
-        # print(testDict)
-        for key,value in testDict.items():
-            print(key,value)
+        print(testDict)
+        # for key,value in testDict.items():
+        #     print(key,value)
         return testDict
 
 @app.route("/", methods=['GET', 'POST'])
