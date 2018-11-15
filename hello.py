@@ -28,16 +28,6 @@ test_database = db.test_database
 useremail = "No user"
 
 
-# when you log in, we will get that email address here
-@app.route('/getemail', methods = ['POST'])
-def get_post_javascript_data():
-    jsdata = request.form['myData']
-    print(jsdata, "has logged in")
-    global useremail
-    useremail = jsdata
-    return jsdata
-
-
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
@@ -50,6 +40,12 @@ class MyOtherForm(FlaskForm):
         locales = ('en_US', 'en')
     group_name = StringField('Team', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
+
+class GroupDeletionForm(FlaskForm):
+    class Meta:
+        csrf = False
+        locales = ('en_US', 'en')
+    group_name_delete = StringField('Team', validators=[DataRequired()])
 
 class GetDataForGroupForm(FlaskForm):
     class Meta:
@@ -66,17 +62,27 @@ def read_csv_file(file):
             # print(row)
             testDict[row[0]] = row[1:]
         print(testDict)
-        # for key,value in testDict.items():
-        #     print(key,value)
         return testDict
+
+# when you log in, we will get that email address here
+@app.route('/getemail', methods = ['POST'])
+def get_post_javascript_data():
+    jsdata = request.form['myData']
+    print(jsdata, "has logged in")
+    global useremail
+    useremail = jsdata
+    return jsdata
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
     global useremail
     retrieve_data = ["Not allowed to see this group's data"]
+    admin = False
     # forms
     otherform = MyOtherForm()
     getdataforgroupform = GetDataForGroupForm()
+    group_deletion_form = GroupDeletionForm()
+    # let's create a group
     if otherform.validate_on_submit():
         db = client.groups
         names = db.list_collection_names()
@@ -93,6 +99,8 @@ def index():
         else:
             print("That team already exists!")
         return redirect('/')
+
+    # let's get data from the group
     elif getdataforgroupform.validate_on_submit():
         # first, let's check for permissions
         allowed_to_see_data = False  # start off as False
@@ -100,7 +108,8 @@ def index():
         names = db.list_collection_names()
         group_name = getdataforgroupform.group_name.data
         if group_name not in names:
-            retrieve_data = "The group: ", group_name, "doesn't exist."
+            retrieve_data = ["The group: " + group_name + " does not exist."]
+            return render_template('index.html', otherform=otherform, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
         else:
             print("Group exists, moving on to the next check.")
         # Okay, so the group exists
@@ -108,35 +117,80 @@ def index():
         group_collection = db[group_name]
         if useremail == "No user":
             retrieve_data = ["You need to be logged in."]
-            return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
+            return render_template('index.html', otherform=otherform, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
         else:
             print("Useremail to check is: ", useremail)
             if useremail in group_collection.find_one()["Admin"]:
-                print("You are a Admin in the group")
+                print("You are an Admin in the group")
                 allowed_to_see_data = True
+                admin = True
             elif useremail in group_collection.find_one()["Standard"]:
                 print("You are a Standard in the group")
                 allowed_to_see_data = True
             else:
                 retrieve_data = ["You are not a part of the group."]
-                return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
-
+                return render_template('index.html', otherform=otherform, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data, admin=admin)
         if allowed_to_see_data:
             retrieve_data = []
             db = client.group_data
             group_collection = db[getdataforgroupform.group_name.data]
             info_list = []
             # print(group_collection)
+            count = 0
             for item in group_collection.find():
-                print("Item is: ", item, type(item))
+                count += 1
+                # print("Item is: ", item, type(item))
                 del item["_id"]
                 retrieve_data.append(item)
-            # print("retrieve_data is: ", retrieve_data)
-            #del retrieve_data['_id']
-            return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
+            if count == 0:
+                retrieve_data = ["There are no data documents in this group"]
+            return render_template('index.html', otherform=otherform, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data,admin=admin)
         else:
-            return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
-    return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform)
+            return render_template('index.html', otherform=otherform, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data,admin=admin)
+    # admin group deletion
+    elif group_deletion_form.validate_on_submit():
+            db_groups = client.groups
+            db_group_data = client.group_data
+            group_name_delete = group_deletion_form.group_name_delete.data
+            db_groups_collection = db_groups[group_name_delete]
+            db_group_data_collection = db_group_data[group_name_delete]
+
+            allowed_to_see_data = False  # start off as False
+            names = db_groups.list_collection_names()
+            if group_name_delete not in names:
+                retrieve_data = ["The group: " + group_name_delete + " doesn't exist."]
+                return render_template('index.html', otherform=otherform, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
+            else:
+                print("Group exists, moving on to the next check.")
+            # Okay, so the group exists
+            # Now, let's check to see if the person has the permission to add data
+            if useremail == "No user":
+                retrieve_data = ["You need to be logged in."]
+                return render_template('index.html', otherform=otherform, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
+            else:
+                print("Useremail to check is: ", useremail)
+                # try:
+                if useremail in db_groups_collection.find_one()["Admin"]:
+                    print("You are an Admin in the group")
+                    allowed_to_see_data = True
+                    admin = True
+                elif useremail in db_groups_collection.find_one()["Standard"]:
+                    print("You are a Standard in the group")
+                    allowed_to_see_data = True
+                else:
+                    retrieve_data = ["You are not a part of the group."]
+                    return render_template('index.html', otherform=otherform, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data, admin=admin)
+                # except:
+                #     retrieve_data = "The group: ", group_name_delete, "doesn't exist."
+
+            print("Attempting to delete")
+            # drop that group!
+            drop1 = db_groups_collection.drop()
+            drop2 = db_group_data_collection.drop()
+            print("Well, let's hope it worked", drop1, drop2)
+
+
+    return render_template('index.html', otherform=otherform, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data, admin=admin)
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
@@ -171,7 +225,7 @@ def upload_file():
         else:
             print("Useremail to check is: ", useremail)
             if useremail in group_collection.find_one()["Admin"]:
-                print("The user is a Admin in the group")
+                print("The user is an Admin in the group")
                 allowed_to_add_data = True
             elif useremail in group_collection.find_one()["Standard"]:
                 print("The user is a Standard in the group")
@@ -233,7 +287,7 @@ def rank_check():
     if group_dict[group].find_one():
         check_group = group_dict[group].find_one()
         if email in check_group['Admin']:
-            result = "You are a Admin"
+            result = "You are an Admin"
         elif email in check_group['Standard']:
             result = "You are a Standard"
         elif email in check_group['Admin'] and email in check_group['Standard']:
