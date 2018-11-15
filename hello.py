@@ -127,6 +127,8 @@ def index():
             info_list = []
             # print(group_collection)
             for item in group_collection.find():
+                print("Item is: ", item, type(item))
+                del item["_id"]
                 retrieve_data.append(item)
             # print("retrieve_data is: ", retrieve_data)
             #del retrieve_data['_id']
