@@ -14,27 +14,27 @@
 
 		<div>
 			<a class="text-primary" onclick="on()">Form a Team</a>
+			<div id="overlay" style="float:left;">
+				{% include 'includes/mkgroup.html' %}
+			</div>
 		</div>
 
-		<div id="overlay" style="float:left;">
-			{% include 'includes/mkgroup.html' %}
-		</div>
 		<div class="data">
 			<a href="/uploader">Upload</a>
 			<h3 class="text-primary">Please input a group to see the data (if you are a member)</h3>
 			{% include 'includes/retrieve_data.html' %}
 			{% if admin %}
 			<div>
-				<p>You are an admin, which means you may delete the group</p>
+				<p class="text-primary">You are an admin, which means you may delete the group</p>
 				{% include 'includes/drop_collection.html' %}
 			</div>
 			{% endif %}
 			<h5 class="text-primary">Here is the data for the group that you have input</h5>
 			<ul id="navigation">
-	    {% for item in retrieve_data %}
-	        <li>{{ item }}</li>
-	    {% endfor %}
-	    </ul>
+	    		{% for item in retrieve_data %}
+	        		<li class="text-primary">{{ item }}</li>
+	    		{% endfor %}
+	    	</ul>
 
 		</div>
 	</div>

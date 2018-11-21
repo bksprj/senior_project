@@ -30,10 +30,12 @@ function signOut() {
 	})
 }
 
+// Overlay function to turn on
 function on() {
 	document.getElementById("overlay").style.display = "block";
 }
 
+// Overlay function to turn off
 function off() {
 	document.getElementById("overlay").style.display = "none";
 }
