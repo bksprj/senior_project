@@ -21,7 +21,7 @@
 
 		<div class="data">
 			<a href="/uploader">Upload</a>
-			<h3 class="text-primary">Please input a group to see the data (if you are a member)</h3>
+			<h3 class="text-muted">Please input a group to see the data (if you are a member)</h3>
 			{% include 'includes/retrieve_data.html' %}
 			{% if admin %}
 			<div>
@@ -32,7 +32,7 @@
 			<h5 class="text-primary">Here is the data for the group that you have input</h5>
 			<ul id="navigation">
 	    		{% for item in retrieve_data %}
-	        		<li class="text-secondary">{{ item }}</li>
+	        		<li class="text-muted">{{ item }}</li>
 	    		{% endfor %}
 	    	</ul>
 
