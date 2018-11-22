@@ -36,6 +36,15 @@
 	    {% endfor %}
 	    </ul>
 
+			<!-- membership_list data -->
+			<br />
+			<h5 class="text-primary">Here are the groups you are a part of</h5>
+			<ul id="navigation">
+	    {% for item in membership_list %}
+	        <li>{{ item }}</li>
+	    {% endfor %}
+	    </ul>
+
 		</div>
 	</div>
 
