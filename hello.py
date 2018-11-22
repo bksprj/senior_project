@@ -66,21 +66,29 @@ def read_csv_file(file):
         return testDict
 
 def list_user_groups(email:str) -> list:
-    membership_list = []  # holds all the groups that the user is a member of
+    membership_list = ["You are not a part of any group"]  # holds all the groups that the user is a member of
     db = client.groups
     groups = db.list_collection_names()
     checkgroup = "We'll use this variable to have a shorter if statement in the loop"
+    existing_membership = False  # if false, then the user is not in any group
+                                 # we revert to the default list, if so
     for group_name in groups:
         checkgroup = db[group_name].find_one()
         print("group_name", group_name, "checkgroup", checkgroup, type(checkgroup))
         if email in checkgroup["Admin"]:
             print("Admin in", group_name)
             membership_list.append("Admin in " + str(group_name))
+            existing_membership = True
         elif email in checkgroup["Standard"]:
             print("Standard in", group_name)
             membership_list.append("Standard in " + str(group_name))
+            existing_membership = True
         else:
             print("User not in", group_name)
+    if not existing_membership:
+        membership_list = ["You are not a part of any group"]
+    else:
+        membership_list = membership_list[1:]
     return membership_list
 
 
