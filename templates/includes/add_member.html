@@ -1,12 +1,12 @@
-﻿{% block content %}
+{% block content %}
 
 	<form method="POST" action="/">
 		<h4 class="text-primary">Form a Team</h4>
 
 		<br>
-	    {{ create_group_form.group_name.label }} {{ create_group_form.group_name(size=20) }}
+	    {{ add_member_form.group_name.label }} {{ add_member_form.group_name(size=20) }}
 		<br>
-	    {{ create_group_form.email.label }} {{ create_group_form.email(size=20) }}
+	    {{ add_member_form.member_input.label }} {{ add_member_form.member_input(size=70) }}
 		<br>
 
 	    <input class="btn btn-primary" type="submit" value="Go">
