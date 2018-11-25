@@ -120,17 +120,15 @@ def create_group(new_group_name:str, admin_email:str):
     else:
         print("That team already exists!")
 
-def get_data(group_name:str) -> list:
-    # returns a list
-
+def get_data(group_name:str):
     # first, let's check for permissions
     allowed_to_see_data = False  # start off as False
+    admin = False
     db = client.groups
     names = db.list_collection_names()
     if group_name not in names:
         # retrieve_data = ["The group: " + group_name + " does not exist."]
-        return ["The group: " + group_name + " does not exist."]
-        # return render_template('index.html', membership_list=membership_list, create_group_formcreate_group_formcreate_group_formcreate_group_form=create_group_formcreate_group_formcreate_group_form, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
+        return [["The group: " + group_name + " does not exist."], admin]
     else:
         print("Group exists, moving on to the next check.")
 
@@ -139,8 +137,7 @@ def get_data(group_name:str) -> list:
     group_collection = db[group_name]
     if useremail == "No user":
         # retrieve_data = ["You need to be logged in."]
-        return ["You need to be logged in."]
-        # return render_template('index.html', membership_list=membership_list, create_group_formcreate_group_form=create_group_form, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
+        return [["You need to be logged in."], admin]
     else:
         # this is to determine the rank, in case different actions are allowed
         print("Useremail to check is: ", useremail)
@@ -153,7 +150,6 @@ def get_data(group_name:str) -> list:
             allowed_to_see_data = True
         else:
             retrieve_data = ["You are not a part of the group."]
-            # return render_template('index.html', membership_list=membership_list, create_group_form=create_group_form, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data, admin=admin)
     if allowed_to_see_data:
         retrieve_data = []
         db = client.group_data
@@ -168,16 +164,50 @@ def get_data(group_name:str) -> list:
             retrieve_data.append(item)
         if count == 0:
             retrieve_data = ["There are no data documents in this group"]
+    return [retrieve_data, admin]
 
-    return retrieve_data
+def delete_group(group_name_delete:str) -> list:
+    db_groups = client.groups
+    db_group_data = client.group_data
+    db_groups_collection = db_groups[group_name_delete]
+    db_group_data_collection = db_group_data[group_name_delete]
 
-    #     return render_template('index.html', membership_list=membership_list, create_group_form=create_group_form, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data,admin=admin)
-    # else:
-    #     return render_template('index.html', membership_list=membership_list, create_group_form=create_group_form, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data,admin=admin)
+    allowed_to_see_data = False  # start off as False
+    # Does the group exist?
+    names = db_groups.list_collection_names()
+    if group_name_delete not in names:
+        server_message = ["The group: " + group_name_delete + " doesn't exist."]
+        return server_message
+    else:
+        print("Group exists, moving on to the next check.")
+
+    # Okay, so the group exists
+    # Now, let's check to see if the person has the permission to add data
+    if useremail == "No user":
+        server_message = ["You need to be logged in."]
+        return server_message
+    else:
+        print("Useremail to check is: ", useremail)
+        if useremail in db_groups_collection.find_one()["Admin"]:
+            print("You are an Admin in the group")
+            allowed_to_see_data = True
+            admin = True
+        elif useremail in db_groups_collection.find_one()["Standard"]:
+            print("You are a Standard in the group")
+            allowed_to_see_data = True
+        else:
+            server_message = ["You are not a part of the group."]
+            return server_message
+    print("Attempting to delete")
+    # drop the group
+    drop1 = db_groups_collection.drop()
+    drop2 = db_group_data_collection.drop()
+    print("Well, let's hope it worked", drop1, drop2)
+    server_message = ["Group '" + str(group_name_delete) + "' has been deleted"]
+    return server_message
 
 #===============================================================================
 # Routes
-
 
 # when you log in, we will get that email address here
 @app.route('/getemail', methods = ['POST'])
@@ -195,7 +225,7 @@ def get_post_javascript_data():
 def index():
     global useremail
     global membership_list
-    retrieve_data = ["Not allowed to see this group's data"]
+    response = ["Not allowed to see this group's data"]
     admin = False
 
     # forms
@@ -213,49 +243,16 @@ def index():
     # let's get data from the group
     elif getdataforgroupform.validate_on_submit():
         group_name = getdataforgroupform.group_name.data
-        retrieve_data = get_data(group_name)
+        response, admin = get_data(group_name)
 
     # admin group deletion
     elif group_deletion_form.validate_on_submit():
-            db_groups = client.groups
-            db_group_data = client.group_data
-            group_name_delete = group_deletion_form.group_name_delete.data
-            db_groups_collection = db_groups[group_name_delete]
-            db_group_data_collection = db_group_data[group_name_delete]
+        group_name_delete = group_deletion_form.group_name_delete.data
+        response = delete_group(group_name_delete)
 
-            allowed_to_see_data = False  # start off as False
-            names = db_groups.list_collection_names()
-            if group_name_delete not in names:
-                retrieve_data = ["The group: " + group_name_delete + " doesn't exist."]
-                return render_template('index.html', membership_list=membership_list, create_group_form=create_group_form, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
-            else:
-                print("Group exists, moving on to the next check.")
-            # Okay, so the group exists
-            # Now, let's check to see if the person has the permission to add data
-            if useremail == "No user":
-                retrieve_data = ["You need to be logged in."]
-                return render_template('index.html', membership_list=membership_list, create_group_form=create_group_form, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
-            else:
-                print("Useremail to check is: ", useremail)
-                # try:
-                if useremail in db_groups_collection.find_one()["Admin"]:
-                    print("You are an Admin in the group")
-                    allowed_to_see_data = True
-                    admin = True
-                elif useremail in db_groups_collection.find_one()["Standard"]:
-                    print("You are a Standard in the group")
-                    allowed_to_see_data = True
-                else:
-                    retrieve_data = ["You are not a part of the group."]
-                    return render_template('index.html', membership_list=membership_list, create_group_form=create_group_form, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data, admin=admin)
-                # except:
-                #     retrieve_data = "The group: ", group_name_delete, "doesn't exist."
-            print("Attempting to delete")
-            # drop that group!
-            drop1 = db_groups_collection.drop()
-            drop2 = db_group_data_collection.drop()
-            print("Well, let's hope it worked", drop1, drop2)
-    return render_template('index.html', membership_list=membership_list, create_group_form=create_group_form, group_deletion_form=group_deletion_form, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data, admin=admin)
+    return render_template('index.html',membership_list=membership_list, \
+        create_group_form=create_group_form, group_deletion_form=group_deletion_form, \
+        getdataforgroupform=getdataforgroupform, response=response, admin=admin)
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
