@@ -11,6 +11,9 @@ from wtforms import StringField
 from wtforms.validators import DataRequired
 import csv
 
+#===============================================================================
+# Global variables and setup
+
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'xml', 'csv'])
 
@@ -28,7 +31,8 @@ test_database = db.test_database
 useremail = "No user"
 membership_list = ["Not a part of any groups"]
 
-
+#===============================================================================
+# Class definitions
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
@@ -54,6 +58,8 @@ class GetDataForGroupForm(FlaskForm):
         locales = ('en_US', 'en')
     group_name = StringField('Group', validators=[DataRequired()])
 
+#===============================================================================
+# Global functions
 def read_csv_file(file):
     with open('uploads/' + file) as csvfile:
         file_reader = csv.reader(csvfile, delimiter=',')
@@ -91,6 +97,24 @@ def list_user_groups(email:str) -> list:
         membership_list = membership_list[1:]
     return membership_list
 
+def create_group(new_group_name:str, admin_email:str):
+    db = client.groups
+    listed_group_names = db.list_collection_names()
+    if new_group_name not in listed_group_names:
+        # We'll want to create the group in the groups database
+        print("Let's create the group")
+        new_group = db[new_group_name]
+        new_group.insert_one({"Admin":[admin_email], "Standard":[]})
+        # Then we'll want to create a collection for that new group's data in the group_data database
+        db = client.group_data
+        new_group = db[new_group_name]
+        new_group.insert_one({"Group creation":"Completed"})
+    else:
+        print("That team already exists!")
+
+#===============================================================================
+# Routes
+
 
 # when you log in, we will get that email address here
 @app.route('/getemail', methods = ['POST'])
@@ -103,6 +127,7 @@ def get_post_javascript_data():
     membership_list = list_user_groups(useremail)
     return jsdata
 
+# index page
 @app.route("/", methods=['GET', 'POST'])
 def index():
     global useremail
@@ -114,23 +139,12 @@ def index():
     otherform = MyOtherForm()
     getdataforgroupform = GetDataForGroupForm()
     group_deletion_form = GroupDeletionForm()
+
     # let's create a group
     if otherform.validate_on_submit():
-        db = client.groups
-        names = db.list_collection_names()
-        if otherform.group_name.data not in names:
-            # We'll want to create the group in the groups database
-            print("We'll have to create the group")
-            print("type of group_name is: ", type(otherform.group_name.data))
-            new_group = db[otherform.group_name.data]
-            new_group.insert_one({"Admin":[otherform.email.data], "Standard":[]})
-            # Then we'll want to create a collection for that new group's data in the group_data database
-            db = client.group_data
-            new_group = db[otherform.group_name.data]
-            new_group.insert_one({"Group creation":"Completed"})
-        else:
-            print("That team already exists!")
-        return redirect('/')
+        input_name = otherform.group_name.data
+        input_email = otherform.email.data
+        create_group(input_name, input_email)
 
     # let's get data from the group
     elif getdataforgroupform.validate_on_submit():
