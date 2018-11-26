@@ -1,15 +1,13 @@
 {% block content %}
 
 	<form method="POST" action="/">
-		<h4 class="text-primary">Form a Team</h4>
-
+		<p class="text-primary">You are an admin, which means you may add members the group</p>
+		<p>The notation to use would be: "Rank:email,email|Rank:email,email"</p>
+    {{ add_member_form.group_name.label }} {{ add_member_form.group_name(size=20) }}
 		<br>
-	    {{ add_member_form.group_name.label }} {{ add_member_form.group_name(size=20) }}
+    {{ add_member_form.member_input.label }} {{ add_member_form.member_input(size=100) }}
 		<br>
-	    {{ add_member_form.member_input.label }} {{ add_member_form.member_input(size=70) }}
-		<br>
-
-	    <input class="btn btn-primary" type="submit" value="Go">
+	    <input class="btn btn-primary" type="submit" value="Add">
 		<a class="text-primary" onclick="off()">Cancel</a>
 	</form>
 

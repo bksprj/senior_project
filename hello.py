@@ -33,6 +33,7 @@ membership_list = ["Not a part of any groups"]
 
 #===============================================================================
 # Class definitions
+
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
@@ -58,7 +59,7 @@ class GetDataForGroupForm(FlaskForm):
         locales = ('en_US', 'en')
     group_name = StringField('Group', validators=[DataRequired()])
 
-class AddNewMember(FlaskForm):
+class AddNewMemberForm(FlaskForm):
     class Meta:
         csrf = False
         locales = ('en_US', 'en')
@@ -68,6 +69,7 @@ class AddNewMember(FlaskForm):
 
 #===============================================================================
 # Global functions
+
 def read_csv_file(file):
     with open('uploads/' + file) as csvfile:
         file_reader = csv.reader(csvfile, delimiter=',')
@@ -88,7 +90,7 @@ def list_user_groups(email:str) -> list:
                                  # we revert to the default list, if so
     for group_name in groups:
         checkgroup = db[group_name].find_one()
-        print("group_name", group_name, "checkgroup", checkgroup, type(checkgroup))
+        # print("group_name", group_name, "checkgroup", checkgroup, type(checkgroup))
         if email in checkgroup["Admin"]:
             print("Admin in", group_name)
             membership_list.append("Admin in " + str(group_name))
@@ -132,6 +134,7 @@ def get_data(group_name:str):
     else:
         print("Group exists, moving on to the next check.")
 
+
     # Okay, so the group exists
     # Now, let's check to see if the person has the permission to add data
     group_collection = db[group_name]
@@ -159,7 +162,6 @@ def get_data(group_name:str):
         count = 0
         for item in group_collection.find():
             count += 1
-            # print("Item is: ", item, type(item))
             del item["_id"]
             retrieve_data.append(item)
         if count == 0:
@@ -206,6 +208,60 @@ def delete_group(group_name_delete:str) -> list:
     server_message = ["Group '" + str(group_name_delete) + "' has been deleted"]
     return server_message
 
+def get_members(group_name:str) -> list:
+    returnval = []
+    db = client.groups
+    names = db.list_collection_names()
+    if group_name not in names:
+        return [f"The group {group_name} does not exist"]
+    query_group = db[group_name]
+    member_data = query_group.find_one()
+    # print(member_data)
+    for rank,user in member_data.items():
+        if rank == "Standard" and len(user) == 0:
+            returnval.append([rank,["There are no standard users"]])
+        else:
+            returnval.append([rank,user])
+    return returnval[1:]
+
+def add_new_members(group_name:str, member_input:str):
+    def get_members_list(update_string):
+        # Rank:email,email
+        return [update_string.split(":")[1]]
+    print("Let's try to add the members!")
+    db = client.groups
+    names = db.list_collection_names()
+    if group_name not in names:
+        return [f"The group {group_name} does not exist"]
+    query_group = db[group_name]
+    prev_member_data = query_group.find_one()  # here's the object to update
+    prev_id_data = prev_member_data["_id"]
+    prev_admin = prev_member_data["Admin"]
+    prev_standard = prev_member_data["Standard"]
+    # next, let's get the update data
+    # At the moment, the format is: "Rank:email,email|Rank:email,email"
+    member_input = member_input.strip(" ")  # in case of spaces
+    member_input = member_input.split("|") # separate ranks
+
+    admin_update = member_input[0]
+    admin_update = get_members_list(admin_update)
+
+    standard_update = member_input[1]
+    standard_update = get_members_list(standard_update)
+    # let's just make the update dictionary quickly
+    new_member_data = {"_id":prev_id_data, "Admin":prev_admin+admin_update, "Standard":prev_standard+standard_update}
+
+    print(prev_member_data)
+    print(new_member_data)
+
+    # now let's update
+    print("First:",query_group.find_one())
+    query_group.replace_one(prev_member_data, new_member_data)
+    print("Then:", query_group.find_one())
+    print("End\n")
+    print("Did the members get added?")
+
+
 #===============================================================================
 # Routes
 
@@ -227,12 +283,13 @@ def index():
     global membership_list
     response = ["Not allowed to see this group's data"]
     admin = False
+    members = ["No members"]
 
     # forms
     create_group_form = CreateGroup()
     getdataforgroupform = GetDataForGroupForm()
     group_deletion_form = GroupDeletionForm()
-    add_member_form = AddNewMember()
+    add_member_form = AddNewMemberForm()
 
     # let's create a group
     if create_group_form.validate_on_submit():
@@ -240,19 +297,35 @@ def index():
         input_email = create_group_form.email.data
         create_group(input_name, input_email)
 
+    elif add_member_form.validate_on_submit():
+        print("\n*******************************************")
+        group_name = add_member_form.group_name.data
+        new_members = add_member_form.member_input.data
+        add_new_members(group_name, new_members)
+        members = get_members(group_name)
+
     # let's get data from the group
     elif getdataforgroupform.validate_on_submit():
         group_name = getdataforgroupform.group_name.data
         response, admin = get_data(group_name)
+        # I suppose we can show members too, when we grab data.
+        # We'll probably want to make this more like "show group details"
+        # rather than just getting data.
+        # members = [admin, standard]
+        members = get_members(group_name)
+        if len(members) == 1:
+            print("There was a problem getting the member data")
+        # print("Members are: ", members)
 
     # admin group deletion
     elif group_deletion_form.validate_on_submit():
         group_name_delete = group_deletion_form.group_name_delete.data
         response = delete_group(group_name_delete)
 
-    return render_template('index.html',membership_list=membership_list, \
-        create_group_form=create_group_form, group_deletion_form=group_deletion_form, \
-        getdataforgroupform=getdataforgroupform, response=response, admin=admin)
+    return render_template('index.html', membership_list=membership_list, \
+        create_group_form=create_group_form, add_member_form=add_member_form, group_deletion_form=group_deletion_form, \
+        getdataforgroupform=getdataforgroupform, response=response, admin=admin, \
+        members=members)
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
