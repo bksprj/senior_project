@@ -276,13 +276,9 @@ def get_post_javascript_data():
     membership_list = list_user_groups(useremail)
     return jsdata
 
-# landing page
-@app.route("/land")
-def landing():
-    return render_template('landing.html')
 
 # index page
-@app.route("/dash", methods=['GET', 'POST'])
+@app.route("/", methods=['GET', 'POST'])
 def index():
     global useremail
     global membership_list
