@@ -11,6 +11,11 @@
   <div class="data" style="float:left;">
 		<h4 class="text-primary">Teams</h4>
 		<!-- List of teams goes here. -->
+		<div id="navigation">
+	    	{% for item in membership_list %}
+	        <p class="text-secondary">{{ item }}</p>
+	    	{% endfor %}
+	    </div>
 
 		<div>
 			<a class="text-primary" onclick="on()">Form a Team</a>
@@ -41,22 +46,13 @@
 	    		{% for item in response %}
 	        		<li class="text-muted">{{ item }}</li>
 	    		{% endfor %}
-	    </ul>
+	    	</ul>
 			<h5 class="text-primary">The members of the group are:</h5>
 			<ul id="navigation">
 	    		{% for ranks_users in members %}
 	        		<li class="text-muted">{{ ranks_users }}</li>
 	    		{% endfor %}
-	    </ul>
-
-			<!-- membership_list data -->
-			<br />
-			<h5 class="text-primary">Here are the groups you are a part of</h5>
-			<ul id="navigation">
-	    {% for item in membership_list %}
-	        <li>{{ item }}</li>
-	    {% endfor %}
-	    </ul>
+	    	</ul>
 
 		</div>
 	</div>
