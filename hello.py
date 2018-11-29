@@ -11,6 +11,9 @@ from wtforms import StringField
 from wtforms.validators import DataRequired
 import csv
 
+#===============================================================================
+# Global variables and setup
+
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'xml', 'csv'])
 
@@ -26,17 +29,10 @@ db = client.test_database
 test_database = db.test_database
 
 useremail = "No user"
+membership_list = ["Not a part of any groups"]
 
-
-# when you log in, we will get that email address here
-@app.route('/getemail', methods = ['POST'])
-def get_post_javascript_data():
-    jsdata = request.form['myData']
-    print(jsdata, "has logged in")
-    global useremail
-    useremail = jsdata
-    return jsdata
-
+#===============================================================================
+# Class definitions
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
@@ -44,18 +40,35 @@ class JSONEncoder(json.JSONEncoder):
             return str(o)
         return json.JSONEncoder.default(self, o)
 
-class MyOtherForm(FlaskForm):
+class CreateGroup(FlaskForm):
     class Meta:
         csrf = False
         locales = ('en_US', 'en')
     group_name = StringField('Team', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
 
+class GroupDeletionForm(FlaskForm):
+    class Meta:
+        csrf = False
+        locales = ('en_US', 'en')
+    group_name_delete = StringField('Team', validators=[DataRequired()])
+
 class GetDataForGroupForm(FlaskForm):
     class Meta:
         csrf = False
         locales = ('en_US', 'en')
     group_name = StringField('Group', validators=[DataRequired()])
+
+class AddNewMemberForm(FlaskForm):
+    class Meta:
+        csrf = False
+        locales = ('en_US', 'en')
+    group_name = StringField('Group', validators=[DataRequired()])
+    member_input = StringField("New Members", validators=[DataRequired()])
+
+
+#===============================================================================
+# Global functions
 
 def read_csv_file(file):
     with open('uploads/' + file, newline='') as csvfile:
@@ -66,77 +79,259 @@ def read_csv_file(file):
             # print(row)
             testDict[row[0]] = row[1:]
         print(testDict)
+<<<<<<< HEAD
         for key,value in testDict.items():
             print(key,value)
+=======
+>>>>>>> 4980a160ecc384f9604ee0f6270a3816860f10bb
         return testDict
 
+def list_user_groups(email:str) -> list:
+    membership_list = ["You are not a part of any group"]  # holds all the groups that the user is a member of
+    db = client.groups
+    groups = db.list_collection_names()
+    checkgroup = "We'll use this variable to have a shorter if statement in the loop"
+    existing_membership = False  # if false, then the user is not in any group
+                                 # we revert to the default list, if so
+    for group_name in groups:
+        checkgroup = db[group_name].find_one()
+        # print("group_name", group_name, "checkgroup", checkgroup, type(checkgroup))
+        if email in checkgroup["Admin"]:
+            print("Admin in", group_name)
+            membership_list.append("Admin in " + str(group_name))
+            existing_membership = True
+        elif email in checkgroup["Standard"]:
+            print("Standard in", group_name)
+            membership_list.append("Standard in " + str(group_name))
+            existing_membership = True
+        else:
+            print("User not in", group_name)
+    if not existing_membership:
+        membership_list = ["You are not a part of any group"]
+    else:
+        membership_list = membership_list[1:]
+    return membership_list
+
+def create_group(new_group_name:str, admin_email:str):
+    db = client.groups
+    listed_group_names = db.list_collection_names()
+    if new_group_name not in listed_group_names:
+        # We'll want to create the group in the groups database
+        # print("Let's create the group")
+        new_group = db[new_group_name]
+        new_group.insert_one({"Admin":[admin_email], "Standard":[]})
+        # Then we'll want to create a collection for that new group's data in the group_data database
+        db = client.group_data
+        new_group = db[new_group_name]
+        new_group.insert_one({"Group creation":"Completed"})
+    else:
+        print("That team already exists!")
+
+def get_data(group_name:str):
+    # first, let's check for permissions
+    allowed_to_see_data = False  # start off as False
+    admin = False
+    db = client.groups
+    names = db.list_collection_names()
+    if group_name not in names:
+        # retrieve_data = ["The group: " + group_name + " does not exist."]
+        return [["The group: " + group_name + " does not exist."], admin]
+    else:
+        print("Group exists, moving on to the next check.")
+
+
+    # Okay, so the group exists
+    # Now, let's check to see if the person has the permission to add data
+    group_collection = db[group_name]
+    if useremail == "No user":
+        # retrieve_data = ["You need to be logged in."]
+        return [["You need to be logged in."], admin]
+    else:
+        # this is to determine the rank, in case different actions are allowed
+        print("Useremail to check is: ", useremail)
+        if useremail in group_collection.find_one()["Admin"]:
+            print("You are an Admin in the group")
+            allowed_to_see_data = True
+            admin = True
+        elif useremail in group_collection.find_one()["Standard"]:
+            print("You are a Standard in the group")
+            allowed_to_see_data = True
+        else:
+            retrieve_data = ["You are not a part of the group."]
+    if allowed_to_see_data:
+        retrieve_data = []
+        db = client.group_data
+        group_collection = db[group_name]
+        info_list = []
+        # print(group_collection)
+        count = 0
+        for item in group_collection.find():
+            count += 1
+            del item["_id"]
+            retrieve_data.append(item)
+        if count == 0:
+            retrieve_data = ["There are no data documents in this group"]
+    return [retrieve_data, admin]
+
+def delete_group(group_name_delete:str) -> list:
+    db_groups = client.groups
+    db_group_data = client.group_data
+    db_groups_collection = db_groups[group_name_delete]
+    db_group_data_collection = db_group_data[group_name_delete]
+
+    allowed_to_see_data = False  # start off as False
+    # Does the group exist?
+    names = db_groups.list_collection_names()
+    if group_name_delete not in names:
+        server_message = ["The group: " + group_name_delete + " doesn't exist."]
+        return server_message
+    else:
+        print("Group exists, moving on to the next check.")
+
+    # Okay, so the group exists
+    # Now, let's check to see if the person has the permission to add data
+    if useremail == "No user":
+        server_message = ["You need to be logged in."]
+        return server_message
+    else:
+        print("Useremail to check is: ", useremail)
+        if useremail in db_groups_collection.find_one()["Admin"]:
+            print("You are an Admin in the group")
+            allowed_to_see_data = True
+            admin = True
+        elif useremail in db_groups_collection.find_one()["Standard"]:
+            print("You are a Standard in the group")
+            allowed_to_see_data = True
+        else:
+            server_message = ["You are not a part of the group."]
+            return server_message
+    print("Attempting to delete")
+    # drop the group
+    drop1 = db_groups_collection.drop()
+    drop2 = db_group_data_collection.drop()
+    print("Well, let's hope it worked", drop1, drop2)
+    server_message = ["Group '" + str(group_name_delete) + "' has been deleted"]
+    return server_message
+
+def get_members(group_name:str) -> list:
+    returnval = []
+    db = client.groups
+    names = db.list_collection_names()
+    if group_name not in names:
+        return [f"The group {group_name} does not exist"]
+    query_group = db[group_name]
+    member_data = query_group.find_one()
+    # print(member_data)
+    for rank,user in member_data.items():
+        if rank == "Standard" and len(user) == 0:
+            returnval.append([rank,["There are no standard users"]])
+        else:
+            returnval.append([rank,user])
+    return returnval[1:]
+
+def add_new_members(group_name:str, member_input:str):
+    def get_members_list(update_string):
+        # Rank:email,email
+        return [update_string.split(":")[1]]
+    print("Let's try to add the members!")
+    db = client.groups
+    names = db.list_collection_names()
+    if group_name not in names:
+        return [f"The group {group_name} does not exist"]
+    query_group = db[group_name]
+    prev_member_data = query_group.find_one()  # here's the object to update
+    prev_id_data = prev_member_data["_id"]
+    prev_admin = prev_member_data["Admin"]
+    prev_standard = prev_member_data["Standard"]
+    # next, let's get the update data
+    # At the moment, the format is: "Rank:email,email|Rank:email,email"
+    member_input = member_input.strip(" ")  # in case of spaces
+    member_input = member_input.split("|") # separate ranks
+
+    admin_update = member_input[0]
+    admin_update = get_members_list(admin_update)
+
+    standard_update = member_input[1]
+    standard_update = get_members_list(standard_update)
+    # let's just make the update dictionary quickly
+    new_member_data = {"_id":prev_id_data, "Admin":prev_admin+admin_update, "Standard":prev_standard+standard_update}
+
+    print(prev_member_data)
+    print(new_member_data)
+
+    # now let's update
+    print("First:",query_group.find_one())
+    query_group.replace_one(prev_member_data, new_member_data)
+    print("Then:", query_group.find_one())
+    print("End\n")
+    print("Did the members get added?")
+
+
+#===============================================================================
+# Routes
+
+# when you log in, we will get that email address here
+@app.route('/getemail', methods = ['POST'])
+def get_post_javascript_data():
+    jsdata = request.form['myData']
+    print(jsdata, "has logged in")
+    global useremail
+    global membership_list
+    useremail = jsdata
+    membership_list = list_user_groups(useremail)
+    return jsdata
+
+
+# index page
 @app.route("/", methods=['GET', 'POST'])
 def index():
     global useremail
-    retrieve_data = ["Not allowed to see this group's data"]
-    # forms
-    otherform = MyOtherForm()
-    getdataforgroupform = GetDataForGroupForm()
-    if otherform.validate_on_submit():
-        db = client.groups
-        names = db.list_collection_names()
-        if otherform.group_name.data not in names:
-            # We'll want to create the group in the groups database
-            print("We'll have to create the group")
-            print("type of group_name is: ", type(otherform.group_name.data))
-            new_group = db[otherform.group_name.data]
-            new_group.insert_one({"Admin":[otherform.email.data], "Standard":[]})
-            # Then we'll want to create a collection for that new group's data in the group_data database
-            db = client.group_data
-            new_group = db[otherform.group_name.data]
-            new_group.insert_one({"Group creation":"Completed"})
-        else:
-            print("That team already exists!")
-        return redirect('/')
-    elif getdataforgroupform.validate_on_submit():
-        # first, let's check for permissions
-        allowed_to_see_data = False  # start off as False
-        db = client.groups
-        names = db.list_collection_names()
-        group_name = getdataforgroupform.group_name.data
-        if group_name not in names:
-            retrieve_data = "The group: ", group_name, "doesn't exist."
-        else:
-            print("Group exists, moving on to the next check.")
-        # Okay, so the group exists
-        # Now, let's check to see if the person has the permission to add data
-        group_collection = db[group_name]
-        if useremail == "No user":
-            retrieve_data = ["You need to be logged in."]
-            return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
-        else:
-            print("Useremail to check is: ", useremail)
-            if useremail in group_collection.find_one()["Admin"]:
-                print("You are a Admin in the group")
-                allowed_to_see_data = True
-            elif useremail in group_collection.find_one()["Standard"]:
-                print("You are a Standard in the group")
-                allowed_to_see_data = True
-            else:
-                retrieve_data = ["You are not a part of the group."]
-                return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
+    global membership_list
+    response = ["Not allowed to see this group's data"]
+    admin = False
+    members = ["No members"]
 
-        if allowed_to_see_data:
-            retrieve_data = []
-            db = client.group_data
-            group_collection = db[getdataforgroupform.group_name.data]
-            info_list = []
-            # print(group_collection)
-            for item in group_collection.find():
-                print("Item is: ", item, type(item))
-                del item["_id"]
-                retrieve_data.append(item)
-            # print("retrieve_data is: ", retrieve_data)
-            #del retrieve_data['_id']
-            return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
-        else:
-            return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform, retrieve_data=retrieve_data)
-    return render_template('index.html', otherform=otherform, getdataforgroupform=getdataforgroupform)
+    # forms
+    create_group_form = CreateGroup()
+    getdataforgroupform = GetDataForGroupForm()
+    group_deletion_form = GroupDeletionForm()
+    add_member_form = AddNewMemberForm()
+
+    # let's create a group
+    if create_group_form.validate_on_submit():
+        input_name = create_group_form.group_name.data
+        input_email = create_group_form.email.data
+        create_group(input_name, input_email)
+
+    elif add_member_form.validate_on_submit():
+        print("\n*******************************************")
+        group_name = add_member_form.group_name.data
+        new_members = add_member_form.member_input.data
+        add_new_members(group_name, new_members)
+        members = get_members(group_name)
+
+    # let's get data from the group
+    elif getdataforgroupform.validate_on_submit():
+        group_name = getdataforgroupform.group_name.data
+        response, admin = get_data(group_name)
+        # I suppose we can show members too, when we grab data.
+        # We'll probably want to make this more like "show group details"
+        # rather than just getting data.
+        # members = [admin, standard]
+        members = get_members(group_name)
+        if len(members) == 1:
+            print("There was a problem getting the member data")
+        # print("Members are: ", members)
+
+    # admin group deletion
+    elif group_deletion_form.validate_on_submit():
+        group_name_delete = group_deletion_form.group_name_delete.data
+        response = delete_group(group_name_delete)
+
+    return render_template('index.html', membership_list=membership_list, \
+        create_group_form=create_group_form, add_member_form=add_member_form, group_deletion_form=group_deletion_form, \
+        getdataforgroupform=getdataforgroupform, response=response, admin=admin, \
+        members=members)
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
@@ -171,7 +366,7 @@ def upload_file():
         else:
             print("Useremail to check is: ", useremail)
             if useremail in group_collection.find_one()["Admin"]:
-                print("The user is a Admin in the group")
+                print("The user is an Admin in the group")
                 allowed_to_add_data = True
             elif useremail in group_collection.find_one()["Standard"]:
                 print("The user is a Standard in the group")
@@ -233,7 +428,7 @@ def rank_check():
     if group_dict[group].find_one():
         check_group = group_dict[group].find_one()
         if email in check_group['Admin']:
-            result = "You are a Admin"
+            result = "You are an Admin"
         elif email in check_group['Standard']:
             result = "You are a Standard"
         elif email in check_group['Admin'] and email in check_group['Standard']:

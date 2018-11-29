@@ -1,36 +1,52 @@
 ﻿{% extends 'base.html' %}
 
 {% block content %}
-	<div class="goaway">
-		<h3 class="text-primary">Welcome to Data Sense!</h3>
-		<h5 class="text-primary">Please Sign In</h5>
-		<img src="{{url_for('static', filename='img/ds_logo.png')}}" width="400" height="400"/>
-		<p class="text-primary">Please note that users *NEED* a Google acount to use this application...</p>
-	</div>
 
-    <div class="data" style="float:left;">
+  <div class="data" style="float:left;">
 		<h4 class="text-primary">Teams</h4>
 		<!-- List of teams goes here. -->
+		<div id="navigation">
+	    	{% for item in membership_list %}
+	        <p class="text-muted">{{ item }}</p>
+	    	{% endfor %}
+	    </div>
 
 		<div>
 			<a class="text-primary" onclick="on()">Form a Team</a>
-		</div>
-
-		<div id="overlay" style="float:left;">
+			<div id="overlay" style="float:left;">
 			{% include 'includes/mkgroup.html' %}
+			</div>
 		</div>
+
 		<div class="data">
-
 			<a href="/uploader">Upload</a>
-
-			<h3 class="text-primary">Please input a group to see the data (if you are a member)</h3>
+			<!---<h3 class="text-muted">Please input a group to see the data (if you are a member)</h3>-->
 			{% include 'includes/retrieve_data.html' %}
+			{% if admin %}
+
+			<div>
+				<p class="text-primary">You are an admin, which means you may delete the group</p>
+				{% include 'includes/drop_collection.html' %}
+			</div>
+
+			<div>
+				{% include 'includes/add_member.html' %}
+			</div>
+
+
+			{% endif %}
 			<h5 class="text-primary">Here is the data for the group that you have input</h5>
 			<ul id="navigation">
-	    {% for item in retrieve_data %}
-	        <li>{{ item }}</li>
-	    {% endfor %}
-	    </ul>
+	    		{% for item in response %}
+	        		<li class="text-muted">{{ item }}</li>
+	    		{% endfor %}
+	    	</ul>
+			<h5 class="text-primary">The members of the group are:</h5>
+			<ul id="navigation">
+	    		{% for ranks_users in members %}
+	        		<li class="text-muted">{{ ranks_users }}</li>
+	    		{% endfor %}
+	    	</ul>
 
 		</div>
 	</div>
