@@ -19,11 +19,10 @@
 		</div>
 
 		<div class="data">
-			<a href="/uploader">Upload</a>
 			<!---<h3 class="text-muted">Please input a group to see the data (if you are a member)</h3>-->
 			{% include 'includes/retrieve_data.html' %}
-			{% if admin %}
-
+			
+            {% if admin %}
 			<div>
 				<p class="text-primary">You are an admin, which means you may delete the group</p>
 				{% include 'includes/drop_collection.html' %}
@@ -35,7 +34,7 @@
 			{% endif %}
 		</div>
 	</div>
-	<div class="data" style="margin-left:50px;">
+	<div class="data" style="float:left;">
 		<h5 class="text-primary">The members of the group are:</h5>
 		<div id="navigation">
 	    	{% for ranks_users in members %}
@@ -43,13 +42,14 @@
 	    	{% endfor %}
 	    </div>
 	</div>
-    <div class="data">
+    <div class="data" style="float:left;">
         <h5 class="text-primary">Files/Data</h5>
         <div id="navigation">
             {% for item in response %}
             <p class="text-muted">{{ item }}</p>
             {% endfor %}
         </div>
+        <a href="/uploader">Upload</a>
     </div>
 
 
