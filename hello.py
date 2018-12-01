@@ -92,12 +92,12 @@ def list_user_groups(email:str) -> list:
         checkgroup = db[group_name].find_one()
         # print("group_name", group_name, "checkgroup", checkgroup, type(checkgroup))
         if email in checkgroup["Admin"]:
-            print("Admin in", group_name)
-            membership_list.append("Admin in " + str(group_name))
+            print(group_name)
+            membership_list.append(str(group_name))
             existing_membership = True
         elif email in checkgroup["Standard"]:
-            print("Standard in", group_name)
-            membership_list.append("Standard in " + str(group_name))
+            print(group_name)
+            membership_list.append(str(group_name))
             existing_membership = True
         else:
             print("User not in", group_name)
