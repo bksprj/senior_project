@@ -36,22 +36,21 @@
 		</div>
 	</div>
 	<div class="data" style="margin-left:50px;">
-		<div>
-			<h5 class="text-primary">Here is the data for the group that you have input</h5>
-			<ul id="navigation">
-	    		{% for item in response %}
-	        		<li class="text-muted">{{ item }}</li>
-	    		{% endfor %}
-	    	</ul>
-			<h5 class="text-primary">The members of the group are:</h5>
-			<ul id="navigation">
-	    		{% for ranks_users in members %}
-	        		<li class="text-muted">{{ ranks_users }}</li>
-	    		{% endfor %}
-	    	</ul>
-
-		</div>
+		<h5 class="text-primary">The members of the group are:</h5>
+		<div id="navigation">
+	    	{% for ranks_users in members %}
+	        	<p class="text-muted">{{ ranks_users }}</p>
+	    	{% endfor %}
+	    </div>
 	</div>
+    <div class="data">
+        <h5 class="text-primary">Files/Data</h5>
+        <div id="navigation">
+            {% for item in response %}
+            <p class="text-muted">{{ item }}</p>
+            {% endfor %}
+        </div>
+    </div>
 
 
 {% endblock %}
