@@ -2,7 +2,7 @@
 
 {% block content %}
 
-  <div class="data" style="float:left;">
+  <div class="data" style="float:left;width:20%;">
 		<h4 class="text-primary">Teams</h4>
 		<!-- List of teams goes here. -->
 		<div id="navigation">
@@ -35,7 +35,7 @@
 		</div>
 	</div>
 	<div class="data" style="float:left;width:20%;">
-		<h5 class="text-primary">Members</h5>
+		<h4 class="text-primary">Members</h4>
 		<div id="navigation">
 	    	{% for ranks_users in members %}
 	        	<p class="text-muted">{{ ranks_users }}</p>
@@ -43,7 +43,7 @@
 	    </div>
 	</div>
     <div class="data" style="float:left;width:20%;">
-        <h5 class="text-primary">Files/Data</h5>
+        <h4 class="text-primary">Files/Data</h4>
         <div id="navigation">
             {% for item in response %}
             <p class="text-muted">{{ item }}</p>
