@@ -225,9 +225,15 @@ def get_members(group_name:str) -> list:
     return returnval[1:]
 
 def add_new_members(group_name:str, member_input:str):
-    def get_members_list(update_string):
+    def get_members_list(update_string:str):
         # Rank:email,email
-        return [update_string.split(":")[1]]
+        # return [update_string.split(":")[1]]
+        members_part = update_string.split(":")
+        if "," in members_part[1]:
+            print(f"members_part is {members_part}")
+            return members_part[1].split(',')
+        else:
+            return members_part[1:]
     print("Let's try to add the members!")
     db = client.groups
     names = db.list_collection_names()
@@ -245,21 +251,34 @@ def add_new_members(group_name:str, member_input:str):
 
     admin_update = member_input[0]
     admin_update = get_members_list(admin_update)
+    remove_dup_admin = []
+    for i in admin_update:
+        if i not in prev_admin:
+            remove_dup_admin.append(i)
+
+    # eventually, it'll be it's own function to remove duplicates
 
     standard_update = member_input[1]
     standard_update = get_members_list(standard_update)
-    # let's just make the update dictionary quickly
-    new_member_data = {"_id":prev_id_data, "Admin":prev_admin+admin_update, "Standard":prev_standard+standard_update}
+    remove_dup_standard = []
 
-    print(prev_member_data)
-    print(new_member_data)
+    for i in standard_update:
+        if i not in prev_standard:
+            remove_dup_standard.append(i)
+
+    print(f"\nprev_admin is {prev_admin}\n")
+    print(f"\nremove_dup_admin is {remove_dup_admin}\n")
+
+    print(f"\nprev_standard is {prev_standard}\n")
+    print(f"\nremove_dup_standard is {remove_dup_standard}\n")
+
+    # let's just make the update dictionary quickly
+    new_member_data = {"_id":prev_id_data, "Admin":prev_admin+remove_dup_admin, "Standard":prev_standard+remove_dup_standard}
 
     # now let's update
-    print("First:",query_group.find_one())
+    print("Previous member data:",query_group.find_one())
     query_group.replace_one(prev_member_data, new_member_data)
-    print("Then:", query_group.find_one())
-    print("End\n")
-    print("Did the members get added?")
+    print("Current member data:", query_group.find_one())
 
 
 #===============================================================================
@@ -301,7 +320,7 @@ def index():
         print("\n*******************************************")
         group_name = add_member_form.group_name.data
         new_members = add_member_form.member_input.data
-        add_new_members(group_name, new_members)
+        add_new_member_return_msg = add_new_members(group_name, new_members)  # if None, then no problems
         members = get_members(group_name)
 
     # let's get data from the group
