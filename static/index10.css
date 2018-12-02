@@ -15,8 +15,8 @@
 
 body {
 	padding-top: 20px;
-	padding-left: 5px;
-	padding-right:5px;
+	padding-left: 10px;
+	padding-right:10px;
 }
 
 ul.nav li.dropdown:hover ul.dropdown-menu {
@@ -35,7 +35,7 @@ nav {
 
 .column {
 	float: left;
-	width: 33.33%;
+	width: 30%;
     padding: 7.5px;
     text-align: center;
 }
