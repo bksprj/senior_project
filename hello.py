@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, request, flash, redirect, send_from_directory
 from flask_pymongo import PyMongo
-import pymongo  #document-oriented database
+import pymongo  # document-oriented database
 import urllib  # in coordination with an RFC
 import json
 from bson import ObjectId
@@ -225,16 +225,31 @@ def get_members(group_name:str) -> list:
     return returnval[1:]
 
 def add_new_members(group_name:str, member_input:str):
-    def get_members_list(update_string:str):
-        # Rank:email,email
-        # return [update_string.split(":")[1]]
-        members_part = update_string.split(":")
-        if "," in members_part[1]:
-            print(f"members_part is {members_part}")
-            return members_part[1].split(',')
-        else:
-            return members_part[1:]
-    print("Let's try to add the members!")
+    def list_without_dups(list1:list, list2:list) -> list:
+        result = list1
+        for i in list2:
+            if i not in list1:
+                result.append(i)
+        return result
+
+    # format: Rank:email,email|Rank:email,email
+    # first, get a list of each email input for each rank
+    member_input = member_input.replace(" ", "")  # get rid of spaces
+    separate_ranks = member_input.split("|")
+    # ["rank", "email,email,email"]
+    admin_rank_list = separate_ranks[0].split(":")
+    if len(admin_rank_list) > 1:
+        new_admin_members_list = admin_rank_list[1].split(",")
+    standard_rank_list = separate_ranks[1].split(":")
+    if len(standard_rank_list) > 1:
+        new_standard_members_list = standard_rank_list[1].split(",")
+
+    # The email lists requested to be added:
+    # print(f"new_admin_members_list is: {new_admin_members_list}")
+    # print(f"new_standard_members_list is: {new_standard_members_list}")
+
+    # now that we have the lists of email addresses to potentially add for each
+    # rank, now let's get the current member data
     db = client.groups
     names = db.list_collection_names()
     if group_name not in names:
@@ -244,41 +259,20 @@ def add_new_members(group_name:str, member_input:str):
     prev_id_data = prev_member_data["_id"]
     prev_admin = prev_member_data["Admin"]
     prev_standard = prev_member_data["Standard"]
-    # next, let's get the update data
-    # At the moment, the format is: "Rank:email,email|Rank:email,email"
-    member_input = member_input.strip(" ")  # in case of spaces
-    member_input = member_input.split("|") # separate ranks
 
-    admin_update = member_input[0]
-    admin_update = get_members_list(admin_update)
-    remove_dup_admin = []
-    for i in admin_update:
-        if i not in prev_admin:
-            remove_dup_admin.append(i)
+    new_admin_members_list = list_without_dups(prev_admin, new_admin_members_list)
+    new_standard_members_list = list_without_dups(prev_standard, new_standard_members_list)
 
-    # eventually, it'll be it's own function to remove duplicates
+    # print(f"Here are the final admin members {new_admin_members_list}")
+    # print(f"Here are the final standard members {new_standard_members_list}")
 
-    standard_update = member_input[1]
-    standard_update = get_members_list(standard_update)
-    remove_dup_standard = []
 
-    for i in standard_update:
-        if i not in prev_standard:
-            remove_dup_standard.append(i)
+    new_member_info = {"_id":prev_id_data, "Admin":new_admin_members_list, "Standard":new_standard_members_list}
+    # print(f"New member info is: {new_member_info}")
 
-    print(f"\nprev_admin is {prev_admin}\n")
-    print(f"\nremove_dup_admin is {remove_dup_admin}\n")
-
-    print(f"\nprev_standard is {prev_standard}\n")
-    print(f"\nremove_dup_standard is {remove_dup_standard}\n")
-
-    # let's just make the update dictionary quickly
-    new_member_data = {"_id":prev_id_data, "Admin":prev_admin+remove_dup_admin, "Standard":prev_standard+remove_dup_standard}
-
-    # now let's update
     print("Previous member data:",query_group.find_one())
-    query_group.replace_one(prev_member_data, new_member_data)
-    print("Current member data:", query_group.find_one())
+    query_group.find_one_and_replace({"_id":prev_id_data}, new_member_info)
+    print("Current member data:",query_group.find_one())
 
 
 #===============================================================================
@@ -321,7 +315,8 @@ def index():
         print("\n*******************************************")
         group_name = add_member_form.group_name.data
         new_members = add_member_form.member_input.data
-        add_new_member_return_msg = add_new_members(group_name, new_members)  # if None, then no problems
+        # print(f"\nAttempting member addition with {group_name} and members: {new_members}")
+        add_new_member_return_msg = add_new_members(group_name, new_members)  # Currently, this would be None
         members = get_members(group_name)
 
     # let's get data from the group
