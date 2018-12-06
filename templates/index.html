@@ -43,7 +43,7 @@
 	    	{% endfor %}
 	    </div>
 	</div>
-    <div class="data" style="float:left;width:20%; padding-left: 10%">
+    <div class="data" style="float:left;width:30%; padding-left: 10%">
         <h4 class="text-primary">Files/Data</h4>
         <div id="navigation">
           {%- if response|length > 1 -%}
@@ -58,7 +58,9 @@
           {% endif %}
           {%- if response|length < 2 -%}
             <p>{{ response[0] }}</p>
-          {% endif %}
+					{% endif %}
+					
+					<a href="/uploader">Upload a File</a>
 
 		</div>
    <!--
@@ -68,8 +70,7 @@
 				{% include 'includes/uploader.html' %}
 			</div>
     </div>
-  -->
-  <a href="/uploader">Upload a File</a>
+  	-->
     </div>
 
 
