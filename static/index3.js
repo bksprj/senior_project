@@ -37,7 +37,15 @@ function on() {
 	document.getElementById("overlay").style.display = "block";
 }
 
+function uploadOn() {
+	document.getElementById("overlay").style.display = "block";
+}
+
 // Overlay function to turn off
 function off() {
-	document.getElementById("overlay").style.display = "none";
+	document.getElementById("upload").style.display = "none";
+}
+
+function uploadOff() {
+	document.getElementById("upload").style.display = "block";
 }

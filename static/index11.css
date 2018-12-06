@@ -33,6 +33,12 @@ nav {
 	text-align: center;
 }
 
+#upload {
+	display: none;
+	width: 100%;
+	text-align: center;
+}
+
 .column {
 	float: left;
 	width: 30%;
