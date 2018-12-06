@@ -189,6 +189,8 @@ def get_data(group_name:str):
         for file in dirs:
             print(file)
             file_list.append(file)
+    else:
+        file_list = ["Not allowed to see this group's data"]
 
     return [ [retrieve_data, file_list], admin ]
 
