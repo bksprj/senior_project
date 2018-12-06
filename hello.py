@@ -395,7 +395,7 @@ def upload_file():
         names = db.list_collection_names()
         if group_name not in names:
             print("The group: ", group_name, "doesn't exist.")
-            return render_template('uploader.html')
+            return render_template('/includes/uploader.html')
         else:
             print("Group exists, moving on to the next check.")
         # Okay, so the group exists
