@@ -42,6 +42,11 @@ function uploadOn() {
 	document.getElementById("upload").style.display = "block";
 }
 
+// Overlay function to turn on
+function adminOn() {
+	document.getElementById("admin").style.display = "block";
+}
+
 // Overlay function to turn off
 function off() {
 	document.getElementById("overlay").style.display = "none";
@@ -50,4 +55,9 @@ function off() {
 // Overlay function to turn off
 function uploadOff() {
 	document.getElementById("upload").style.display = "none";
+}
+
+// Overlay function to turn off
+function adminOff() {
+	document.getElementById("admin").style.display = "none";
 }
