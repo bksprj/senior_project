@@ -6,6 +6,7 @@ import json
 from bson import ObjectId
 from werkzeug import secure_filename
 import os
+import sys
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired
@@ -69,6 +70,10 @@ class AddNewMemberForm(FlaskForm):
 
 #===============================================================================
 # Global functions
+
+def delete_file(filename):
+    path = UPLOAD_FOLDER + "/" +filename
+    os.remove(path)
 
 def read_csv_file(file):
     with open('uploads/' + file, newline='') as csvfile:
@@ -167,7 +172,15 @@ def get_data(group_name:str):
             retrieve_data.append(item)
         if count == 0:
             retrieve_data = ["There are no data documents in this group"]
-    return [retrieve_data, admin]
+        
+        dirs = os.listdir(UPLOAD_FOLDER)
+        file_list = []
+        # This would print all the files and directories
+        for file in dirs:
+            print(file)
+            file_list.append(file)
+
+    return [ [retrieve_data, file_list], admin ]
 
 def delete_group(group_name_delete:str) -> list:
     db_groups = client.groups
