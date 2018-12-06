@@ -172,7 +172,7 @@ def get_data(group_name:str):
             retrieve_data.append(item)
         if count == 0:
             retrieve_data = ["There are no data documents in this group"]
-        
+
         dirs = os.listdir(UPLOAD_FOLDER)
         file_list = []
         # This would print all the files and directories
@@ -337,6 +337,9 @@ def index():
     elif getdataforgroupform.validate_on_submit():
         group_name = getdataforgroupform.group_name.data
         response, admin = get_data(group_name)
+        data_list = response[0] # these two variables are here
+        file_list = response[1] # if we want to do something different here
+
         # I suppose we can show members too, when we grab data.
         # We'll probably want to make this more like "show group details"
         # rather than just getting data.
