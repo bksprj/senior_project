@@ -43,7 +43,7 @@ function uploadOn() {
 
 // Overlay function to turn off
 function off() {
-	document.getElementById("upload").style.display = "none";
+	document.getElementById("overlay").style.display = "none";
 }
 
 function uploadOff() {
