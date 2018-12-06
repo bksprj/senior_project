@@ -441,7 +441,7 @@ def upload_file():
 
                 return redirect(url_for('index'))
             # return redirect(url_for('uploaded_file',filename=filename)) # perhaps we don't need to redirect again
-    return render_template('uploader.html')
+    return render_template('includes/uploader.html')
 
 @app.route("/uploads/<filename>")
 def uploaded_file(filename):
