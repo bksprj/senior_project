@@ -39,6 +39,12 @@ nav {
 	text-align: center;
 }
 
+#admin {
+	display: none;
+	width: 100%;
+	text-align: center;
+}
+
 .column {
 	float: left;
 	width: 30%;
