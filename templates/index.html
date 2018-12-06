@@ -48,8 +48,13 @@
             {% for item in response %}
             <p class="text-muted">{{ item }}</p>
             {% endfor %}
-        </div>
-        <a href="/uploader">Upload</a>
+		</div>
+		<div>
+			<a class="text-primary" onclick="on()">Upload</a>
+			<div id="overlay">
+				{% include 'includes/uploader.html%}
+			</div>
+		</div>
     </div>
 
 
