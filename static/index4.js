@@ -38,7 +38,7 @@ function on() {
 }
 
 function uploadOn() {
-	document.getElementById("overlay").style.display = "block";
+	document.getElementById("upload").style.display = "block";
 }
 
 // Overlay function to turn off
