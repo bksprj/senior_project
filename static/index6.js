@@ -37,6 +37,7 @@ function on() {
 	document.getElementById("overlay").style.display = "block";
 }
 
+// Overlay function to turn on
 function uploadOn() {
 	document.getElementById("upload").style.display = "block";
 }
@@ -46,6 +47,7 @@ function off() {
 	document.getElementById("overlay").style.display = "none";
 }
 
+// Overlay function to turn off
 function uploadOff() {
-	document.getElementById("upload").style.display = "block";
+	document.getElementById("upload").style.display = "none";
 }
