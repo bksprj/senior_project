@@ -337,8 +337,8 @@ def index():
     elif getdataforgroupform.validate_on_submit():
         group_name = getdataforgroupform.group_name.data
         response, admin = get_data(group_name)
-        data_list = response[0] # these two variables are here
-        file_list = response[1] # if we want to do something different here
+        # data_list = response[0] # these two variables are here
+        # file_list = response[1] # if we want to do something different here
 
         # I suppose we can show members too, when we grab data.
         # We'll probably want to make this more like "show group details"
