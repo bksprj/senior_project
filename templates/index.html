@@ -51,8 +51,8 @@
             {% endfor %}
 
             <p>The files for your group are:</p>
-            {% for file_name in response[1] %}
-            <p class="text-muted">{{ file_name }}</p>
+			{% for file_name in response[1] %}
+			<a class="text-muted" href="/uploads/{{ file_name }}" download>{{ file_name }}</a>
             {% endfor %}
           {% endif %}
 
