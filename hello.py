@@ -78,12 +78,8 @@ def read_csv_file(file):
         for row in file_reader:
             # print(row)
             testDict[row[0]] = row[1:]
+        print("LOOK HERE")
         print(testDict)
-<<<<<<< HEAD
-        for key,value in testDict.items():
-            print(key,value)
-=======
->>>>>>> 4980a160ecc384f9604ee0f6270a3816860f10bb
         return testDict
 
 def list_user_groups(email:str) -> list:
