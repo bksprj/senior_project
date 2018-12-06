@@ -54,6 +54,12 @@ class GroupDeletionForm(FlaskForm):
         locales = ('en_US', 'en')
     group_name_delete = StringField('Team', validators=[DataRequired()])
 
+class FileDeletionForm(FlaskForm):
+    class Meta:
+        csrf = False
+        locales = ('en_US', 'en')
+    file_name_delete = StringField('File', validators=[DataRequired()])
+
 class GetDataForGroupForm(FlaskForm):
     class Meta:
         csrf = False
@@ -72,8 +78,12 @@ class AddNewMemberForm(FlaskForm):
 # Global functions
 
 def delete_file(filename):
-    path = UPLOAD_FOLDER + "/" +filename
-    os.remove(path)
+    try:
+        path = UPLOAD_FOLDER + "/" +filename
+        os.remove(path)
+        return [f"Deleted {filename} successfully"]
+    except:
+        return [f"Unable to delete {filename}; perhaps it isn't stored?"]
 
 def read_csv_file(file):
     with open('uploads/' + file, newline='') as csvfile:
@@ -318,6 +328,7 @@ def index():
     getdataforgroupform = GetDataForGroupForm()
     group_deletion_form = GroupDeletionForm()
     add_member_form = AddNewMemberForm()
+    file_deletion_form = FileDeletionForm()
 
     # let's create a group
     if create_group_form.validate_on_submit():
@@ -354,10 +365,14 @@ def index():
         group_name_delete = group_deletion_form.group_name_delete.data
         response = delete_group(group_name_delete)
 
+    elif file_deletion_form.validate_on_submit():
+        file_name_delete = file_deletion_form.file_name_delete.data
+        response = delete_file(file_name_delete)
+
     return render_template('index.html', membership_list=membership_list, \
         create_group_form=create_group_form, add_member_form=add_member_form, group_deletion_form=group_deletion_form, \
         getdataforgroupform=getdataforgroupform, response=response, admin=admin, \
-        members=members)
+        members=members, file_deletion_form=file_deletion_form)
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():

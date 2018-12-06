@@ -28,8 +28,9 @@
 		<h4 class="text-primary">Members</h4>
         {% if admin %}
 			<div>
-				<p class="text-primary">You are an admin, which means you may delete the group</p>
+				<p class="text-primary">You are an admin, which means you may delete the group or data</p>
 				{% include 'includes/drop_collection.html' %}
+        {% include 'includes/file_deletion.html' %}
 			</div>
 
 			<div>
@@ -45,7 +46,7 @@
     <div class="data" style="float:left;width:20%;">
         <h4 class="text-primary">Files/Data</h4>
         <div id="navigation">
-          {%- if response|length > 1 -%}...
+          {%- if response|length > 1 -%}
             {% for item in response[0] %}
             <p class="text-muted">{{ item }}</p>
             {% endfor %}
@@ -55,7 +56,9 @@
       			<a class="text-muted" href="/uploads/{{ file_name }}" download>{{ file_name }}</a>
             {% endfor %}
           {% endif %}
-
+          {%- if response|length < 2 -%}
+            <p>{{ response[0] }}</p>
+          {% endif %}
 
 		</div>
 		<div>
