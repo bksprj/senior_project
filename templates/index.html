@@ -52,7 +52,7 @@
 
             <p>The files for your group are:</p>
 			{% for file_name in response[1] %}
-			<a class="text-muted" href="{{url_for('uploads', filename='{{ file_name }}')}}" download>{{ file_name }}</a>
+			<a class="text-muted" href="{{url_for('uploads', filename='file_name')}}" download>{{ file_name }}</a>
             {% endfor %}
           {% endif %}
 
