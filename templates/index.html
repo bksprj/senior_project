@@ -14,7 +14,7 @@
 		<div>
 			<a class="text-primary" onclick="on()">Form a Team</a>
 			<div id="overlay" style="float:left;">
-				{% include 'includes/mkgroup.html' %}
+			{% include 'includes/mkgroup.html' %}
 			</div>
 		</div>
 
@@ -48,10 +48,12 @@
             {% for item in response %}
             <p class="text-muted">{{ item }}</p>
             {% endfor %}
-        </div>
-		<a class="text-primary" onclick="on()">Upload</a>
-		<div id="overlay">
-			{% include 'includes/uploader.html%}
+		</div>
+		<div>
+			<a class="text-primary" onclick="on()">Upload</a>
+			<div id="overlay">
+				{% include 'includes/uploader.html%}
+			</div>
 		</div>
     </div>
 
