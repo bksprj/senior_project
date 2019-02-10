@@ -2,69 +2,76 @@
 
 {% block content %}
 
-    <div class="data" style="float:left;width:20%;">
-		<h4 class="text-primary">Teams</h4>
-		<!-- List of teams goes here. -->
-		<div id="navigation">
-	    	{% for item in membership_list %}
-	        <p class="text-muted">{{ item }}</p>
-	    	{% endfor %}
-	    </div>
-
-		<div>
-			<a class="text-primary" onclick="on()">Form a Team</a>
-			<div id="overlay" style="float:left;">
-			{% include 'includes/mkgroup.html' %}
+    <div class="data panel panel-default" style="float:left;width:20%;">
+		<div class="panel-body">
+			<h4 class="text-primary">Teams</h4>
+			<!-- List of teams goes here. -->
+			<div id="navigation">
+	    		{% for item in membership_list %}
+				<p class="text-muted">{{ item }}</p>
+	    		{% endfor %}
 			</div>
-		</div>
 
-		<div class="data">
-			<!---<h3 class="text-muted">Please input a group to see the data (if you are a member)</h3>-->
-			{% include 'includes/retrieve_data.html' %}
-
-		</div>
-	</div>
-	<div class="data" style="float:left;width:20%;">
-		<h4 class="text-primary">Members</h4>
-        {% if admin %}
 			<div>
-				<p class="text-primary">You are an admin, which means you have special privileges.</p>
-				<a class="text-primary" onclick="adminOn()">show</a>
-				<div id="admin">
-					{% include 'includes/drop_collection.html' %}
-					{% include 'includes/file_deletion.html' %}
-					{% include 'includes/add_member.html' %}
-					<a class="text-primary" onclick="adminOff()">close</a>
+				<a class="text-primary" onclick="on()">Form a Team</a>
+				<div id="overlay" style="float:left;">
+				{% include 'includes/mkgroup.html' %}
 				</div>
 			</div>
 
-		{% endif %}
-		<div id="navigation">
-	    	{% for ranks_users in members %}
-	        	<p class="text-muted">{{ ranks_users }}</p>
-	    	{% endfor %}
-	    </div>
-	</div>
-  <div class="data" style="float:left;width:30%; padding-left: 10%">
-    <h4 class="text-primary">Files/Data</h4>
-      <div id="navigation">
-        {%- if response|length > 1 -%}
-          {% for item in response[0] %}
-          <p class="text-muted">{{ item }}</p>
-          {% endfor %}
+			<div class="data">
+				<!---<h3 class="text-muted">Please input a group to see the data (if you are a member)</h3>-->
+				{% include 'includes/retrieve_data.html' %}
 
-          <p class="text-primary">The files for your group are:</p>
-      		{% for file_name in response[1] %}
-      		<a class="text-muted" href="/uploads/{{ file_name }}" download>{{ file_name }}</a>
-          {% endfor %}
-        {% endif %}
-        {%- if response|length < 2 -%}
-          <p>{{ response[0] }}</p>
-				{% endif %}
-					
-				<a href="/uploader">Upload a File</a>
 			</div>
-  	</div>
+		</div>
+	</div>
+
+	<div class="data panel panel-default" style="float:left;width:20%;">
+		<div class="panel-body">
+			<h4 class="text-primary">Members</h4>
+			{% if admin %}
+				<div>
+					<p class="text-primary">You are an admin, which means you have special privileges.</p>
+					<a class="text-primary" onclick="adminOn()">show</a>
+					<div id="admin">
+						{% include 'includes/drop_collection.html' %}
+						{% include 'includes/file_deletion.html' %}
+						{% include 'includes/add_member.html' %}
+						<a class="text-primary" onclick="adminOff()">close</a>
+					</div>
+				</div>
+
+			{% endif %}
+			<div id="navigation">
+	    		{% for ranks_users in members %}
+	        		<p class="text-muted">{{ ranks_users }}</p>
+	    		{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div class="data" style="float:left;width:30%; padding-left: 10%">
+		<h4 class="text-primary">Files/Data</h4>
+		<div id="navigation">
+			{%- if response|length > 1 -%}
+				{% for item in response[0] %}
+				<p class="text-muted">{{ item }}</p>
+				{% endfor %}
+
+				<p class="text-primary">The files for your group are:</p>
+      			{% for file_name in response[1] %}
+      				<a class="text-muted" href="/uploads/{{ file_name }}" download>{{ file_name }}</a>
+				{% endfor %}
+			{% endif %}
+
+			{%- if response|length < 2 -%}
+				<p>{{ response[0] }}</p>
+			{% endif %}
+					
+			<a href="/uploader">Upload a File</a>
+		</div>
+	</div>
 
 
 {% endblock %}
