@@ -6,11 +6,11 @@
 		<div class="panel-body">
 			<h4 class="text-primary">Teams</h4>
 			<!-- List of teams goes here. -->
-			<ul id="navigation" style="list-style: none;">
+			<div id="navigation">
 	    		{% for item in membership_list %}
-				<li class="text-muted">{{ item }}</li>
+				<a class="text-muted">{{ item }}</a>
 	    		{% endfor %}
-			</ul>
+			</div>
 
 			<div style="padding-top:10px;">
 				<a class="text-primary" onclick="on()">Form a Team</a>
