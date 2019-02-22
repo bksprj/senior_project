@@ -1,77 +1,124 @@
-﻿{% extends 'base.html' %}
+﻿<!DOCTYPE html>
 
-{% block content %}
+<html>
+	<head>
+		<title>Data Sense</title>
+		<meta charset="utf-8" />
+		<meta name="google-signin-client_id" content="798265448710-nqo7h881abf59cn9oghng9erq841tbq1.apps.googleusercontent.com">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link rel="icon" href="{{url_for('static', filename='img/ds_logo.png')}}">
+		<script src="{{url_for('static', filename='index7.js')}}"></script>
+		<link rel="stylesheet" href="{{ url_for('static', filename='index12.css') }}" />
+	</head>
 
-    <div class="data panel panel-default" style="float:left;width:20%;">
-		<div class="panel-body">
-			<h4 class="text-primary">Teams</h4>
-			<!-- List of teams goes here. -->
-			<div id="navigation">
-	    		{% for item in membership_list %}
-				<a class="text-muted">{{ item }}</a>
-				<br>
-	    		{% endfor %}
+	<header>
+		<nav class="navbar navbar-fixed-top admin-menu bg-light" role="navigation">
+			<a class="navbar-brand" href="/">Data Sense</a>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<a class="navbar-brand" href="/about">About</a>
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown" style="padding-top:7.5px;padding-right:5px;">
+						<img class="data" src="{{url_for('static', filename='img/new_blue.png')}}" style="float:right" width="37.5" height="37.5" />
+						<ul class="dropdown-menu" style="text-align:center;">
+							<li>
+								<p class="text-primary">Notifications</p>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<div class="g-signin2" data-onsuccess="onSignIn" style="padding-right:5px;" data-theme="dark"></div>
+					</li>
+					<li class="dropdown data" style="padding-top:7.5px;padding-right:5px;">
+						<h5 class="text-primary" id="name" style="padding-right:5px;float:left;"></h5>
+						<img id="pic" class="img-circle data" style="float:right" width="37.5" height="37.5" />
+						<ul class="dropdown-menu" style="text-align:center;">
+							<li>
+								<a class="text-primary" href="/profile">Profile Settings</a>
+							</li>
+							<li>
+								<a onclick="signOut()" class="text-primary">Sign Out</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
 			</div>
+		</nav>
+	</header>
 
-			<div style="padding-top:10px;">
-				<a class="text-primary" onclick="on()">Form a Team</a>
-				<div id="overlay" style="float:left;">
-					{% include 'includes/mkgroup.html' %}
+	<body>
+		<div class="data panel panel-default" style="float:left;width:20%;">
+			<div class="panel-body">
+				<h4 class="text-primary">Teams</h4>
+				<!-- List of teams goes here. -->
+				<div id="navigation">
+	    			{% for item in membership_list %}
+					<a class="text-muted">{{ item }}</a>
+					<br>
+	    			{% endfor %}
 				</div>
-			</div>
 
-			<!--<div class="data">
-				<h3 class="text-muted">Please input a group to see the data (if you are a member)</h3>
-				{% include 'includes/retrieve_data.html' %}
-			</div>-->
-		</div>
-	</div>
-
-	<div class="data" style="float:left;width:20%; padding-left:10px;">
-		<div>
-			<h4 class="text-primary">Members</h4>
-			{% if admin %}
-				<div>
-					<p class="text-primary">You are an admin, which means you have special privileges.</p>
-					<a class="text-primary" onclick="adminOn()">show</a>
-					<div id="admin">
-						{% include 'includes/drop_collection.html' %}
-						{% include 'includes/file_deletion.html' %}
-						{% include 'includes/add_member.html' %}
-						<a class="text-primary" onclick="adminOff()">close</a>
+				<div style="padding-top:10px;">
+					<a class="text-primary" onclick="on()">Form a Team</a>
+					<div id="overlay" style="float:left;">
+						{% include 'includes/mkgroup.html' %}
 					</div>
 				</div>
 
-			{% endif %}
-			<div id="navigation">
-	    		{% for ranks_users in members %}
-	        		<p class="text-muted">{{ ranks_users }}</p>
-	    		{% endfor %}
+				<!--<div class="data">
+					<h3 class="text-muted">Please input a group to see the data (if you are a member)</h3>
+					{% include 'includes/retrieve_data.html' %}
+				</div>-->
 			</div>
 		</div>
-	</div>
 
-	<div class="data" style="float:left;width:30%; padding-left: 10%">
-		<h4 class="text-primary">Files/Data</h4>
-		<div id="navigation">
-			{%- if response|length > 1 -%}
-				{% for item in response[0] %}
-				<p class="text-muted">{{ item }}</p>
-				{% endfor %}
+		<div class="data" style="float:left;width:20%; padding-left:10px;">
+			<div>
+				<h4 class="text-primary">Members</h4>
+				{% if admin %}
+					<div>
+						<p class="text-primary">You are an admin, which means you have special privileges.</p>
+						<a class="text-primary" onclick="adminOn()">show</a>
+						<div id="admin">
+							{% include 'includes/drop_collection.html' %}
+							{% include 'includes/file_deletion.html' %}
+							{% include 'includes/add_member.html' %}
+							<a class="text-primary" onclick="adminOff()">close</a>
+						</div>
+					</div>
 
-				<p class="text-primary">The files for your group are:</p>
-      			{% for file_name in response[1] %}
-      				<a class="text-muted" href="/uploads/{{ file_name }}" download>{{ file_name }}</a>
-				{% endfor %}
-			{% endif %}
-
-			{%- if response|length < 2 -%}
-				<p>{{ response[0] }}</p>
-			{% endif %}
-					
-			<a href="/uploader">Upload a File</a>
+				{% endif %}
+				<div id="navigation">
+	    			{% for ranks_users in members %}
+	        			<p class="text-muted">{{ ranks_users }}</p>
+	    			{% endfor %}
+				</div>
+			</div>
 		</div>
-	</div>
 
+		<div class="data" style="float:left;width:30%; padding-left: 10%">
+			<h4 class="text-primary">Files/Data</h4>
+			<div id="navigation">
+				{%- if response|length > 1 -%}
+					{% for item in response[0] %}
+					<p class="text-muted">{{ item }}</p>
+					{% endfor %}
 
-{% endblock %}
+					<p class="text-primary">The files for your group are:</p>
+      				{% for file_name in response[1] %}
+      					<a class="text-muted" href="/uploads/{{ file_name }}" download>{{ file_name }}</a>
+					{% endfor %}
+				{% endif %}
+
+				{%- if response|length < 2 -%}
+					<p>{{ response[0] }}</p>
+				{% endif %}
+					
+				<a href="/uploader">Upload a File</a>
+			</div>
+		</div>
+	</body>
+</html>
