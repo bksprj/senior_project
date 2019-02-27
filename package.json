@@ -1,0 +1,23 @@
+{
+  "name": "senior_project",
+  "version": "1.0.0",
+  "description": "App for senior project",
+  "main": "index7.js",
+  "scripts": {
+    "test": "mocha || true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bksprj/senior_project.git"
+  },
+  "author": "Keegan Husom, Brian Ramirez, Sage deBrum",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bksprj/senior_project/issues"
+  },
+  "homepage": "https://github.com/bksprj/senior_project#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2"
+  }
+}
