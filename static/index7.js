@@ -32,6 +32,10 @@ function signOut() {
 	})
 }
 
+function query_data(group_name){
+	$.post("/grab_group" + group_name)
+}
+
 // Overlay function to turn on
 function on() {
 	document.getElementById("overlay").style.display = "block";
