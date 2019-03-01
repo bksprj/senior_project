@@ -10,7 +10,7 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<link rel="icon" href="{{url_for('static', filename='img/ds_logo.png')}}">
-		<script src="{{url_for('static', filename='index1.js')}}"></script>
+		<script src="{{url_for('static', filename='index3.js')}}"></script>
 		<link rel="stylesheet" href="{{ url_for('static', filename='index12.css') }}" />
 	</head>
 
@@ -92,7 +92,7 @@
 				{% endif %}
 				<div id="navigation">
 	    			{% for ranks_users in members %}
-	        			<p class="text-muted">{{ ranks_users }}</p>
+	        			<p class="text-muted" id="white">{{ ranks_users }}</p>
 	    			{% endfor %}
 				</div>
 			</div>
@@ -103,12 +103,12 @@
 			<div id="navigation">
 				{%- if response|length > 1 -%}
 					{% for item in response[0] %}
-					<p class="text-muted">{{ item }}</p>
+					<p class="text-muted" id="white">{{ item }}</p>
 					{% endfor %}
 
 					<p class="text-primary">The files for your group are:</p>
       				{% for file_name in response[1] %}
-      					<a class="text-muted" href="/uploads/{{ file_name }}" download>{{ file_name }}</a>
+      					<a class="text-muted" id="white" href="/uploads/{{ file_name }}" download>{{ file_name }}</a>
 					{% endfor %}
 				{% endif %}
 

@@ -69,5 +69,5 @@ function adminOff() {
 // Changes the theme color
 function dark_mode() {
 	document.body.style.background = "#4d4d4d";
-    document.getElementsByTagName("P").style.color = "white";
+    document.getElementsById("white").style.color = "#ffffff";
 }
