@@ -65,3 +65,9 @@ function uploadOff() {
 function adminOff() {
 	document.getElementById("admin").style.display = "none";
 }
+
+// Changes the theme color
+function dark_mode() {
+	document.body.style.background = "#4d4d4d";
+	document.getElementById('turndark').style.color = "#4d4d4d";
+}
