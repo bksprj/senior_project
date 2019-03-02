@@ -50,26 +50,24 @@
 	</header>
 
 	<body style="padding-top:35px;">
-		<div class="data panel panel-default" style="float:left;width:20%;">
-			<div class="panel-body">
-				<h4 class="text-primary"><strong>Teams</strong></h4>
-				<!-- List of teams goes here. -->
-				<div id="navigation">
-	    			{% for item in membership_list %}
-					<a class="text-muted" onclick="query_data({{ item }})"><strong>{{ item }}</strong></a>
-					<br>
-	    			{% endfor %}
-				</div>
+		<div style="float:left;width:20%;">
+			<h4 class="text-primary"><strong>Teams</strong></h4>
+			<!-- List of teams goes here. -->
+			<div id="navigation">
+	    		{% for item in membership_list %}
+				<a style="color:white;" onclick="query_data({{ item }})"><strong>{{ item }}</strong></a>
+				<br>
+	    		{% endfor %}
+			</div>
 
-				<div style="padding-top:20px;">
-					<a class="text-primary" onclick="showModel()"><strong>Form a Team</strong></a>
-				</div>
+			<div style="padding-top:20px;">
+				<a class="text-primary" onclick="showModel()"><strong>Form a Team</strong></a>
+			</div>
 
-				<div id="myModal" class="modal">
-					<div class="modal-content">
-						{% include 'includes/mkgroup.html' %}
-						<span class="close" onclick="spanClick()" style="float: left;">&times;</span>
-					</div>
+			<div id="myModal" class="modal">
+				<div class="modal-content">
+					{% include 'includes/mkgroup.html' %}
+					<span class="close" onclick="spanClick()" style="float: left;">&times;</span>
 				</div>
 			</div>
 		</div>
@@ -92,7 +90,7 @@
 				{% endif %}
 				<div id="navigation">
 	    			{% for ranks_users in members %}
-	        			<p class="text-muted" id="white">{{ ranks_users }}</p>
+	        			<p style="color:white;">{{ ranks_users }}</p>
 	    			{% endfor %}
 				</div>
 			</div>
@@ -103,7 +101,7 @@
 			<div id="navigation">
 				{%- if response|length > 1 -%}
 					{% for item in response[0] %}
-					<p class="text-muted" id="white"><strong>{{ item }}</strong></p>
+					<p style="color:white;"><strong>{{ item }}</strong></p>
 					{% endfor %}
 
 					<p class="text-primary"><strong>The files for your group are:</strong></p>
@@ -113,10 +111,10 @@
 				{% endif %}
 
 				{%- if response|length < 2 -%}
-					<p class="text-muted">{{ response[0] }}</p>
+					<p style="color:white;">{{ response[0] }}</p>
 				{% endif %}
 
-				<a class="text-primary" href="/uploader">Upload a File</a>
+				<a class="text-primary" href="/uploader"><strong>Upload a File</strong></a>
 			</div>
 		</div>
 	</body>
