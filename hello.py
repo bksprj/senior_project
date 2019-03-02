@@ -321,9 +321,9 @@ def get_post_javascript_data():
 def index():
     global useremail
     global membership_list
-    response = ["Not allowed to see this group's data"]
+    response = ["No files here..."]
     admin = False
-    members = ["No members"]
+    members = ["Not looking at any teams..."]
 
     # forms
     create_group_form = CreateGroup()
