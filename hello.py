@@ -31,6 +31,9 @@ test_database = db.test_database
 
 useremail = "No user"
 membership_list = ["Not a part of any Teams"]
+group_data = [["No groups"], ["No admin"]]
+group_members = ["No members"]
+check_group = "not checking a group"
 
 #===============================================================================
 # Class definitions
@@ -59,12 +62,6 @@ class FileDeletionForm(FlaskForm):
         csrf = False
         locales = ('en_US', 'en')
     file_name_delete = StringField('File', validators=[DataRequired()])
-
-class GetDataForGroupForm(FlaskForm):
-    class Meta:
-        csrf = False
-        locales = ('en_US', 'en')
-    group_name = StringField('Group', validators=[DataRequired()])
 
 class AddNewMemberForm(FlaskForm):
     class Meta:
@@ -301,7 +298,10 @@ def add_new_members(group_name:str, member_input:str):
     print("Current member data:",query_group.find_one())
 
 def get_team_member_file(group_name:str):
-    return get_members(group_name)
+    member_file = open("uploads/members.txt", "w+")
+    for member in get_members(group_name):
+        member_file.write()
+    return get_members(group_name + "\n")
 
 #===============================================================================
 # Routes
@@ -323,6 +323,12 @@ def get_post_group_name(group_name):
     print(group_name)
     global useremail
     global membership_list
+    global group_data
+    global group_members
+    global check_group
+    check_group = group_name
+    group_data = get_data(group_name)
+    group_members = get_members(group_name)
     return "RETRIEVED GROUP NAME"
 
 
@@ -331,13 +337,15 @@ def get_post_group_name(group_name):
 def index():
     global useremail
     global membership_list
+    global group_data
+    global group_members
+    global check_group
     response = ["No files here..."]
     admin = False
-    members = ["Not looking at any teams..."]
+    # members = ["Not looking at any teams..."]
 
     # forms
     create_group_form = CreateGroup()
-    getdataforgroupform = GetDataForGroupForm()
     group_deletion_form = GroupDeletionForm()
     add_member_form = AddNewMemberForm()
     file_deletion_form = FileDeletionForm()
@@ -356,23 +364,6 @@ def index():
         add_new_member_return_msg = add_new_members(group_name, new_members)  # Currently, this would be None
         members = get_members(group_name)
 
-    # let's get data from the group
-    elif getdataforgroupform.validate_on_submit():
-        group_name = getdataforgroupform.group_name.data
-        response, admin = get_data(group_name)
-        # data_list = response[0] # these two variables are here
-        # file_list = response[1] # if we want to do something different here
-
-        # I suppose we can show members too, when we grab data.
-        # We'll probably want to make this more like "show group details"
-        # rather than just getting data.
-        # members = [admin, standard]
-        members = get_members(group_name)
-        if len(members) == 1:
-            print("There was a problem getting the member data")
-        # print("Members are: ", members)
-
-    # admin group deletion
     elif group_deletion_form.validate_on_submit():
         group_name_delete = group_deletion_form.group_name_delete.data
         response = delete_group(group_name_delete)
@@ -380,11 +371,12 @@ def index():
     elif file_deletion_form.validate_on_submit():
         file_name_delete = file_deletion_form.file_name_delete.data
         response = delete_file(file_name_delete)
+    print("\nGroup data is:\n", group_data)
 
     return render_template('index.html', membership_list=membership_list, \
-        create_group_form=create_group_form, add_member_form=add_member_form, group_deletion_form=group_deletion_form, \
-        getdataforgroupform=getdataforgroupform, response=response, admin=admin, \
-        members=members, file_deletion_form=file_deletion_form)
+        create_group_form=create_group_form, add_member_form=add_member_form, \
+        group_deletion_form=group_deletion_form, response=response, \
+        admin=admin, members=group_members, file_deletion_form=file_deletion_form)
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
