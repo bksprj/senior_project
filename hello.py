@@ -317,6 +317,7 @@ def get_post_javascript_data():
     membership_list = list_user_groups(useremail)
     return jsdata
 
+# when you click on a group name this will retrieve that group name
 @app.route('/grab_group/<group_name>', methods = ['POST'])
 def get_post_group_name(group_name):
     print(group_name)
