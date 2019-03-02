@@ -98,6 +98,6 @@ nav {
   cursor: pointer;
 }
 
-.btn--dark-mode {
-	background-color: #2C2F33;
-}
+.dark-mode {
+  background: #2C2F33
+ }

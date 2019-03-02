@@ -68,7 +68,7 @@ function adminOff() {
 
 // Changes the theme color
 function dark_mode() {
-	document.querySelector('dark-mode-toggle').classList.toggle('dark-mode'); // ie9+ only
+	document.body.classList.toggle('dark-mode')
 }
 
 // When the user clicks the button, open the modal 
