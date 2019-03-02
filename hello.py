@@ -301,7 +301,10 @@ def add_new_members(group_name:str, member_input:str):
     print("Current member data:",query_group.find_one())
 
 def get_team_member_file(group_name:str):
-    return get_members(group_name)
+    member_file = open("uploads/members.txt", "w+")
+    for member in get_members(group_name):
+        member_file.write()
+    return get_members(group_name + "\n")
 
 #===============================================================================
 # Routes
