@@ -12,7 +12,7 @@ function onSignIn(googleUser) {
 	$(".goaway").css("display","none");
 	$("#pic").attr('src',profile.getImageUrl());
 	$("#pic2").attr('src',profile.getImageUrl());
-	$.post("/getemail", {"myData": profile.getEmail()})
+	$.post("/getemail", {"myData": profile.getEmail()});
 	$("#email").text(profile.getEmail());
 	$('#name').text(profile.getName());
 	$('#name2').text(profile.getName());
@@ -33,7 +33,7 @@ function signOut() {
 }
 
 function query_data(group_name){
-	$.post("/grab_group" + group_name)
+	$.post("/grab_group/" + group_name);
 }
 
 // Overlay function to turn on
