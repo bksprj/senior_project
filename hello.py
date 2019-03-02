@@ -320,6 +320,13 @@ def get_post_javascript_data():
     membership_list = list_user_groups(useremail)
     return jsdata
 
+@app.route('/grab_group/<group_name>', methods = ['POST'])
+def get_post_group_name(group_name):
+    print(group_name)
+    global useremail
+    global membership_list
+    return "RETRIEVED GROUP NAME"
+
 
 # index page
 @app.route("/", methods=['GET', 'POST'])
@@ -496,9 +503,6 @@ def aftersignin():
 @app.route("/about", methods=['GET', 'POST'])
 def about():
     return render_template('about.html')
-
-
-
 
 if __name__ == '__main__':
     app.run(debug = True)
