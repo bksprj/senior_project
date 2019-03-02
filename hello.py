@@ -30,7 +30,7 @@ db = client.test_database
 test_database = db.test_database
 
 useremail = "No user"
-membership_list = ["Not a part of any groups"]
+membership_list = ["Not a part of any Teams"]
 
 #===============================================================================
 # Class definitions
