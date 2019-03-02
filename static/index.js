@@ -66,11 +66,6 @@ function adminOff() {
 	document.getElementById("admin").style.display = "none";
 }
 
-// Changes the theme color
-function dark_mode() {
-	document.body.classList.toggle('dark-mode')
-}
-
 // When the user clicks the button, open the modal 
 function showModel() {
   document.getElementById("myModal").style.display = "block";

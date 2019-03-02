@@ -52,17 +52,17 @@
 	<body style="padding-top:35px;">
 		<div class="data panel panel-default" style="float:left;width:20%;">
 			<div class="panel-body">
-				<h4 class="text-primary">Teams</h4>
+				<h4 class="text-primary"><strong>Teams</strong></h4>
 				<!-- List of teams goes here. -->
 				<div id="navigation">
 	    			{% for item in membership_list %}
-					<a class="text-muted" onclick="query_data({{ item }})">{{ item }}</a>
+					<a class="text-muted" onclick="query_data({{ item }})"><strong>{{ item }}</strong></a>
 					<br>
 	    			{% endfor %}
 				</div>
 
 				<div style="padding-top:20px;">
-					<a class="text-primary" onclick="showModel()">Form a Team</a>
+					<a class="text-primary" onclick="showModel()"><strong>Form a Team</strong></a>
 				</div>
 
 				<div id="myModal" class="modal">
@@ -71,16 +71,12 @@
 						<span class="close" onclick="spanClick()" style="float: left;">&times;</span>
 					</div>
 				</div>
-
-				<div style="position:absolute; bottom:0; float:left; padding-bottom:5px;">
-        			<button class="btn btn-primary" onclick="dark_mode()">Dark Mode ON/OFF</button>
-        		</div>
 			</div>
 		</div>
 
 		<div class="data" style="float:left;width:20%; padding-left:10px; padding-top:15px;">
 			<div>
-				<h4 class="text-primary">Members</h4>
+				<h4 class="text-primary"><strong>Members</strong></h4>
 				{% if admin %}
 					<div>
 						<p class="text-primary">You are an admin, which means you have special privileges.</p>
@@ -103,16 +99,16 @@
 		</div>
 
 		<div class="data" style="float:left;width:30%; padding-left:10%; padding-top:15px;">
-			<h4 class="text-primary">Files/Data</h4>
+			<h4 class="text-primary"><strong>Files/Data</strong></h4>
 			<div id="navigation">
 				{%- if response|length > 1 -%}
 					{% for item in response[0] %}
-					<p class="text-muted" id="white">{{ item }}</p>
+					<p class="text-muted" id="white"><strong>{{ item }}</strong></p>
 					{% endfor %}
 
-					<p class="text-primary">The files for your group are:</p>
+					<p class="text-primary"><strong>The files for your group are:</strong></p>
       				{% for file_name in response[1] %}
-      					<a class="text-muted" id="white" href="/uploads/{{ file_name }}" download>{{ file_name }}</a>
+      					<a class="text-muted" id="white" href="/uploads/{{ file_name }}" download><strong>{{ file_name }}</strong></a>
 					{% endfor %}
 				{% endif %}
 
