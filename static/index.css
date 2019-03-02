@@ -97,3 +97,7 @@ nav {
   text-decoration: none;
   cursor: pointer;
 }
+
+.btn--dark-mode {
+	background-color: #2C2F33;
+}
