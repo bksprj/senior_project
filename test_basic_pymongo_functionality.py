@@ -18,9 +18,19 @@ class TestStringMethods(unittest.TestCase):
     #         s.split(2)
 
     def test_create_group(self):
+        print("test_create_group")
         test_group = "test_group_01"
         admin = "debrsa01@luther.edu"
-        self.assertEqual(hello.create_group(test_group, admin), None)
+        self.assertEqual(hello.create_group(test_group, admin), None) # no return value
+        print("*=============================================================*")
+
+    def test_get_data(self):
+        print("test_get_data")
+        test_group = "test_group_01"
+        self.assertEqual(len(hello.get_data(test_group)), 2) # as long as the return value makes sense
+        print("Let's see what the return value is:")
+        print(hello.get_data(test_group))
+        print("*=============================================================*")
 
 if __name__ == '__main__':
     unittest.main()
