@@ -10,8 +10,8 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<link rel="icon" href="{{url_for('static', filename='img/ds_logo.png')}}">
-		<script src="{{url_for('static', filename='index5.js')}}"></script>
-		<link rel="stylesheet" href="{{ url_for('static', filename='index12.css') }}" />
+		<script src="{{url_for('static', filename='index6.js')}}"></script>
+		<link rel="stylesheet" href="{{ url_for('static', filename='index13.css') }}" />
 	</head>
 
 	<header>
@@ -61,12 +61,25 @@
 	    			{% endfor %}
 				</div>
 
-				<div style="padding-top:10px;">
+				<a class="text-primary" id="myBtn" style="padding-top:10px;">Form a Team</a>
+
+				<!-- The Modal -->
+				<div id="myModal" class="modal">
+
+					<!-- Modal content -->
+					<div class="modal-content">
+						<span class="close">&times;</span>
+						{% include 'includes/mkgroup.html' %}
+					</div>
+
+				</div>
+
+				<!-- <div style="padding-top:10px;">
 					<a class="text-primary" onclick="on()">Form a Team</a>
 					<div id="overlay" style="float:left;">
 						{% include 'includes/mkgroup.html' %}
 					</div>
-				</div>
+				</div> -->
 
 				<div style="position:absolute; bottom:0; float:left; padding-bottom:5px;">
         			<button class="btn btn-primary" onclick="dark_mode()">Dark Mode ON</button>
