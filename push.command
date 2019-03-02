@@ -1,6 +1,6 @@
 #! /bin/bash
 
-cd ~/Desktop/senior_project
+cd ~/Desktop/Data_Sense/senior_project
 git add .
 git commit -m "Auto Update"
 git push origin master
