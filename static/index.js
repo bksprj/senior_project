@@ -71,15 +71,6 @@ function dark_mode() {
 	document.body.style.background = "#2C2F33";
 }
 
-// Get the modal
-var modal = document.getElementById('myModal');
-
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
 // When the user clicks the button, open the modal 
 function showModel() {
   document.getElementById("myModal").style.display = "block";
@@ -88,11 +79,4 @@ function showModel() {
 // When the user clicks on <span> (x), close the modal
 function spanClick() {
   document.getElementById("myModal").style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-	if (event.target == modal) {
-		modal.style.display = "none";
-	}
 }
