@@ -300,6 +300,8 @@ def add_new_members(group_name:str, member_input:str):
     query_group.find_one_and_replace({"_id":prev_id_data}, new_member_info)
     print("Current member data:",query_group.find_one())
 
+def get_team_member_file(group_name:str):
+    return get_members(group_name)
 
 #===============================================================================
 # Routes
