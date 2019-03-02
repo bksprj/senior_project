@@ -51,17 +51,17 @@
 
 	<body style="padding-top:35px;">
 		<div style="float:left;width:20%;padding-top:15px;">
-			<h4 class="text-primary"><strong>Teams</strong></h4>
+			<h3 class="text-primary"><strong>Teams</strong></h3>
 			<!-- List of teams goes here. -->
 			<div id="navigation">
 	    		{% for item in membership_list %}
-				<a style="color:white;" onclick="query_data({{ item }})"><strong>{{ item }}</strong></a>
+				<a style="color:white;" onclick="query_data({{ item }})"><strong><font size="4">{{ item }}</font></strong></a>
 				<br>
 	    		{% endfor %}
 			</div>
 
 			<div style="padding-top:10px;">
-				<a class="text-primary" onclick="showModel()"><strong>Form a Team</strong></a>
+				<a class="text-primary" onclick="showModel()"><strong><font size="4">Form a Team</font></strong></a>
 			</div>
 
 			<div id="myModal" class="modal">
@@ -74,7 +74,7 @@
 
 		<div class="data" style="float:left;width:20%; padding-left:10px; padding-top:15px;">
 			<div>
-				<h4 class="text-primary"><strong>Members</strong></h4>
+				<h3 class="text-primary"><strong>Members</strong></h3>
 				{% if admin %}
 					<div>
 						<p class="text-primary">You are an admin, which means you have special privileges.</p>
@@ -90,18 +90,18 @@
 				{% endif %}
 				<div id="navigation">
 	    			{% for ranks_users in members %}
-	        			<p style="color:white;">{{ ranks_users }}</p>
+	        			<p style="color:white;"><strong>{{ ranks_users }}</strong></p>
 	    			{% endfor %}
 				</div>
 			</div>
 		</div>
 
 		<div class="data" style="float:left;width:30%; padding-left:10%; padding-top:15px;">
-			<h4 class="text-primary"><strong>Files/Data</strong></h4>
+			<h3 class="text-primary"><strong>Files/Data</strong></h3>
 			<div id="navigation">
 				{%- if response|length > 1 -%}
 					{% for item in response[0] %}
-					<p style="color:white;"><strong>{{ item }}</strong></p>
+				<p style="color:white;"><strong><font size="4">{{ item }}</font></strong></p>
 					{% endfor %}
 
 					<p class="text-primary"><strong>The files for your group are:</strong></p>
@@ -111,10 +111,10 @@
 				{% endif %}
 
 				{%- if response|length < 2 -%}
-					<p style="color:white;">{{ response[0] }}</p>
+					<p style="color:white;"><strong><font size="4">{{ response[0] }}</font></strong></p>
 				{% endif %}
 
-				<a class="text-primary" href="/uploader"><strong>Upload a File</strong></a>
+				<a class="text-primary" href="/uploader"><strong><font size="4">Upload a File</font></strong></a>
 			</div>
 		</div>
 	</body>
