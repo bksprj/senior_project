@@ -13,7 +13,7 @@ function onSignIn(googleUser) {
 	$("#pic").attr('src',profile.getImageUrl());
 	$("#pic2").attr('src',profile.getImageUrl());
 	$.post("/getemail", {"myData": profile.getEmail()});
-	$.post("/getname", {"myDataName": profile.getName()});
+	//$.post("/getname", {"myDataName": profile.getName()});
 	$("#email").text(profile.getEmail());
 	$('#name').text(profile.getName());
 	$('#name2').text(profile.getName());
