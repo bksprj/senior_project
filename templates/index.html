@@ -67,7 +67,7 @@
 			<div id="myModal" class="modal">
 				<div class="modal-content">
 					{% include 'includes/mkgroup.html' %}
-					<span class="close" onclick="spanClick()" style="float: left;">&times;</span>
+					<span class="close" onclick="spanClick()">&times;</span>
 				</div>
 			</div>
 		</div>
@@ -114,7 +114,14 @@
 					<p style="color:white;"><strong><font size="4">{{ response[0] }}</font></strong></p>
 				{% endif %}
 
-				<a class="text-primary" href="/uploader"><strong><font size="4">Upload a File</font></strong></a>
+				<a class="text-primary" onclick="showModel()"><strong><font size="4">Upload a File</font></strong></a>
+
+				<div id="myModal" class="modal">
+					<div class="modal-content">
+						{% include 'includes/uploader.html' %}
+						<span class="close" onclick="spanClick()">&times;</span>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>
