@@ -109,3 +109,13 @@ nav {
   text-decoration: none;
   cursor: pointer;
 }
+
+.atag {
+  text-decoration: none;
+}
+
+.ataghover {
+  color:#99AAB5;
+  text-decoration:none;
+  cursor:pointer;
+ }
