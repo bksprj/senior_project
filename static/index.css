@@ -97,7 +97,7 @@ nav {
 
 /* The Close Button */
 .close {
-  color: #aaaaaa;
+  color: #888;
   float: right;
   font-size: 28px;
   font-weight: bold;
@@ -111,10 +111,12 @@ nav {
 }
 
 .atag {
+  color: white;
   text-decoration: none;
 }
 
-.atag:hover {
+.atag:hover,
+.atag:focus {
   color:#99AAB5;
   text-decoration:none;
   cursor:pointer;
