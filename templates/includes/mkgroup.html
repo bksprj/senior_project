@@ -2,12 +2,8 @@
 
 	<form method="POST" action="/" style="float:left;">
 		<h4 class="text-primary">Form a Team</h4>
-
-		<br>
 	    {{ create_group_form.group_name.label }} {{ create_group_form.group_name(size=20) }}
-		<br>
 	    {{ create_group_form.email.label }} {{ create_group_form.email(size=20) }}
-		<br>
 
 		<input class="btn btn-primary" type="submit" value="Form Team">
 		<span class="close" onclick="spanClick()">&times;</span>
