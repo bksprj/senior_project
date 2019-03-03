@@ -80,7 +80,18 @@ nav {
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
+  width: 20%;
+  text-align: center;
+}
+
+/* Modal Content */
+.modal-contents {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
   width: 15%;
+  height: 20%;
   text-align: center;
 }
 
