@@ -114,7 +114,7 @@ nav {
   text-decoration: none;
 }
 
-.ataghover {
+.atag:hover {
   color:#99AAB5;
   text-decoration:none;
   cursor:pointer;
