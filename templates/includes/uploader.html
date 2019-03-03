@@ -6,8 +6,10 @@
   <input type=text name=group_insert>
   <p class="text-primary">Click browse to find the file to upload</p>
   <input type=file name=file>
-  <input class="btn btn-primary" type=submit value=Upload style="padding-top:5px;">
-  <span class="close" onclick="spanClickUploader()">&times;</span>
+  <div style="padding-top:5px;">
+    <input class="btn btn-primary" type=submit value=Upload>
+    <span class="close" onclick="spanClickUploader()">&times;</span>
+  </div>
 </form>
 
 {% endblock %}
