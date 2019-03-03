@@ -100,12 +100,12 @@
 			<div id="navigation">
 				{%- if response|length > 1 -%}
 					{% for item in response[0] %}
-				<p style="color:white;"><strong><font size="4">{{ item }}</font></strong></p>
+					<p style="color:white;"><strong><font size="4">{{ item }}</font></strong></p>
 					{% endfor %}
 
 					<p class="text-primary"><strong>The files for your group are:</strong></p>
       				{% for file_name in response[1] %}
-      					<a class="text-muted" id="white" href="/uploads/{{ file_name }}" download><strong>{{ file_name }}</strong></a>
+      					<a class="atag" href="/uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
 					{% endfor %}
 				{% endif %}
 
