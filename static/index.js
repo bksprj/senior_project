@@ -75,3 +75,13 @@ function showModel() {
 function spanClick() {
   document.getElementById("myModal").style.display = "none";
 }
+
+function showUploader() {
+	document.getElementById("myUploader").style.display = "block";
+}
+  
+// When the user clicks on <span> (x), close the modal
+function spanClickUploader() {
+	document.getElementById("myUploader").style.display = "none";
+}
+  

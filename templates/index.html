@@ -114,12 +114,12 @@
 					<p style="color:white;"><strong><font size="4">{{ response[0] }}</font></strong></p>
 				{% endif %}
 
-				<a class="text-primary" onclick="showModel()"><strong><font size="4">Upload a File</font></strong></a>
+				<a class="text-primary" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
 
-				<div id="myModal" class="modal">
+				<div id="myUploader" class="modal">
 					<div class="modal-content">
 						{% include 'includes/uploader.html' %}
-						<span class="close" onclick="spanClick()">&times;</span>
+						<span class="close" onclick="spanClickUploader()">&times;</span>
 					</div>
 				</div>
 			</div>
