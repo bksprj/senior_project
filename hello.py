@@ -95,7 +95,7 @@ def read_csv_file(file):
         print(testDict)
         return testDict
 
-def notifications(noto_type:str,name=None,file_name=None) -> str:
+def notify(noto_type:str,name=None,file_name=None) -> str:
     # we want notifications for 2 groups of cases: regarding user and regarding files
     # noto_type can be "add" or "delete"
 
@@ -151,6 +151,7 @@ def create_group(new_group_name:str, admin_email:str):
         new_group = db[new_group_name]
         new_group.insert_one({"Notifications":[]})
         new_group.insert_one({"Files":[]}) # names of files that belong to the group
+        new_group.insert_one({"Tasks":[]})
     else:
         print("That team already exists!")
 
@@ -306,15 +307,29 @@ def add_new_members(group_name:str, member_input:str):
 
 
     new_admin_members_list = list_without_dups(prev_admin, new_admin_members_list)
-    aset = set(prev_admin)
-    amset = set(new_admin_members_list)
-    anset = aset - amset
-    if len(anset) > 0:
-        db = client.group_data
-        query_group = db[group_name]
-        notifications = query_group.find_one()
-        for one_admin in anset:
-            notifications.append(notification("add",one_admin,None))
+    aset = set(prev_admin) # previous
+    amset = set(new_admin_members_list) # new
+    anset = aset - amset # difference
+
+    new_notes = []
+    db = client.group_data
+    for eachadmin in new_admin_members_list:
+        new_notes.append(notify("add", eachadmin, None))
+    # new_notes = [notify("add","testboi",None)]
+    names = db.list_collection_names()
+    the_group = db[group_name]
+    all_docs = the_group.find()
+    group_data_list = [i for i in all_docs]
+    notifications = group_data_list[0]
+    prev_notes = notifications["Notifications"]
+    new_notes = prev_notes + new_notes
+    new_notes_dict = {"_id":notifications["_id"], "Notifications":new_notes}
+    print(f"Before, notifications were {prev_notes}")
+    the_group.find_one_and_replace(notifications, new_notes_dict)
+
+        # notifications = query_group.find_one()
+        # for one_admin in anset:
+        #     notifications.append(notification("add",one_admin,None))
             # group_note = db[check_group]["Notifications"].append(notification("add",one_admin,None))
 
 
@@ -385,10 +400,25 @@ def index():
     global group_members
     global check_group
     global admin
+
+
+    # get noto_lst
+    if check_group != "not checking a group":
+        db = client.group_data
+        the_group = db[check_group]
+        all_docs = the_group.find()
+        group_stuff = [i for i in all_docs]
+        group_notes = group_stuff[0]
+        noto_lst = group_notes["Notifications"]
+        if len(noto_lst) == 0:
+            noto_lst = ["There are no notifications"]
+        print(f" here are the notifications {noto_lst}")
+    else:
+        noto_lst = ["No Group Selected"]
+
+
     response = ["No files here..."]
-    #================================TEST======================================#
-    noto_lst = ['test has been deleted', 'poop has been decked']
-    #================================TEST======================================#
+
     file_lst = os.listdir(UPLOAD_FOLDER)
     # members = ["Not looking at any teams..."]
 
@@ -430,7 +460,7 @@ def index():
     return render_template('index.html', membership_list=membership_list, \
         create_group_form=create_group_form, add_member_form=add_member_form, \
         group_deletion_form=group_deletion_form, response=response, file_lst=file_lst, \
-        admin=admin, members=group_members, file_deletion_form=file_deletion_form)
+        admin=admin, members=group_members, file_deletion_form=file_deletion_form, noto_lst=noto_lst)
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
