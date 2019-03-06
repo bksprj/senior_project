@@ -333,9 +333,10 @@ def get_post_javascript_data():
     membership_list = list_user_groups(useremail)
     return jsdata
 
+# when you click on a group name this will retrieve that group name
 @app.route('/grab_group/<group_name>', methods = ['POST'])
 def get_post_group_name(group_name):
-    print(group_name)
+    # print(group_name)
     global useremail
     global membership_list
     global group_data
@@ -345,7 +346,6 @@ def get_post_group_name(group_name):
     group_data = get_data(group_name)
     group_members = get_members(group_name)
     return "RETRIEVED GROUP NAME"
-
 
 # index page
 @app.route("/", methods=['GET', 'POST'])
@@ -392,7 +392,12 @@ def index():
         response = delete_file(file_name_delete)
     print("\nGroup data is:\n", group_data)
 
-    # print("file_lst is: " + str(file_lst))
+    dirs = os.listdir(UPLOAD_FOLDER)
+    file_lst = []
+    for file_name in dirs:
+        file_lst.append(file_name)
+    print("FILE LIST TO BE PASSED", file_lst)
+
     return render_template('index.html', membership_list=membership_list, \
         create_group_form=create_group_form, add_member_form=add_member_form, \
         group_deletion_form=group_deletion_form, response=response, file_lst=file_lst, \
