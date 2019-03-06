@@ -149,7 +149,8 @@ def create_group(new_group_name:str, admin_email:str):
         # Then we'll want to create a collection for that new group's data in the group_data database
         db = client.group_data
         new_group = db[new_group_name]
-        new_group.insert_one({"Group creation":"Completed"})
+        new_group.insert_one({"Notifications":[]})
+        new_group.insert_one({"Files":[]}) # names of files that belong to the group
     else:
         print("That team already exists!")
 
@@ -265,6 +266,7 @@ def get_members(group_name:str) -> list:
     return returnval[1:]
 
 def add_new_members(group_name:str, member_input:str):
+    global check_group
     def list_without_dups(list1:list, list2:list) -> list:
         result = list1
         for i in list2:
@@ -300,7 +302,23 @@ def add_new_members(group_name:str, member_input:str):
     prev_admin = prev_member_data["Admin"]
     prev_standard = prev_member_data["Standard"]
 
+
+
+
     new_admin_members_list = list_without_dups(prev_admin, new_admin_members_list)
+    aset = set(prev_admin)
+    amset = set(new_admin_members_list)
+    anset = aset - amset
+    if len(anset) > 0:
+        db = client.group_data
+        query_group = db[group_name]
+        notifications = query_group.find_one()
+        for one_admin in anset:
+            notifications.append(notification("add",one_admin,None))
+            # group_note = db[check_group]["Notifications"].append(notification("add",one_admin,None))
+
+
+
     new_standard_members_list = list_without_dups(prev_standard, new_standard_members_list)
 
     # print(f"Here are the final admin members {new_admin_members_list}")
