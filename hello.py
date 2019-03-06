@@ -116,18 +116,18 @@ def list_user_groups(email:str) -> list:
     membership_list = ["You are not a part of any group"]  # holds all the groups that the user is a member of
     db = client.groups
     groups = db.list_collection_names()
-    checkgroup = "We'll use this variable to have a shorter if statement in the loop"
+    # checkgroup = "We'll use this variable to have a shorter if statement in the loop"
     existing_membership = False  # if false, then the user is not in any group
                                  # we revert to the default list, if so
     for group_name in groups:
         checkgroup = db[group_name].find_one()
-        # print("group_name", group_name, "checkgroup", checkgroup, type(checkgroup))
+        print("\nHEY\ngroup_name", group_name, "checkgroup", checkgroup, type(checkgroup))
         if email in checkgroup["Admin"]:
-            print(group_name)
+            # print(group_name)
             membership_list.append(str(group_name))
             existing_membership = True
         elif email in checkgroup["Standard"]:
-            print(group_name)
+            # print(group_name)
             membership_list.append(str(group_name))
             existing_membership = True
         else:
@@ -151,7 +151,6 @@ def create_group(new_group_name:str, admin_email:str):
         new_group = db[new_group_name]
         new_group.insert_one({"Notifications":[]})
         new_group.insert_one({"Files":[]}) # names of files that belong to the group
-        new_group.insert_one({"Tasks":[]})
     else:
         print("That team already exists!")
 
@@ -314,7 +313,7 @@ def add_new_members(group_name:str, member_input:str):
     new_notes = []
     db = client.group_data
     for eachadmin in new_admin_members_list:
-        new_notes.append(notify("add", eachadmin, None))
+        new_notes.append(notify("add"))
     # new_notes = [notify("add","testboi",None)]
     names = db.list_collection_names()
     the_group = db[group_name]
