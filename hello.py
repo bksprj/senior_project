@@ -34,6 +34,7 @@ membership_list = ["Not a part of any Teams"]
 group_data = [["No groups"], ["No admin"]]
 group_members = ["No members"]
 check_group = "not checking a group"
+admin = False
 
 #===============================================================================
 # Class definitions
@@ -342,9 +343,19 @@ def get_post_group_name(group_name):
     global group_data
     global group_members
     global check_group
+    global admin
     check_group = group_name
     group_data = get_data(group_name)
     group_members = get_members(group_name)
+    # admin check
+    db = client.groups
+    group_collection = db[group_name]
+    if useremail in group_collection.find_one()["Admin"]:
+        # print("You are an Admin in the group")
+        admin = True
+    else:
+        admin = False
+
     return "RETRIEVED GROUP NAME"
 
 # index page
@@ -355,8 +366,8 @@ def index():
     global group_data
     global group_members
     global check_group
+    global admin
     response = ["No files here..."]
-    admin = False
     #================================TEST======================================#
     noto_lst = ['test has been deleted', 'poop has been decked']
     #================================TEST======================================#
