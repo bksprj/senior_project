@@ -107,9 +107,9 @@
 
 					<p class="text-primary"><strong>The files for your group are:</strong></p>
       				{% for file_name in file_lst %}
-      					<a class="atag" href="/uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
-					{% endfor %}
-				{% endif %}
+      					<a class="atag" href="uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
+							{% endfor %}
+			  {% endif %}
 
 				{%- if response|length < 2 -%}
 					<p style="color:white;"><strong><font size="4">{{ response[0] }}</font></strong></p>
