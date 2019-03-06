@@ -106,18 +106,15 @@
 					{% endfor %}
 
 					<p class="text-primary"><strong>The files for your group are:</strong></p>
-<<<<<<< HEAD
       				{% for file_name in file_lst %}
       					<a class="atag" href="uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
 							{% endfor %}
 			  {% endif %}
-=======
-				{% endif %}
+
 
 				{% for file_name in file_lst %}
       					<a class="atag" href="/uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
 					{% endfor %}
->>>>>>> a1544627431d2faa6883a56d693ac1ed1ec132c0
 
 				{%- if response|length < 2 -%}
 					<p style="color:white;"><strong><font size="4">{{ response[0] }}</font></strong></p>
