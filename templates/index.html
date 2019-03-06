@@ -33,7 +33,7 @@
 						<div class="g-signin2" data-onsuccess="onSignIn" style="padding-right:5px;" data-theme="dark"></div>
 					</li>
 					<li class="dropdown data" style="padding-top:7.5px;padding-right:5px;">
-						<h5 class="text-primary" id="name" style="padding-right:5px;float:left;"><strong></strong></h5>
+						<h5 class="text-primary hov" id="name" style="padding-right:5px;float:left;"><strong></strong></h5>
 						<img id="pic" class="img-circle data" style="float:right" width="37.5" height="37.5" />
 						<ul class="dropdown-menu" style="text-align:center;">
 							<li>
@@ -55,24 +55,23 @@
 			<!-- List of teams goes here. -->
 			<div id="navigation">
 	    		{% for item in membership_list %}
-				<a style="color:white;" onclick="query_data('{{ item }}')"><strong><font size="4">{{ item }}</font></strong></a>
+				<a class="atag" onclick="query_data('{{ item }}'); window.location.reload()"><strong><font size="4">{{ item }}</font></strong></a>
 				<br>
 	    		{% endfor %}
 			</div>
 
 			<div style="padding-top:10px;">
-				<a class="text-primary" onclick="showModel()"><strong><font size="4">Form a Team</font></strong></a>
+				<a class="text-primary hov" onclick="showModel()"><strong><font size="4">Form a Team</font></strong></a>
 			</div>
 
 			<div id="myModal" class="modal">
-				<div class="modal-content">
+				<div class="modal-contents">
 					{% include 'includes/mkgroup.html' %}
-					<span class="close" onclick="spanClick()" style="float: left;">&times;</span>
 				</div>
 			</div>
 		</div>
 
-		<div class="data" style="float:left;width:20%; padding-left:10px; padding-top:15px;">
+		<div style="float:left;width:20%; padding-left:10%; padding-top:15px;">
 			<div>
 				<h3 class="text-primary"><strong>Members</strong></h3>
 				{% if admin %}
@@ -96,17 +95,17 @@
 			</div>
 		</div>
 
-		<div class="data" style="float:left;width:30%; padding-left:10%; padding-top:15px;">
+		<div style="float:left;width:30%; padding-left:20%; padding-top:15px;">
 			<h3 class="text-primary"><strong>Files/Data</strong></h3>
 			<div id="navigation">
 				{%- if response|length > 1 -%}
 					{% for item in response[0] %}
-				<p style="color:white;"><strong><font size="4">{{ item }}</font></strong></p>
+					<p style="color:white;"><strong><font size="4">{{ item }}</font></strong></p>
 					{% endfor %}
 
 					<p class="text-primary"><strong>The files for your group are:</strong></p>
       				{% for file_name in response[1] %}
-      					<a class="text-muted" id="white" href="/uploads/{{ file_name }}" download><strong>{{ file_name }}</strong></a>
+      					<a class="atag" href="/uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
 					{% endfor %}
 				{% endif %}
 
@@ -114,7 +113,13 @@
 					<p style="color:white;"><strong><font size="4">{{ response[0] }}</font></strong></p>
 				{% endif %}
 
-				<a class="text-primary" href="/uploader"><strong><font size="4">Upload a File</font></strong></a>
+				<a class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
+
+				<div id="myUploader" class="modal">
+					<div class="modal-content">
+						{% include 'includes/uploader.html' %}
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>

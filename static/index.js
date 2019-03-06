@@ -13,6 +13,7 @@ function onSignIn(googleUser) {
 	$("#pic").attr('src',profile.getImageUrl());
 	$("#pic2").attr('src',profile.getImageUrl());
 	$.post("/getemail", {"myData": profile.getEmail()});
+	//$.post("/getname", {"myDataName": profile.getName()});
 	$("#email").text(profile.getEmail());
 	$('#name').text(profile.getName());
 	$('#name2').text(profile.getName());
@@ -75,3 +76,13 @@ function showModel() {
 function spanClick() {
   document.getElementById("myModal").style.display = "none";
 }
+
+function showUploader() {
+	document.getElementById("myUploader").style.display = "block";
+}
+  
+// When the user clicks on <span> (x), close the modal
+function spanClickUploader() {
+	document.getElementById("myUploader").style.display = "none";
+}
+  

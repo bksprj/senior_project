@@ -80,13 +80,24 @@ nav {
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
+  width: 20%;
+  text-align: center;
+}
+
+/* Modal Content */
+.modal-contents {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
   width: 15%;
+  height: 40%;
   text-align: center;
 }
 
 /* The Close Button */
 .close {
-  color: #aaaaaa;
+  color: #888;
   float: right;
   font-size: 28px;
   font-weight: bold;
@@ -98,3 +109,21 @@ nav {
   text-decoration: none;
   cursor: pointer;
 }
+
+.atag {
+  color: white;
+}
+
+.atag:hover,
+.atag:focus {
+  color:#99AAB5;
+  text-decoration:none;
+  cursor:pointer;
+ }
+
+ .hov:hover,
+ .hov:focus {
+  color:#99AAB5;
+  text-decoration:none;
+  cursor:pointer;
+ }
