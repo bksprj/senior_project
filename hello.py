@@ -392,7 +392,7 @@ def index():
         response = delete_file(file_name_delete)
     print("\nGroup data is:\n", group_data)
 
-    print("file_lst is: " + str(file_lst))
+    # print("file_lst is: " + str(file_lst))
     return render_template('index.html', membership_list=membership_list, \
         create_group_form=create_group_form, add_member_form=add_member_form, \
         group_deletion_form=group_deletion_form, response=response, file_lst=file_lst, \
