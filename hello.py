@@ -94,16 +94,16 @@ def read_csv_file(file):
         print(testDict)
         return testDict
 
-def notifications(noti_type:str,member=None,file_name=None) -> list:
+def notifications(noti_type:str,name=None,file_name=None) -> list:
     # we want notifications for 2 groups of cases: regarding user and regarding files
     # noti_type can be "add" or "delete"
 
     # 1. When a user is added or deleted
     if name != None:
         if noti_type == "add":
-            return [str(name) + " was added to the group."]
+            return [str(name) + " was added."]
         elif noti_type == "delete":
-            return [str(name) + " was deleted from the group."]
+            return [str(name) + " was deleted."]
     # 2. When a file is added or deleted
     if file_name != None:
         if noti_type == "add":
