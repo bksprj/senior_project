@@ -94,6 +94,23 @@ def read_csv_file(file):
         print(testDict)
         return testDict
 
+def notifications(noto_type:str,name=None,file_name=None) -> list:
+    # we want notifications for 2 groups of cases: regarding user and regarding files
+    # noto_type can be "add" or "delete"
+
+    # 1. When a user is added or deleted
+    if name != None:
+        if noto_type == "add":
+            return [str(name) + " was added."]
+        elif noto_type == "delete":
+            return [str(name) + " was deleted."]
+    # 2. When a file is added or deleted
+    if file_name != None:
+        if noto_type == "add":
+            return ["The file * " + str(file_name) + " * was added."]
+        elif noto_type == "delete":
+            return ["The file * " + str(file_name) + " * was deleted."]
+
 def list_user_groups(email:str) -> list:
     membership_list = ["You are not a part of any group"]  # holds all the groups that the user is a member of
     db = client.groups
