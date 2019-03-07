@@ -35,7 +35,12 @@ function signOut() {
 
 function query_data(group_name){
 	$.post("/grab_group/" + group_name);
-	// setTimeout(function(){location.reload(true)}, 1000);
+	// setTimeout(function(){document.location.reload(true)}, 1000);
+}
+
+// function timedRefresh() {
+// 	setTimeout("location.reload(true);",1000);
+// }
 
 // Overlay function to turn on
 function on() {
@@ -102,6 +107,6 @@ function showAdmin() {
   }
   
   // When the user clicks on <span> (x), close the modal
-  function spanAdmin() {
+function spanAdmin() {
 	document.getElementById("myAdmin").style.display = "none";
   }
