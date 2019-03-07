@@ -121,7 +121,7 @@ def list_user_groups(email:str) -> list:
                                  # we revert to the default list, if so
     for group_name in groups:
         checkgroup = db[group_name].find_one()
-        print("\nHEY\ngroup_name", group_name, "checkgroup", checkgroup, type(checkgroup))
+        # print("\nHEY\ngroup_name", group_name, "checkgroup", checkgroup, type(checkgroup))
         if email in checkgroup["Admin"]:
             # print(group_name)
             membership_list.append(str(group_name))
@@ -151,6 +151,7 @@ def create_group(new_group_name:str, admin_email:str):
         new_group = db[new_group_name]
         new_group.insert_one({"Notifications":[]})
         new_group.insert_one({"Files":[]}) # names of files that belong to the group
+        new_group.insert_one({"Tasks":[]})
     else:
         print("That team already exists!")
 
@@ -210,6 +211,9 @@ def get_data(group_name:str):
     return [ [retrieve_data, file_list], admin ]
 
 def delete_group(group_name_delete:str) -> list:
+    global check_group
+
+
     db_groups = client.groups
     db_group_data = client.group_data
     db_groups_collection = db_groups[group_name_delete]
@@ -247,6 +251,7 @@ def delete_group(group_name_delete:str) -> list:
     drop2 = db_group_data_collection.drop()
     print("Well, let's hope it worked", drop1, drop2)
     server_message = ["Group '" + str(group_name_delete) + "' has been deleted"]
+    check_group = "not checking a group"
     return server_message
 
 def get_members(group_name:str) -> list:
@@ -306,14 +311,11 @@ def add_new_members(group_name:str, member_input:str):
 
 
     new_admin_members_list = list_without_dups(prev_admin, new_admin_members_list)
-    aset = set(prev_admin) # previous
-    amset = set(new_admin_members_list) # new
-    anset = aset - amset # difference
 
     new_notes = []
     db = client.group_data
     for eachadmin in new_admin_members_list:
-        new_notes.append(notify("add"))
+        new_notes.append(notify("add", eachadmin, None))
     # new_notes = [notify("add","testboi",None)]
     names = db.list_collection_names()
     the_group = db[group_name]
@@ -321,17 +323,14 @@ def add_new_members(group_name:str, member_input:str):
     group_data_list = [i for i in all_docs]
     notifications = group_data_list[0]
     prev_notes = notifications["Notifications"]
+
     new_notes = prev_notes + new_notes
+    if len(new_notes) > 10:
+        new_notes = new_notes[-10:]
     new_notes_dict = {"_id":notifications["_id"], "Notifications":new_notes}
-    print(f"Before, notifications were {prev_notes}")
-    the_group.find_one_and_replace(notifications, new_notes_dict)
-
-        # notifications = query_group.find_one()
-        # for one_admin in anset:
-        #     notifications.append(notification("add",one_admin,None))
-            # group_note = db[check_group]["Notifications"].append(notification("add",one_admin,None))
-
-
+    # print(f"Before, notifications were {prev_notes}")
+    if len(new_notes) > 0:
+        the_group.find_one_and_replace(notifications, new_notes_dict)
 
     new_standard_members_list = list_without_dups(prev_standard, new_standard_members_list)
 
@@ -342,9 +341,9 @@ def add_new_members(group_name:str, member_input:str):
     new_member_info = {"_id":prev_id_data, "Admin":new_admin_members_list, "Standard":new_standard_members_list}
     # print(f"New member info is: {new_member_info}")
 
-    print("Previous member data:",query_group.find_one())
+    # print("Previous member data:",query_group.find_one())
     query_group.find_one_and_replace({"_id":prev_id_data}, new_member_info)
-    print("Current member data:",query_group.find_one())
+    # print("Current member data:",query_group.find_one())
 
 def get_team_member_file(group_name:str):
     member_file = open("uploads/members.txt", "w+")
@@ -401,21 +400,6 @@ def index():
     global admin
 
 
-    # get noto_lst
-    if check_group != "not checking a group":
-        db = client.group_data
-        the_group = db[check_group]
-        all_docs = the_group.find()
-        group_stuff = [i for i in all_docs]
-        group_notes = group_stuff[0]
-        noto_lst = group_notes["Notifications"]
-        if len(noto_lst) == 0:
-            noto_lst = ["There are no notifications"]
-        print(f" here are the notifications {noto_lst}")
-    else:
-        noto_lst = ["No Group Selected"]
-
-
     response = ["No files here..."]
 
     file_lst = os.listdir(UPLOAD_FOLDER)
@@ -434,7 +418,7 @@ def index():
         create_group(input_name, input_email)
 
     elif add_member_form.validate_on_submit():
-        print("\n*******************************************")
+        # print("\n*******************************************")
         group_name = add_member_form.group_name.data
         new_members = add_member_form.member_input.data
         # print(f"\nAttempting member addition with {group_name} and members: {new_members}")
@@ -448,13 +432,29 @@ def index():
     elif file_deletion_form.validate_on_submit():
         file_name_delete = file_deletion_form.file_name_delete.data
         response = delete_file(file_name_delete)
-    print("\nGroup data is:\n", group_data)
+    # print("\nGroup data is:\n", group_data)
 
     dirs = os.listdir(UPLOAD_FOLDER)
     file_lst = []
     for file_name in dirs:
         file_lst.append(file_name)
-    print("FILE LIST TO BE PASSED", file_lst)
+    # print("FILE LIST TO BE PASSED", file_lst)
+
+
+    # get noto_lst
+    print("check_group is", check_group)
+    if check_group != "not checking a group":
+        db = client.group_data
+        the_group = db[check_group]
+        all_docs = the_group.find()
+        group_stuff = [i for i in all_docs]
+        group_notes = group_stuff[0]
+        noto_lst = group_notes["Notifications"]
+        if len(noto_lst) == 0:
+            noto_lst = ["There are no notifications"]
+        print(f" here are the notifications {noto_lst}")
+    else:
+        noto_lst = ["No Group Selected"]
 
     return render_template('index.html', membership_list=membership_list, \
         create_group_form=create_group_form, add_member_form=add_member_form, \
