@@ -57,7 +57,9 @@
 			<!-- List of teams goes here. -->
 			<div id="navigation">
 	    		{% for item in membership_list %}
-				<a class="atag" onclick="query_data('{{ item }}'); window.location.reload()"><strong><font size="4">{{ item }}</font></strong></a>
+				<!-- <a class="atag" onclick="query_data('{{ item }}'); window.location.reload()"><strong><font size="4">{{ item }}</font></strong></a> -->
+				<a class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a>
+
 				<br>
 	    		{% endfor %}
 			</div>
