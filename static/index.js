@@ -67,7 +67,7 @@ function adminOff() {
 	document.getElementById("admin").style.display = "none";
 }
 
-// When the user clicks the button, open the modal 
+// When the user clicks the button, open the modal
 function showModel() {
   document.getElementById("myModal").style.display = "block";
 }
@@ -80,28 +80,28 @@ function spanClick() {
 function showUploader() {
 	document.getElementById("myUploader").style.display = "block";
 }
-  
+
 // When the user clicks on <span> (x), close the modal
 function spanClickUploader() {
 	document.getElementById("myUploader").style.display = "none";
 }
-  
-// When the user clicks the button, open the modal 
+
+// When the user clicks the button, open the modal
 function showTaskIn() {
 	document.getElementById("myTaskIn").style.display = "block";
   }
-  
+
   // When the user clicks on <span> (x), close the modal
   function spanTaskIn() {
 	document.getElementById("myTaskIn").style.display = "none";
   }
 
-  // When the user clicks the button, open the modal 
+  // When the user clicks the button, open the modal
 function showAdmin() {
 	document.getElementById("myAdmin").style.display = "block";
   }
-  
+
   // When the user clicks on <span> (x), close the modal
   function spanAdmin() {
 	document.getElementById("myAdmin").style.display = "none";
-  }
+}}
