@@ -311,13 +311,10 @@ def add_new_members(group_name:str, member_input:str):
 
 
     new_admin_members_list = list_without_dups(prev_admin, new_admin_members_list)
-    aset = set(prev_admin) # previous
-    amset = set(new_admin_members_list) # new
-    anset = aset - amset # difference
 
     new_notes = []
     db = client.group_data
-    for eachadmin in anset:
+    for eachadmin in new_admin_members_list:
         new_notes.append(notify("add", eachadmin, None))
     # new_notes = [notify("add","testboi",None)]
     names = db.list_collection_names()
@@ -326,7 +323,10 @@ def add_new_members(group_name:str, member_input:str):
     group_data_list = [i for i in all_docs]
     notifications = group_data_list[0]
     prev_notes = notifications["Notifications"]
+
     new_notes = prev_notes + new_notes
+    if len(new_notes) > 10:
+        new_notes = new_notes[-10:]
     new_notes_dict = {"_id":notifications["_id"], "Notifications":new_notes}
     # print(f"Before, notifications were {prev_notes}")
     if len(new_notes) > 0:
