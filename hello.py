@@ -211,6 +211,9 @@ def get_data(group_name:str):
     return [ [retrieve_data, file_list], admin ]
 
 def delete_group(group_name_delete:str) -> list:
+    global check_group
+
+
     db_groups = client.groups
     db_group_data = client.group_data
     db_groups_collection = db_groups[group_name_delete]
@@ -248,6 +251,7 @@ def delete_group(group_name_delete:str) -> list:
     drop2 = db_group_data_collection.drop()
     print("Well, let's hope it worked", drop1, drop2)
     server_message = ["Group '" + str(group_name_delete) + "' has been deleted"]
+    check_group = "not checking a group"
     return server_message
 
 def get_members(group_name:str) -> list:
@@ -324,7 +328,7 @@ def add_new_members(group_name:str, member_input:str):
     prev_notes = notifications["Notifications"]
     new_notes = prev_notes + new_notes
     new_notes_dict = {"_id":notifications["_id"], "Notifications":new_notes}
-    print(f"Before, notifications were {prev_notes}")
+    # print(f"Before, notifications were {prev_notes}")
     if len(new_notes) > 0:
         the_group.find_one_and_replace(notifications, new_notes_dict)
 
@@ -337,9 +341,9 @@ def add_new_members(group_name:str, member_input:str):
     new_member_info = {"_id":prev_id_data, "Admin":new_admin_members_list, "Standard":new_standard_members_list}
     # print(f"New member info is: {new_member_info}")
 
-    print("Previous member data:",query_group.find_one())
+    # print("Previous member data:",query_group.find_one())
     query_group.find_one_and_replace({"_id":prev_id_data}, new_member_info)
-    print("Current member data:",query_group.find_one())
+    # print("Current member data:",query_group.find_one())
 
 def get_team_member_file(group_name:str):
     member_file = open("uploads/members.txt", "w+")
