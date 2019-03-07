@@ -95,3 +95,13 @@ function showTaskIn() {
   function spanTaskIn() {
 	document.getElementById("myTaskIn").style.display = "none";
   }
+
+  // When the user clicks the button, open the modal 
+function showAdmin() {
+	document.getElementById("myAdmin").style.display = "block";
+  }
+  
+  // When the user clicks on <span> (x), close the modal
+  function spanAdmin() {
+	document.getElementById("myAdmin").style.display = "none";
+  }

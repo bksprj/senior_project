@@ -79,24 +79,26 @@
 		<div class="data" style="float:left;width:20%; padding-left:10%; padding-top:15px;">
 			<div>
 				<h3 class="text-primary"><strong>Members</strong></h3>
-				{% if admin %}
-					<div>
-						<p class="text-primary">You are an admin, which means you have special privileges.</p>
-						<a class="text-primary" onclick="adminOn()">show</a>
-						<div id="admin">
-							{% include 'includes/drop_collection.html' %}
-							{% include 'includes/file_deletion.html' %}
-							{% include 'includes/add_member.html' %}
-							<a class="text-primary" onclick="adminOff()">close</a>
-						</div>
-					</div>
-
-				{% endif %}
 				<div id="navigation">
 	    			{% for ranks_users in members %}
 					<p style="color:white;"><strong><font size="4">{{ ranks_users }}</font></strong></p>
 	    			{% endfor %}
 				</div>
+
+				{% if admin %}
+				<div>
+					<a class="text-primary hov" onclick="showAdmin()"><strong><font size="4">Admin Privileges</font></strong></a>
+					<div id="myAdmin" class="modal">
+						<div class="modal-content">
+							{% include 'includes/drop_collection.html' %}
+							{% include 'includes/file_deletion.html' %}
+							{% include 'includes/add_member.html' %}
+							
+						</div>
+					</div>
+				</div>
+				{% endif %}
+
 			</div>
 		</div>
 
