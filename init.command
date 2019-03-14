@@ -1,6 +1,7 @@
 #! /bin/bash
 
 cd
+pip install -U selenium
 cd Desktop
 mkdir Data_Sense
 cd Data_Sense
