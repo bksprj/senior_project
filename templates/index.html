@@ -57,7 +57,11 @@
 			<!-- List of teams goes here. -->
 			<div id="navigation">
 	    		{% for item in membership_list %}
-				<a id="{{ item }}" class="atag" onclick="query_data('{{ item }}'); setTimeout(function(){document.location.reload(true)}, 1000);"><strong><font size="4">{{ item }}</font></strong></a>
+				<a class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a>
+				<!-- <a class="atag" onclick="query_data('{{ item }}'); document.location.reload(true);"><strong><font size="4">{{ item }}</font></strong></a> -->
+				<!-- <a class="atag" onclick="query_data('{{ item }}'); setTimeout(function(){document.location.reload(true)}, 1000);"><strong><font size="4">{{ item }}</font></strong></a> -->
+
+
 				<br>
 	    		{% endfor %}
 			</div>
@@ -90,7 +94,7 @@
 							{% include 'includes/drop_collection.html' %}
 							{% include 'includes/file_deletion.html' %}
 							{% include 'includes/add_member.html' %}
-							
+
 						</div>
 					</div>
 				</div>
@@ -131,6 +135,12 @@
 				</div>
 			</div>
 		</div>
+
+
+
+
+
+
 
 		<div class="data" style="position: absolute; bottom: 0; float: left; padding-top: 5px; padding-bottom: 5px;">
 			<div>
