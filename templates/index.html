@@ -57,17 +57,21 @@
 			<!-- List of teams goes here. -->
 			<div id="navigation">
 	    		{% for item in membership_list %}
+<<<<<<< HEAD
 				<a class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a>
 				<!-- <a class="atag" onclick="query_data('{{ item }}'); document.location.reload(true);"><strong><font size="4">{{ item }}</font></strong></a> -->
 				<!-- <a class="atag" onclick="query_data('{{ item }}'); setTimeout(function(){document.location.reload(true)}, 1000);"><strong><font size="4">{{ item }}</font></strong></a> -->
 
 
+=======
+				<a id="{{ item }}" class="atag" onclick="query_data('{{ item }}'); setTimeout(function(){document.location.reload(true)}, 1000);"><strong><font size="4">{{ item }}</font></strong></a>
+>>>>>>> 8576cd309312fa49bb8e20663f5224a5b3d62cc5
 				<br>
 	    		{% endfor %}
 			</div>
 
 			<div style="padding-top:10px;">
-				<a class="text-primary hov" onclick="showModel()"><strong><font size="4">Form a Team</font></strong></a>
+				<a id="form-team" class="text-primary hov" onclick="showModel()"><strong><font size="4">Form a Team</font></strong></a>
 			</div>
 
 			<div id="myModal" class="modal">
@@ -88,7 +92,7 @@
 
 				{% if admin %}
 				<div>
-					<a class="text-primary hov" onclick="showAdmin()"><strong><font size="4">Admin Privileges</font></strong></a>
+					<a id="admin-priv" class="text-primary hov" onclick="showAdmin()"><strong><font size="4">Admin Privileges</font></strong></a>
 					<div id="myAdmin" class="modal">
 						<div class="modal-content">
 							{% include 'includes/drop_collection.html' %}
