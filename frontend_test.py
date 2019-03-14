@@ -83,6 +83,7 @@ driver.find_element_by_id("add-mem").click()
 time.sleep(5)
 driver.refresh()
 
+# Delete Group
 driver.find_element_by_id("admin-priv").click()
 deleteteam = driver.find_element_by_id("group_name_delete")
 deleteteam.send_keys(name)
