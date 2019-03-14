@@ -20,10 +20,10 @@ def rand_name():
 
 # Username and Pass to sign in to gmail.
 print("Do not use with a gmail account that has two step verification.")
-#user = str(input("Enter gmail account:\n"))
-#passw = str(input("Enter Password:\n"))
-user = "keegan.husom@gmail.com"
-passw = "R3dSkull"
+user = str(input("Enter gmail account:\n"))
+passw = str(input("Enter Password:\n"))
+#user = "keegan.husom@gmail.com"
+#passw =
 
 # Picking Search Engine
 driver = webdriver.Chrome("/Users/KeeganHusom/Downloads/chromedriver")
@@ -65,13 +65,13 @@ driver.find_element_by_id("form-team-btn").click()
 
 time.sleep(10)
 driver.refresh()
-time.sleep(5)
 driver.refresh()
 
 # Add Team Members
 driver.find_element_by_id(name).click()
 
 time.sleep(10)
+driver.refresh()
 
 driver.find_element_by_id("admin-priv").click()
 time.sleep(2)
