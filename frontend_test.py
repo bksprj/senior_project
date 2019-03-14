@@ -69,13 +69,21 @@ time.sleep(5)
 
 driver.find_element_by_id("admin-priv").click()
 time.sleep(2)
-memberName = driver.find_element_by_id("member_imput")
+memberName = driver.find_element_by_id("member_input")
 memberName.send_keys("Standard:husoke01@luther.edu")
 time.sleep(2)
 driver.find_element_by_id("add-mem").click()
 
 time.sleep(5)
 driver.refresh()
+
+driver.find_element_by_id("admin-priv").click()
+deleteteam = driver.find_element_by_id("group_name_delete")
+deleteteam.send_keys(name)
+time.sleep(2)
+
+driver.find_element_by_id("delete-team").click()
+
 
 
 
