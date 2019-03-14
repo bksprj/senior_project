@@ -43,21 +43,42 @@ time.sleep(2)
 
 # Push Login
 driver.find_element_by_xpath("//*[@id='passwordNext']/content/span").click()
-time.sleep(6)
+time.sleep(4)
 
 # Going to web app
 driver.get("https://data-sense.herokuapp.com/")
+time.sleep(6)
 
-# Test Forming a Team
+# Forming a Team
 driver.find_element_by_id("form-team").click()
 teamname = driver.find_element_by_id("group_name")
 name = rand_name()
 teamname.send_keys(name)
+time.sleep(2)
 admin = driver.find_element_by_id("email")
 admin.send_keys(user)
+time.sleep(2)
 driver.find_element_by_id("form-team-btn").click()
+
+time.sleep(5)
+driver.refresh()
+
+# Add Team Members
+driver.find_element_by_id("random-team").click()
+time.sleep(5)
+
+driver.find_element_by_id("admin-priv").click()
+time.sleep(2)
+memberName = driver.find_element_by_id("member_imput")
+memberName.send_keys("Standard:husoke01@luther.edu")
+time.sleep(2)
+driver.find_element_by_id("add-mem").click()
+
+time.sleep(5)
+driver.refresh()
+
 
 
 
 # Stop driver
-driver.close()
+#driver.close()
