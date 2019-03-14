@@ -12,8 +12,13 @@ function onSignIn(googleUser) {
 	$(".goaway").css("display","none");
 	$("#pic").attr('src',profile.getImageUrl());
 	$("#pic2").attr('src',profile.getImageUrl());
-	$.post("/getemail", {"myData": profile.getEmail()});
-	//$.post("/getname", {"myDataName": profile.getName()});
+	// $.post("/getemail", {"myData": profile.getEmail()});
+	$.ajax({
+  type: "POST",
+  url: "/getemail",
+  data: {"myData": profile.getEmail()}
+  });
+	
 	$("#email").text(profile.getEmail());
 	$('#name').text(profile.getName());
 	$('#name2').text(profile.getName());

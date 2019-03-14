@@ -57,10 +57,9 @@
 			<!-- List of teams goes here. -->
 			<div id="navigation">
 	    		{% for item in membership_list %}
-				<!-- <a class="atag" onclick="query_data('{{ item }}'); window.location.reload()"><strong><font size="4">{{ item }}</font></strong></a> -->
-				<!-- <a class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a> -->
+				<a class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a>
 				<!-- <a class="atag" onclick="query_data('{{ item }}'); document.location.reload(true);"><strong><font size="4">{{ item }}</font></strong></a> -->
-				<a class="atag" onclick="query_data('{{ item }}'); setTimeout(function(){document.location.reload(true)}, 1000);"><strong><font size="4">{{ item }}</font></strong></a>
+				<!-- <a class="atag" onclick="query_data('{{ item }}'); setTimeout(function(){document.location.reload(true)}, 1000);"><strong><font size="4">{{ item }}</font></strong></a> -->
 
 
 				<br>
@@ -95,7 +94,7 @@
 							{% include 'includes/drop_collection.html' %}
 							{% include 'includes/file_deletion.html' %}
 							{% include 'includes/add_member.html' %}
-							
+
 						</div>
 					</div>
 				</div>
@@ -136,6 +135,42 @@
 				</div>
 			</div>
 		</div>
+
+
+
+		<form action="/" id="searchForm">
+  		<input type="text" name="s" placeholder="Search...">
+  		<input type="submit" value="Search">
+		</form>
+		<!-- the result of the search will be rendered inside this div -->
+		<div id="result"></div>
+
+		<script>
+		// Attach a submit handler to the form
+		$( "#searchForm" ).submit(function( event ) {
+
+		  // Stop form from submitting normally
+		  event.preventDefault();
+
+		  // Get some values from elements on the page:
+		  var $form = $( this ),
+		    term = $form.find( "input[name='s']" ).val(),
+		    url = $form.attr( "action" );
+
+		  // Send the data using post
+		  var posting = $.post( "/getemail", { s: term } );
+
+		  // Put the results in a div
+		  posting.done(function( data ) {
+		    var content = $( data ).find( "#content" );
+		    $( "#result" ).empty().append( content );
+		  });
+		});
+		</script>
+
+
+
+
 
 		<div class="data" style="position: absolute; bottom: 0; float: left; padding-top: 5px; padding-bottom: 5px;">
 			<div>
