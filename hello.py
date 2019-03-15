@@ -29,6 +29,7 @@ client = pymongo.MongoClient("mongodb://%s:%s@cluster0-shard-00-00-mhqmc.mongodb
 db = client.test_database
 test_database = db.test_database
 
+# Data we'll work with for what's showing on the page
 useremail = "No user"
 membership_list = ["Not a part of any Teams"]
 group_data = [["No groups"], ["No admin"]]
@@ -145,7 +146,7 @@ def create_group(new_group_name:str, admin_email:str):
         # We'll want to create the group in the groups database
         # print("Let's create the group")
         new_group = db[new_group_name]
-        new_group.insert_one({"Admin":[admin_email], "Standard":[]})
+        new_group.insert_one({"Admin":[admin_email], "Standard":["Visitor"]})
         # Then we'll want to create a collection for that new group's data in the group_data database
         db = client.group_data
         new_group = db[new_group_name]
