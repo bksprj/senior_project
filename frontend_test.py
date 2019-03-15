@@ -64,7 +64,7 @@ time.sleep(2)
 driver.find_element_by_id("form-team-btn").click()
 time.sleep(2)
 driver.refresh()
-time.sleep(10)
+time.sleep(5)
 driver.refresh()
 
 # Add Team Members
@@ -72,10 +72,10 @@ driver.refresh()
 time.sleep(3)
 driver.refresh()
 driver.find_element_by_id(name).click()
-driver.refresh()
 
 time.sleep(10)
 driver.refresh()
+time.sleep(2)
 
 driver.find_element_by_id("admin-priv").click()
 time.sleep(2)
