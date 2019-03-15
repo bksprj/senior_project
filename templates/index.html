@@ -1,7 +1,6 @@
-﻿<!DOCTYPE html>
-
+<!DOCTYPE html>
 <html>
-	<head>
+    <head>
 		<title>Data Sense</title>
 		<meta charset="utf-8" />
 		<meta name="google-signin-client_id" content="798265448710-nqo7h881abf59cn9oghng9erq841tbq1.apps.googleusercontent.com">
@@ -10,7 +9,7 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<link rel="icon" href="{{url_for('static', filename='img/ds_logo.png')}}">
-		<script src="{{url_for('static', filename='index.js')}}"></script>
+		<script src="{{url_for('static', filename='indexhome.js')}}"></script>
 		<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" />
 	</head>
 
@@ -18,136 +17,38 @@
 		<nav class="navbar navbar-fixed-top admin-menu bg-light" role="navigation">
 			<a class="navbar-brand" href="/"><strong><font size="5">Data Sense</font></strong></a>
 			<!-- Collect the nav links, forms, and other content for toggling -->
-			<a class="navbar-brand" href="/about"><strong><font size="5">About</font></strong></a>
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
-				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown" style="padding-top:7.5px;padding-right:5px;">
-						<img class="data" src="{{url_for('static', filename='img/new_blue.png')}}" style="float:right" width="37.5" height="37.5" />
-						<ul class="dropdown-menu" style="text-align:center;">
-							{% for noto in noto_lst %}
-							<li>
-								<p class="text-primary">{{ noto }}</p>
-							</li>
-							{% endfor %}
-						</ul>
-					</li>
-					<li>
-						<div class="g-signin2" data-onsuccess="onSignIn" style="padding-right:5px;" data-theme="dark"></div>
-					</li>
-					<li class="dropdown data" style="padding-top:7.5px;padding-right:5px;">
-						<h5 class="text-primary hov" id="name" style="padding-right:5px;float:left;"><strong></strong></h5>
-						<img id="pic" class="img-circle data" style="float:right" width="37.5" height="37.5" />
-						<ul class="dropdown-menu" style="text-align:center;">
-							<li>
-								<a class="text-primary" href="/profile">Profile Settings</a>
-							</li>
-							<li>
-								<a onclick="signOut()" class="text-primary">Sign Out</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
+            <a class="navbar-brand" href="/about"><strong><font size="5">About</font></strong></a>
+            <div class="g-signin2" data-onsuccess="onSignIn" style="padding-right:10px;float:right" data-theme="dark"></div>
 		</nav>
-	</header>
+    </header>
+    
+    <body style="padding-top:35px;padding-left:15px;">
 
-	<body style="padding-top:35px;">
-		<div class="data" style="float:left;width:20%;padding-top:15px;">
-			<h3 class="text-primary"><strong>Teams</strong></h3>
-			<!-- List of teams goes here. -->
-			<div id="navigation">
+        <div style="float:left;width:20%;padding-top:15px;">
+            <h3 class="text-primary"><strong>Teams</strong></h3>
+            <div id="navigation">
 	    		{% for item in membership_list %}
 				<a id="{{ item }}" class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a>
 				<!-- <a class="atag" onclick="query_data('{{ item }}'); document.location.reload(true);"><strong><font size="4">{{ item }}</font></strong></a> -->
 				<!-- <a class="atag" onclick="query_data('{{ item }}'); setTimeout(function(){document.location.reload(true)}, 1000);"><strong><font size="4">{{ item }}</font></strong></a> -->
-
-
 				<br>
 	    		{% endfor %}
 			</div>
+        </div>
 
-			<div style="padding-top:10px;">
-				<a id="form-team" class="text-primary hov" onclick="showModel()"><strong><font size="4">Form a Team</font></strong></a>
-			</div>
-
-			<div id="myModal" class="modal">
-				<div class="modal-contents">
-					{% include 'includes/mkgroup.html' %}
-				</div>
-			</div>
-		</div>
-
-		<div class="data" style="float:left;width:20%; padding-left:10%; padding-top:15px;">
-			<div>
-				<h3 class="text-primary"><strong>Members</strong></h3>
-				<div id="navigation">
-	    			{% for ranks_users in members %}
-					<p style="color:white;"><strong><font size="4">{{ ranks_users }}</font></strong></p>
-	    			{% endfor %}
-				</div>
-
-				{% if admin %}
-				<div>
-					<a id="admin-priv" class="text-primary hov" onclick="showAdmin()"><strong><font size="4">Admin Privileges</font></strong></a>
-					<div id="myAdmin" class="modal">
-						<div class="modal-content">
-							{% include 'includes/drop_collection.html' %}
-							{% include 'includes/file_deletion.html' %}
-							{% include 'includes/add_member.html' %}
-
-						</div>
-					</div>
-				</div>
-				{% endif %}
-
-			</div>
-		</div>
-
-		<div class="data" style="float:left;width:30%; padding-left:20%; padding-top:15px;">
-			<h3 class="text-primary"><strong>Files/Data</strong></h3>
+        <div style="float:left;width:30%; padding-left:20%; padding-top:15px;">
+            <h3 class="text-primary"><strong>Data</strong></h3>
 			<div id="navigation">
 				{%- if response|length > 1 -%}
 					{% for item in response[0] %}
 					<p style="color:white;"><strong><font size="4">{{ item }}</font></strong></p>
 					{% endfor %}
-
-					<p class="text-primary"><strong>The files for your group are:</strong></p>
       				{% for file_name in file_lst %}
-      					<a class="atag" href="uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
-							{% endfor %}
-			  {% endif %}
-
-
-				{% for file_name in file_lst %}
-      					<a class="atag" href="/uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
+      				<a class="atag" href="uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
 					{% endfor %}
+                {% endif %}
+            </div>
+        </div>
 
-				<a class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
-
-				<div id="myUploader" class="modal">
-					<div class="modal-content">
-						{% include 'includes/uploader.html' %}
-					</div>
-				</div>
-			</div>
-		</div>
-
-
-
-
-
-
-
-		<div class="data" style="position: absolute; bottom: 0; float: left; padding-top: 5px; padding-bottom: 5px;">
-			<div>
-				<input type="checkbox"><p style="color:white;">example task item</p><br>
-			</div>
-			<a class="text-primary hov" onclick="showTaskIn()"><strong><font size="4">New Task</font></strong></a>
-			<div id="myTaskIn" class="modal">
-				<div class="modal-content">
-					{% include 'includes/add_task.html' %}
-				</div>
-			</div>
-		</div>
-	</body>
+    </body>
 </html>
