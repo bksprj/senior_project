@@ -365,11 +365,14 @@ def get_post_javascript_data():
     # return jsdata
     user = jsdata.split("@")[0]
 
+    print("USERNAME", user)
+
     return redirect(url_for('user', username=user))
 
 @app.route('/user/<username>', methods = ['GET', 'POST'])
 def user(username):
-    return render_template("user.html", content=username)
+    print("IN USER ROUTE", username)
+    return render_template("index.html", name=username)
 
 # when you click on a group name this will retrieve that group name
 @app.route('/grab_group/<group_name>', methods = ['POST'])

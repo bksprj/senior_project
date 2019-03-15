@@ -23,7 +23,7 @@ function onSignIn(googleUser) {
 	$('#name').text(profile.getName());
 	$('#name2').text(profile.getName());
 
-	$.post("/user");
+	//$.post("/user");
 
 }
 
