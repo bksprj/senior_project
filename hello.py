@@ -457,7 +457,7 @@ def index():
     else:
         noto_lst = ["No Group Selected"]
 
-
+    db = client.groups
     list_all_groups = db.list_collection_names()
     membership_list = [group for group in list_all_groups]
 
