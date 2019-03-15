@@ -24,16 +24,18 @@
 					<li class="dropdown" style="padding-top:7.5px;padding-right:5px;">
 						<img class="data" src="{{url_for('static', filename='img/new_blue.png')}}" style="float:right" width="37.5" height="37.5" />
 						<ul class="dropdown-menu" style="text-align:center;">
+							{% for noto in noto_lst %}
 							<li>
-								<p class="text-primary">Notifications</p>
+								<p class="text-primary">{{ noto }}</p>
 							</li>
+							{% endfor %}
 						</ul>
 					</li>
 					<li>
 						<div class="g-signin2" data-onsuccess="onSignIn" style="padding-right:5px;" data-theme="dark"></div>
 					</li>
 					<li class="dropdown data" style="padding-top:7.5px;padding-right:5px;">
-						<h5 class="text-primary" id="name" style="padding-right:5px;float:left;"><strong></strong></h5>
+						<h5 class="text-primary hov" id="name" style="padding-right:5px;float:left;"><strong></strong></h5>
 						<img id="pic" class="img-circle data" style="float:right" width="37.5" height="37.5" />
 						<ul class="dropdown-menu" style="text-align:center;">
 							<li>
