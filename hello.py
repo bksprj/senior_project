@@ -457,6 +457,10 @@ def index():
     else:
         noto_lst = ["No Group Selected"]
 
+
+    list_all_groups = db.list_collection_names()
+    membership_list = [group for group in list_all_groups]
+
     return render_template('index.html', membership_list=membership_list, \
         create_group_form=create_group_form, add_member_form=add_member_form, \
         group_deletion_form=group_deletion_form, response=response, file_lst=file_lst, \
