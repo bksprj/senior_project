@@ -75,202 +75,6 @@ class AddNewMemberForm(FlaskForm):
 
 #===============================================================================
 # Global functions
-
-def delete_file(filename):
-    try:
-        path = UPLOAD_FOLDER + "/" +filename
-        os.remove(path)
-        return [f"Deleted {filename} successfully"]
-    except:
-        return [f"Unable to delete {filename}; perhaps it isn't stored?"]
-
-def read_csv_file(file):
-    with open('uploads/' + file, newline='') as csvfile:
-        file_reader = csv.reader(csvfile, delimiter=',')
-
-        testDict = {}
-        for row in file_reader:
-            # print(row)
-            testDict[row[0]] = row[1:]
-        print("LOOK HERE")
-        print(testDict)
-        return testDict
-
-def notify(noto_type:str,name=None,file_name=None) -> str:
-    # we want notifications for 2 groups of cases: regarding user and regarding files
-    # noto_type can be "add" or "delete"
-
-    # 1. When a user is added or deleted
-    if name != None:
-        if noto_type == "add":
-            return str(name) + " was added."
-        elif noto_type == "delete":
-            return str(name) + " was deleted."
-    # 2. When a file is added or deleted
-    if file_name != None:
-        if noto_type == "add":
-            return "The file * " + str(file_name) + " * was added."
-        elif noto_type == "delete":
-            return "The file * " + str(file_name) + " * was deleted."
-
-def list_user_groups(email:str) -> list:
-    membership_list = ["You are not a part of any group"]  # holds all the groups that the user is a member of
-    db = client.groups
-    groups = db.list_collection_names()
-    # checkgroup = "We'll use this variable to have a shorter if statement in the loop"
-    existing_membership = False  # if false, then the user is not in any group
-                                 # we revert to the default list, if so
-    for group_name in groups:
-        checkgroup = db[group_name].find_one()
-        # print("\nHEY\ngroup_name", group_name, "checkgroup", checkgroup, type(checkgroup))
-        if email in checkgroup["Admin"]:
-            # print(group_name)
-            membership_list.append(str(group_name))
-            existing_membership = True
-        elif email in checkgroup["Standard"]:
-            # print(group_name)
-            membership_list.append(str(group_name))
-            existing_membership = True
-        else:
-            print("User not in", group_name)
-    if not existing_membership:
-        membership_list = ["You are not a part of any group"]
-    else:
-        membership_list = membership_list[1:]
-    return membership_list
-
-def create_group(new_group_name:str, admin_email:str):
-    db = client.groups
-    listed_group_names = db.list_collection_names()
-    if new_group_name not in listed_group_names:
-        # We'll want to create the group in the groups database
-        # print("Let's create the group")
-        new_group = db[new_group_name]
-        new_group.insert_one({"Admin":[admin_email], "Standard":["Visitor"]})
-        # Then we'll want to create a collection for that new group's data in the group_data database
-        db = client.group_data
-        new_group = db[new_group_name]
-        new_group.insert_one({"Notifications":[]})
-        new_group.insert_one({"Files":[]}) # names of files that belong to the group
-        new_group.insert_one({"Tasks":[]})
-    else:
-        print("That team already exists!")
-
-def get_data(group_name:str):
-    # first, let's check for permissions
-    allowed_to_see_data = False  # start off as False
-    admin = False
-    db = client.groups
-    names = db.list_collection_names()
-    if group_name not in names:
-        # retrieve_data = ["The group: " + group_name + " does not exist."]
-        return [["The group: " + group_name + " does not exist."], admin]
-    else:
-        print("Group exists, moving on to the next check.")
-
-    # Okay, so the group exists
-    # Now, let's check to see if the person has the permission to add data
-    group_collection = db[group_name]
-    if useremail == "No user":
-        # retrieve_data = ["You need to be logged in."]
-        return [["You need to be logged in."], admin]
-    else:
-        # this is to determine the rank, in case different actions are allowed
-        print("Useremail to check is: ", useremail)
-        if useremail in group_collection.find_one()["Admin"]:
-            print("You are an Admin in the group")
-            allowed_to_see_data = True
-            admin = True
-        elif useremail in group_collection.find_one()["Standard"]:
-            print("You are a Standard in the group")
-            allowed_to_see_data = True
-        else:
-            retrieve_data = ["You are not a part of the group."]
-    if allowed_to_see_data:
-        retrieve_data = []
-        db = client.group_data
-        group_collection = db[group_name]
-        info_list = []
-        # print(group_collection)
-        count = 0
-        for item in group_collection.find():
-            count += 1
-            del item["_id"]
-            retrieve_data.append(item)
-        if count == 0:
-            retrieve_data = ["There are no data documents in this group"]
-
-        dirs = os.listdir(UPLOAD_FOLDER)
-        file_list = []
-        # This would print all the files and directories
-        for file in dirs:
-            print(file)
-            file_list.append(file)
-    else:
-        file_list = ["Not allowed to see this group's data"]
-
-    return [ [retrieve_data, file_list], admin ]
-
-def delete_group(group_name_delete:str) -> list:
-    global check_group
-
-
-    db_groups = client.groups
-    db_group_data = client.group_data
-    db_groups_collection = db_groups[group_name_delete]
-    db_group_data_collection = db_group_data[group_name_delete]
-
-    allowed_to_see_data = False  # start off as False
-    # Does the group exist?
-    names = db_groups.list_collection_names()
-    if group_name_delete not in names:
-        server_message = ["The group: " + group_name_delete + " doesn't exist."]
-        return server_message
-    else:
-        print("Group exists, moving on to the next check.")
-
-    # Okay, so the group exists
-    # Now, let's check to see if the person has the permission to add data
-    if useremail == "No user":
-        server_message = ["You need to be logged in."]
-        return server_message
-    else:
-        print("Useremail to check is: ", useremail)
-        if useremail in db_groups_collection.find_one()["Admin"]:
-            print("You are an Admin in the group")
-            allowed_to_see_data = True
-            admin = True
-        elif useremail in db_groups_collection.find_one()["Standard"]:
-            print("You are a Standard in the group")
-            allowed_to_see_data = True
-        else:
-            server_message = ["You are not a part of the group."]
-            return server_message
-    print("Attempting to delete")
-    # drop the group
-    drop1 = db_groups_collection.drop()
-    drop2 = db_group_data_collection.drop()
-    print("Well, let's hope it worked", drop1, drop2)
-    server_message = ["Group '" + str(group_name_delete) + "' has been deleted"]
-    check_group = "not checking a group"
-    return server_message
-
-def get_members(group_name:str) -> list:
-    returnval = []
-    db = client.groups
-    names = db.list_collection_names()
-    if group_name not in names:
-        return [f"The group {group_name} does not exist"]
-    query_group = db[group_name]
-    member_data = query_group.find_one()
-    # print(member_data)
-    for rank,user in member_data.items():
-        if rank == "Standard" and len(user) == 0:
-            returnval.append([rank,["There are no standard users"]])
-        else:
-            returnval.append([rank,user])
-    return returnval[1:]
-
 def add_new_members(group_name:str, member_input:str):
     global check_group
     def list_without_dups(list1:list, list2:list) -> list:
@@ -346,12 +150,206 @@ def add_new_members(group_name:str, member_input:str):
     query_group.find_one_and_replace({"_id":prev_id_data}, new_member_info)
     # print("Current member data:",query_group.find_one())
 
+def create_group(new_group_name:str, admin_email:str):
+    db = client.groups
+    listed_group_names = db.list_collection_names()
+    if new_group_name not in listed_group_names:
+        # We'll want to create the group in the groups database
+        # print("Let's create the group")
+        new_group = db[new_group_name]
+        new_group.insert_one({"Admin":[admin_email], "Standard":["Visitor"]})
+        # Then we'll want to create a collection for that new group's data in the group_data database
+        db = client.group_data
+        new_group = db[new_group_name]
+        new_group.insert_one({"Notifications":[]})
+        new_group.insert_one({"Files":[]}) # names of files that belong to the group
+        new_group.insert_one({"Tasks":[]})
+    else:
+        print("That team already exists!")
+
+def delete_file(filename):
+    try:
+        path = UPLOAD_FOLDER + "/" +filename
+        os.remove(path)
+        return [f"Deleted {filename} successfully"]
+    except:
+        return [f"Unable to delete {filename}; perhaps it isn't stored?"]
+
+def delete_group(group_name_delete:str) -> list:
+    global check_group
+
+
+    db_groups = client.groups
+    db_group_data = client.group_data
+    db_groups_collection = db_groups[group_name_delete]
+    db_group_data_collection = db_group_data[group_name_delete]
+
+    allowed_to_see_data = False  # start off as False
+    # Does the group exist?
+    names = db_groups.list_collection_names()
+    if group_name_delete not in names:
+        server_message = ["The group: " + group_name_delete + " doesn't exist."]
+        return server_message
+    else:
+        print("Group exists, moving on to the next check.")
+
+    # Okay, so the group exists
+    # Now, let's check to see if the person has the permission to add data
+    if useremail == "No user":
+        server_message = ["You need to be logged in."]
+        return server_message
+    else:
+        print("Useremail to check is: ", useremail)
+        if useremail in db_groups_collection.find_one()["Admin"]:
+            print("You are an Admin in the group")
+            allowed_to_see_data = True
+            admin = True
+        elif useremail in db_groups_collection.find_one()["Standard"]:
+            print("You are a Standard in the group")
+            allowed_to_see_data = True
+        else:
+            server_message = ["You are not a part of the group."]
+            return server_message
+    print("Attempting to delete")
+    # drop the group
+    drop1 = db_groups_collection.drop()
+    drop2 = db_group_data_collection.drop()
+    print("Well, let's hope it worked", drop1, drop2)
+    server_message = ["Group '" + str(group_name_delete) + "' has been deleted"]
+    check_group = "not checking a group"
+    return server_message
+
+def list_user_groups(email:str) -> list:
+    membership_list = ["You are not a part of any group"]  # holds all the groups that the user is a member of
+    db = client.groups
+    groups = db.list_collection_names()
+    # checkgroup = "We'll use this variable to have a shorter if statement in the loop"
+    existing_membership = False  # if false, then the user is not in any group
+                                 # we revert to the default list, if so
+    for group_name in groups:
+        checkgroup = db[group_name].find_one()
+        # print("\nHEY\ngroup_name", group_name, "checkgroup", checkgroup, type(checkgroup))
+        if email in checkgroup["Admin"]:
+            # print(group_name)
+            membership_list.append(str(group_name))
+            existing_membership = True
+        elif email in checkgroup["Standard"]:
+            # print(group_name)
+            membership_list.append(str(group_name))
+            existing_membership = True
+        else:
+            print("User not in", group_name)
+    if not existing_membership:
+        membership_list = ["You are not a part of any group"]
+    else:
+        membership_list = membership_list[1:]
+    return membership_list
+
+def notify(noto_type:str,name=None,file_name=None) -> str:
+    # we want notifications for 2 groups of cases: regarding user and regarding files
+    # noto_type can be "add" or "delete"
+
+    # 1. When a user is added or deleted
+    if name != None:
+        if noto_type == "add":
+            return str(name) + " was added."
+        elif noto_type == "delete":
+            return str(name) + " was deleted."
+    # 2. When a file is added or deleted
+    if file_name != None:
+        if noto_type == "add":
+            return "The file * " + str(file_name) + " * was added."
+        elif noto_type == "delete":
+            return "The file * " + str(file_name) + " * was deleted."
+
+def get_data(group_name:str):
+    # first, let's check for permissions
+    allowed_to_see_data = False  # start off as False
+    admin = False
+    db = client.groups
+    names = db.list_collection_names()
+    if group_name not in names:
+        # retrieve_data = ["The group: " + group_name + " does not exist."]
+        return [["The group: " + group_name + " does not exist."], admin]
+    else:
+        print("Group exists, moving on to the next check.")
+
+    # Okay, so the group exists
+    # Now, let's check to see if the person has the permission to add data
+    group_collection = db[group_name]
+    if useremail == "No user":
+        # retrieve_data = ["You need to be logged in."]
+        return [["You need to be logged in."], admin]
+    else:
+        # this is to determine the rank, in case different actions are allowed
+        print("Useremail to check is: ", useremail)
+        if useremail in group_collection.find_one()["Admin"]:
+            print("You are an Admin in the group")
+            allowed_to_see_data = True
+            admin = True
+        elif useremail in group_collection.find_one()["Standard"]:
+            print("You are a Standard in the group")
+            allowed_to_see_data = True
+        else:
+            retrieve_data = ["You are not a part of the group."]
+    if allowed_to_see_data:
+        retrieve_data = []
+        db = client.group_data
+        group_collection = db[group_name]
+        info_list = []
+        # print(group_collection)
+        count = 0
+        for item in group_collection.find():
+            count += 1
+            del item["_id"]
+            retrieve_data.append(item)
+        if count == 0:
+            retrieve_data = ["There are no data documents in this group"]
+
+        dirs = os.listdir(UPLOAD_FOLDER)
+        file_list = []
+        # This would print all the files and directories
+        for file in dirs:
+            print(file)
+            file_list.append(file)
+    else:
+        file_list = ["Not allowed to see this group's data"]
+
+    return [ [retrieve_data, file_list], admin ]
+
+def get_members(group_name:str) -> list:
+    returnval = []
+    db = client.groups
+    names = db.list_collection_names()
+    if group_name not in names:
+        return [f"The group {group_name} does not exist"]
+    query_group = db[group_name]
+    member_data = query_group.find_one()
+    # print(member_data)
+    for rank,user in member_data.items():
+        if rank == "Standard" and len(user) == 0:
+            returnval.append([rank,["There are no standard users"]])
+        else:
+            returnval.append([rank,user])
+    return returnval[1:]
+
 def get_team_member_file(group_name:str):
     member_file = open("uploads/members.txt", "w+")
     for member in get_members(group_name):
         member_file.write()
     return get_members(group_name + "\n")
 
+def read_csv_file(file):
+    with open('uploads/' + file, newline='') as csvfile:
+        file_reader = csv.reader(csvfile, delimiter=',')
+
+        testDict = {}
+        for row in file_reader:
+            # print(row)
+            testDict[row[0]] = row[1:]
+        print("LOOK HERE")
+        print(testDict)
+        return testDict
 #===============================================================================
 # Routes
 
