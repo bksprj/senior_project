@@ -35,7 +35,6 @@ function signOut() {
 			$(".g-signin2").css("display","block");
 			$(".data").css("display","none");
 			$(".goaway").css("display","block");
-
 		} else {
 			// Does nothing
 		}

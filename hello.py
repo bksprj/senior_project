@@ -358,15 +358,15 @@ def read_csv_file(file):
 def get_post_javascript_data():
     useremail = request.form['myData']
     print(useremail, "has logged in")
-    # global membership_list
-    # membership_list = list_user_groups(useremail)
-    # return jsdata
-    a = useremail.split("@")
+    global membership_list
+    membership_list = list_user_groups(useremail)
+    return useremail
+    # a = useremail.split("@")
     # url = "loggedin/" + str(a[0])
     # print("url is " + url)
     # return redirect(url_for("loggedin", email=a[0]))
-    print("now to return")
-    return render_template("user.html")
+    # print("now to return")
+    # return render_template("user.html")
 
 @app.route('/loggedin/<email>', methods = ['GET', 'POST'])
 def loggedin(email):
