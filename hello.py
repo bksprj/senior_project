@@ -356,13 +356,23 @@ def read_csv_file(file):
 # when you log in, we will get that email address here
 @app.route('/getemail', methods = ['POST'])
 def get_post_javascript_data():
-    jsdata = request.form['myData']
-    print(jsdata, "has logged in")
-    global useremail
-    global membership_list
-    useremail = jsdata
-    membership_list = list_user_groups(useremail)
-    return jsdata
+    useremail = request.form['myData']
+    print(useremail, "has logged in")
+    # global membership_list
+    # membership_list = list_user_groups(useremail)
+    # return jsdata
+    a = useremail.split("@")
+    # url = "loggedin/" + str(a[0])
+    # print("url is " + url)
+    # return redirect(url_for("loggedin", email=a[0]))
+    print("now to return")
+    return render_template("user.html")
+
+@app.route('/loggedin/<email>', methods = ['GET', 'POST'])
+def loggedin(email):
+    print("Wha- hello")
+    return render_template("user.html")
+
 
 # when you click on a group name this will retrieve that group name
 @app.route('/grab_group/<group_name>', methods = ['POST'])
