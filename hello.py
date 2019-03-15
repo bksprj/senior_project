@@ -219,49 +219,6 @@ def delete_group(group_name_delete:str) -> list:
     check_group = "not checking a group"
     return server_message
 
-def list_user_groups(email:str) -> list:
-    membership_list = ["You are not a part of any group"]  # holds all the groups that the user is a member of
-    db = client.groups
-    groups = db.list_collection_names()
-    # checkgroup = "We'll use this variable to have a shorter if statement in the loop"
-    existing_membership = False  # if false, then the user is not in any group
-                                 # we revert to the default list, if so
-    for group_name in groups:
-        checkgroup = db[group_name].find_one()
-        # print("\nHEY\ngroup_name", group_name, "checkgroup", checkgroup, type(checkgroup))
-        if email in checkgroup["Admin"]:
-            # print(group_name)
-            membership_list.append(str(group_name))
-            existing_membership = True
-        elif email in checkgroup["Standard"]:
-            # print(group_name)
-            membership_list.append(str(group_name))
-            existing_membership = True
-        else:
-            print("User not in", group_name)
-    if not existing_membership:
-        membership_list = ["You are not a part of any group"]
-    else:
-        membership_list = membership_list[1:]
-    return membership_list
-
-def notify(noto_type:str,name=None,file_name=None) -> str:
-    # we want notifications for 2 groups of cases: regarding user and regarding files
-    # noto_type can be "add" or "delete"
-
-    # 1. When a user is added or deleted
-    if name != None:
-        if noto_type == "add":
-            return str(name) + " was added."
-        elif noto_type == "delete":
-            return str(name) + " was deleted."
-    # 2. When a file is added or deleted
-    if file_name != None:
-        if noto_type == "add":
-            return "The file * " + str(file_name) + " * was added."
-        elif noto_type == "delete":
-            return "The file * " + str(file_name) + " * was deleted."
-
 def get_data(group_name:str):
     # first, let's check for permissions
     allowed_to_see_data = False  # start off as False
@@ -338,6 +295,49 @@ def get_team_member_file(group_name:str):
     for member in get_members(group_name):
         member_file.write()
     return get_members(group_name + "\n")
+
+def list_user_groups(email:str) -> list:
+    membership_list = ["You are not a part of any group"]  # holds all the groups that the user is a member of
+    db = client.groups
+    groups = db.list_collection_names()
+    # checkgroup = "We'll use this variable to have a shorter if statement in the loop"
+    existing_membership = False  # if false, then the user is not in any group
+                                 # we revert to the default list, if so
+    for group_name in groups:
+        checkgroup = db[group_name].find_one()
+        # print("\nHEY\ngroup_name", group_name, "checkgroup", checkgroup, type(checkgroup))
+        if email in checkgroup["Admin"]:
+            # print(group_name)
+            membership_list.append(str(group_name))
+            existing_membership = True
+        elif email in checkgroup["Standard"]:
+            # print(group_name)
+            membership_list.append(str(group_name))
+            existing_membership = True
+        else:
+            print("User not in", group_name)
+    if not existing_membership:
+        membership_list = ["You are not a part of any group"]
+    else:
+        membership_list = membership_list[1:]
+    return membership_list
+
+def notify(noto_type:str,name=None,file_name=None) -> str:
+    # we want notifications for 2 groups of cases: regarding user and regarding files
+    # noto_type can be "add" or "delete"
+
+    # 1. When a user is added or deleted
+    if name != None:
+        if noto_type == "add":
+            return str(name) + " was added."
+        elif noto_type == "delete":
+            return str(name) + " was deleted."
+    # 2. When a file is added or deleted
+    if file_name != None:
+        if noto_type == "add":
+            return "The file * " + str(file_name) + " * was added."
+        elif noto_type == "delete":
+            return "The file * " + str(file_name) + " * was deleted."
 
 def read_csv_file(file):
     with open('uploads/' + file, newline='') as csvfile:
