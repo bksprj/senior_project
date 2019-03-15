@@ -371,7 +371,7 @@ def get_post_javascript_data():
 @app.route('/loggedin/<email>', methods = ['GET', 'POST'])
 def loggedin(email):
     print("Wha- hello")
-    return render_template("user.html")
+    return render_template("user.html", email=email)
 
 
 # when you click on a group name this will retrieve that group name
