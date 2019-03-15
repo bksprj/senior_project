@@ -363,7 +363,14 @@ def get_post_javascript_data():
     global membership_list
     useremail = jsdata
     membership_list = list_user_groups(useremail)
-    return jsdata
+    # return jsdata
+    user = jsdata.split("@")[0]
+
+    return redirect(url_for('user', username=user))
+
+@app.route('/user/<username>', methods = ['GET', 'POST'])
+def user(username):
+    return render_template("user.html", content=username)
 
 # when you click on a group name this will retrieve that group name
 @app.route('/grab_group/<group_name>', methods = ['POST'])
