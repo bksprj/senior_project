@@ -122,10 +122,6 @@
       					<a class="atag" href="/uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
 					{% endfor %}
 
-				{%- if response|length < 2 -%}
-					<p style="color:white;"><strong><font size="4">{{ response[0] }}</font></strong></p>
-				{% endif %}
-
 				<a class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
 
 				<div id="myUploader" class="modal">
