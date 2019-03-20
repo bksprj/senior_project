@@ -49,7 +49,7 @@ time.sleep(4)
 
 # Going to web app
 driver.get("https://data-sense.herokuapp.com/")
-time.sleep(6)
+time.sleep(10)
 
 # Forming a Team
 driver.find_element_by_id("form-team").click()
@@ -64,13 +64,11 @@ time.sleep(2)
 driver.find_element_by_id("form-team-btn").click()
 time.sleep(2)
 driver.refresh()
-time.sleep(5)
+time.sleep(10)
 driver.refresh()
 
 # Add Team Members
 
-time.sleep(3)
-driver.refresh()
 driver.find_element_by_id(name).click()
 
 time.sleep(10)
@@ -80,11 +78,11 @@ time.sleep(2)
 driver.find_element_by_id("admin-priv").click()
 time.sleep(2)
 memberName = driver.find_element_by_id("member_input")
-memberName.send_keys("Standard:husoke01@luther.edu")
+memberName.send_keys("Standard:chumptest@chumps.chum")
 time.sleep(2)
 driver.find_element_by_id("add-mem").click()
 
-time.sleep(5)
+time.sleep(10)
 driver.refresh()
 
 # Delete Group
@@ -95,7 +93,7 @@ time.sleep(2)
 
 driver.find_element_by_id("delete-team").click()
 
-time.sleep(5)
+time.sleep(10)
 driver.refresh()
 
 
