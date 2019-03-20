@@ -12,16 +12,7 @@ function onSignIn(googleUser) {
 	$(".goaway").css("display","none");
 	$("#pic").attr('src',profile.getImageUrl());
 	$("#pic2").attr('src',profile.getImageUrl());
-	// $.post("/getemail", {"myData": profile.getEmail()});
-
-	// $.ajax({
-  // type: "POST",
-  // url: "/getemail",
-  // data: {"myData": profile.getEmail()}
-  // });
-
-	// $.post("/loggedin/" + profile.getEmail().slice(0,-10));
-	window.open("http://localhost:5000/loggedin/" + profile.getEmail().slice(0,-10))
+	window.location.replace("http://localhost:5000/loggedin/" + profile.getEmail().slice(0,-10));
 	$("#email").text(profile.getEmail());
 	$('#name').text(profile.getName());
 	$('#name2').text(profile.getName());

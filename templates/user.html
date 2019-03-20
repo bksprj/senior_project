@@ -1,5 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Hello {{email}}!</h1>
+<div class="data" style="float:left;width:20%;padding-top:15px;">
+  <h1>Hello {{email}}!</h1>
+  <h3 class="text-primary"><strong>Teams</strong></h3>
+  <!-- List of teams goes here. -->
+  <div id="navigation">
+      {% for item in membership_list %}
+        <a id="{{ item }}" class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a>
+        <br>
+      {% endfor %}
+  </div>
+
+  <div style="padding-top:10px;">
+    <a id="form-team" class="text-primary hov" onclick="showModel()"><strong><font size="4">Form a Team</font></strong></a>
+  </div>
+</div>
+
+
 {% endblock %}
