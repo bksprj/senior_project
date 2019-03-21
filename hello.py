@@ -361,20 +361,21 @@ def get_post_javascript_data():
     global membership_list
     membership_list = list_user_groups(useremail)
     return useremail
-    # a = useremail.split("@")
-    # url = "loggedin/" + str(a[0])
-    # print("url is " + url)
-    # return redirect(url_for("loggedin", email=a[0]))
-    # print("now to return")
-    # return render_template("user.html")
 
-@app.route('/loggedin/<email>', methods = ['GET', 'POST'])
-def loggedin(email):
+@app.route('/loggedin/<email>/<group_name>', methods = ['GET', 'POST'])
+def loggedin(email, group_name):
     # build membership_list
     db = client.groups
     list_all_groups = db.list_collection_names()
     membership_list = [group for group in list_all_groups]
-    return render_template("user.html", email=email, membership_list=membership_list)
+
+    # was there a group selected?
+    if group_name == "no_group":
+        members = ['No Team Selected']
+    else:
+        members = get_members(group_name)
+
+    return render_template("user.html", email=email, membership_list=membership_list, members=members)
 
 
 # when you click on a group name this will retrieve that group name

@@ -28,14 +28,24 @@ function signOut() {
 			window.location.replace("http://localhost:5000/");
 		} else {
 			// Does nothing
-
 		}
 	})
 }
 
 function query_data(group_name){
-	$.post("/grab_group/" + group_name);
-	// setTimeout(function(){location.reload(true)}, 1000);
+	// $.post("/grab_group/" + group_name);
+	if (window.location.href.slice(-8) == "no_group"){
+		window.location.href = window.location.href.slice(0,-9) + "/" + group_name;
+	}
+	// This is a problem child D':
+	// else{
+	// 	while(window.location.href.slice(-1) != "/"){
+	// 		window.location.href = window.location.href.slice(-1);
+	// 	};
+	// 	window.location.href = window.location.href + group_name;
+	// }
+	// window.location.href = window.location.href + "/" + group_name
+
 }
 
 // Overlay function to turn on

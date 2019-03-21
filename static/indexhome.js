@@ -12,7 +12,7 @@ function onSignIn(googleUser) {
 	$(".goaway").css("display","none");
 	$("#pic").attr('src',profile.getImageUrl());
 	$("#pic2").attr('src',profile.getImageUrl());
-	window.location.replace("http://localhost:5000/loggedin/" + profile.getEmail().slice(0,-10));
+	window.location.replace("http://localhost:5000/loggedin/" + profile.getEmail().slice(0,-10) + "/no_group");
 	$("#email").text(profile.getEmail());
 	$('#name').text(profile.getName());
 	$('#name2').text(profile.getName());
