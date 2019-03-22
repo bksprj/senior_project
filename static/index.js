@@ -25,7 +25,7 @@ function signOut() {
 			$(".g-signin2").css("display","block");
 			$(".data").css("display","none");
 			$(".goaway").css("display","block");
-			window.location.replace("http://localhost:5000/");
+			window.location.replace("https://data-sense.herokuapp.com/");
 		} else {
 			// Does nothing
 		}
