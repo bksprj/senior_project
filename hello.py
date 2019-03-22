@@ -375,7 +375,7 @@ def loggedin(email, group_name):
     else:
         members = get_members(group_name)
 
-    return render_template("user.html", email=email, membership_list=membership_list, members=members)
+    return render_template("user.html", email=email, membership_list=membership_list, members=members, group_name=group_name)
 
 
 # when you click on a group name this will retrieve that group name
