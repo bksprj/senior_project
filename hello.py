@@ -430,6 +430,7 @@ def loggedin(email, group_name):
 
         else:
             # handle duplicate file names
+            # we'll still need to test this though
             done = False
             num = 0
             while not done:

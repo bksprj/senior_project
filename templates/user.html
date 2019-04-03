@@ -1,16 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 <h1> {{ content }} </h1>
 
-{% endblock %}
-=======
-<br />
-<h1 color="white">Hello</h3>
-=======
+
 
 <div class="data" style="float:left;width:20%;padding-top:15px;">
   <h3 class="text-primary"><strong>Teams</strong></h3>
@@ -33,11 +27,17 @@
     <h3 class="text-primary"><strong>{{ group_name }} Members</strong></h3>
     <div id="navigation">
          <!-- Expected a list of strings i.e. [member1, member2, etc]-->
-        {% for ranks_users in members %}
-      <p style="color:white;"><strong><font size="4">{{ ranks_users[0] }}</font></strong></p>
-      <p>Fiddly do fiddlyday you now have the big gay</p>
-      <p style="color:white;"><strong><font size="4">{{ ranks_users[1] }}</font></strong></p>
-        {% endfor %}
+        {% if group_name != "no_group" %}
+            {% for ranks_users in members %}
+                <p style="color:white;"><strong><font size="5">{{ ranks_users[0] }}</font></strong></p>
+                {% for human in ranks_users[1] %}
+                  <p style="color:white;"><font size="4">{{ human }}</font></p>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+        {% if group_name == "no_group" %}
+            <p style="color:white;"><strong><font size="5">No group selected</font></strong></p>
+        {% endif %}
     </div>
 
     {% if admin %}
@@ -48,7 +48,6 @@
           {% include 'includes/drop_collection.html' %}
           {% include 'includes/file_deletion.html' %}
           {% include 'includes/add_member.html' %}
-
         </div>
       </div>
     </div>
@@ -105,6 +104,4 @@
   </div>
 </div>
 
->>>>>>> adb7dccb8c67a5bc0155fd24a440258b7960e095
 {% endblock %}
->>>>>>> c2e5a5772f3986a49d4cc02e10a08a77330495b7
