@@ -75,7 +75,19 @@
 
     <div id="myUploader" class="modal">
       <div class="modal-content">
-        {% include 'includes/uploader.html' %}
+        <!-- {% include 'includes/uploader.html' %} -->
+        <form method=post enctype=multipart/form-data>
+          <h4 class="text-primary">Upload Files</h4>
+          <p class="text-primary">What group would you like to insert data for?</p>
+          <input type=text name=group_insert>
+          <p class="text-primary">Choose a file to upload</p>
+          <input type=file name=file>
+          <div style="padding-top:5px;">
+            <input class="btn btn-primary" type=submit value=Upload>
+            <span class="close" onclick="spanClickUploader()">&times;</span>
+          </div>
+        </form>
+
       </div>
     </div>
   </div>
