@@ -379,8 +379,53 @@ def loggedin(email, group_name):
     if request.method == 'POST':
         file = request.files['file']
         filename = secure_filename(file.filename)
-        print("Attempting to post" + filename)
+        print("Attempting to post: " + filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        # now let's save the name to the group
+        db = client.group_data
+        the_group = db[group_name]
+        all_docs = the_group.find()
+
+        group_stuff = [i for i in all_docs]
+        print("Data for", group_name, " is ", group_stuff)
+        obj_id = []
+        files = []
+        prev_files = {}
+        new_files_list = []
+        for i in group_stuff:
+            try:
+                files = i['Files']
+                prev_files = i
+                print("printing prev_files ", prev_files)
+            except:
+                pass
+        if filename not in files:
+            print("filename,files", filename, files)
+            new_files_list = [i for i in files] + [filename]
+            new_files = {"_id":prev_files["_id"],"Files":new_files_list}
+
+            print("printing new_files ", new_files)
+            the_group.replace_one(prev_files,new_files)
+
+            all_docs = the_group.find()
+            group_stuff = [i for i in all_docs]
+            print("Data for", group_name, " is ", group_stuff)
+
+
+        else:
+            # handle duplicate file names
+            done = False
+            num = 0
+            while not done:
+                tryfile = filename + str(num)
+                print("Trying to input: ", tryfile)
+                if tryfile not in files:
+                    files.append(tryfile)
+                    new_files = {"_id":prev_files["_id"],"Files":files}
+                    the_group.update_one({"Files":prev_files["Files"]},{"Files":files})
+                    done = True
+                else:
+                    num += 1
 
     return render_template("user.html", email=email, membership_list=membership_list, members=members, group_name=group_name)
 
