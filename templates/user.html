@@ -23,9 +23,17 @@
     <h3 class="text-primary"><strong>{{ group_name }} Members</strong></h3>
     <div id="navigation">
          <!-- Expected a list of strings i.e. [member1, member2, etc]-->
-        {% for ranks_users in members %}
-      <p style="color:white;"><strong><font size="4">{{ ranks_users }}</font></strong></p>
-        {% endfor %}
+        {% if group_name != "no_group" %}
+            {% for ranks_users in members %}
+                <p style="color:white;"><strong><font size="5">{{ ranks_users[0] }}</font></strong></p>
+                {% for human in ranks_users[1] %}
+                  <p style="color:white;"><font size="4">{{ human }}</font></p>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+        {% if group_name == "no_group" %}
+            <p style="color:white;"><strong><font size="5">No group selected</font></strong></p>
+        {% endif %}
     </div>
 
     {% if admin %}
