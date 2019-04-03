@@ -372,7 +372,25 @@ def get_post_javascript_data():
 @app.route('/user/<username>', methods = ['GET', 'POST'])
 def user(username):
     print("IN USER ROUTE", username)
+    useremail = request.form['myData']
+    print(useremail, "has logged in")
+    # global membership_list
+    # membership_list = list_user_groups(useremail)
+    # return jsdata
+    a = useremail.split("@")
+    # url = "loggedin/" + str(a[0])
+    # print("url is " + url)
+    # return redirect(url_for("loggedin", email=a[0]))
+    print("now to return")
+    # return render_template("user.html")
     return render_template("index.html", name=username)
+
+
+@app.route('/loggedin/<email>', methods = ['GET', 'POST'])
+def loggedin(email):
+    print("Wha- hello")
+    return render_template("user.html")
+
 
 # when you click on a group name this will retrieve that group name
 @app.route('/grab_group/<group_name>', methods = ['POST'])
