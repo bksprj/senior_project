@@ -12,13 +12,6 @@ function onSignIn(googleUser) {
 	$(".goaway").css("display","none");
 	$("#pic").attr('src',profile.getImageUrl());
 	$("#pic2").attr('src',profile.getImageUrl());
-	// $.post("/getemail", {"myData": profile.getEmail()});
-	$.ajax({
-  type: "POST",
-  url: "/getemail",
-  data: {"myData": profile.getEmail()}
-  });
-	
 	$("#email").text(profile.getEmail());
 	$('#name').text(profile.getName());
 	$('#name2').text(profile.getName());
@@ -35,6 +28,7 @@ function signOut() {
 			$(".g-signin2").css("display","block");
 			$(".data").css("display","none");
 			$(".goaway").css("display","block");
+			window.location.replace("https://data-sense.herokuapp.com/");
 		} else {
 			// Does nothing
 		}
@@ -42,8 +36,14 @@ function signOut() {
 }
 
 function query_data(group_name){
-	$.post("/grab_group/" + group_name);
-	// setTimeout(function(){location.reload(true)}, 1000);
+	var append_here = 0;
+	if (window.location.href.slice(-8) == "no_group"){
+		window.location.href = window.location.href.slice(0,-9) + "/" + group_name;
+	}
+	else{
+		append_here = window.location.href.lastIndexOf("/");
+		window.location.href = window.location.href.slice(0,append_here) + "/" + group_name
+	};
 }
 
 // Overlay function to turn on

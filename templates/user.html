@@ -2,6 +2,7 @@
 
 {% block content %}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <h1> {{ content }} </h1>
 
@@ -9,5 +10,87 @@
 =======
 <br />
 <h1 color="white">Hello</h3>
+=======
+
+<div class="data" style="float:left;width:20%;padding-top:15px;">
+  <h3 class="text-primary"><strong>Teams</strong></h3>
+  <!-- List of teams goes here. -->
+  <div id="navigation">
+      {% for item in membership_list %}
+        <!-- <a id="{{ item }}" class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a> -->
+        <a id="{{ item }}" class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a>
+        <br>
+      {% endfor %}
+  </div>
+
+  <div style="padding-top:10px;">
+    <a id="form-team" class="text-primary hov" onclick="showModel()"><strong><font size="4">Form a Team</font></strong></a>
+  </div>
+</div>
+
+<div class="data" style="float:left;width:50%; padding-left:20px; padding-top:15px;">
+  <div>
+    <h3 class="text-primary"><strong>{{ group_name }} Members</strong></h3>
+    <div id="navigation">
+         <!-- Expected a list of strings i.e. [member1, member2, etc]-->
+        {% for ranks_users in members %}
+      <p style="color:white;"><strong><font size="4">{{ ranks_users }}</font></strong></p>
+        {% endfor %}
+    </div>
+
+    {% if admin %}
+    <div>
+      <a id="admin-priv" class="text-primary hov" onclick="showAdmin()"><strong><font size="4">Admin Privileges</font></strong></a>
+      <div id="myAdmin" class="modal">
+        <div class="modal-content">
+          {% include 'includes/drop_collection.html' %}
+          {% include 'includes/file_deletion.html' %}
+          {% include 'includes/add_member.html' %}
+
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<div class="data" style="float:right;width:30%; padding-left:20px; padding-top:15px;">
+  <h3 class="text-primary"><strong>Files/Data</strong></h3>
+  <div id="navigation">
+    {%- if response|length > 1 -%}
+      {% for item in response[0] %}
+      <p style="color:white;"><strong><font size="4">{{ item }}</font></strong></p>
+      {% endfor %}
+
+      <p class="text-primary"><strong>The files for your group are:</strong></p>
+          {% for file_name in file_lst %}
+          <a class="atag" href="uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
+      {% endfor %}
+      {% endif %}
+
+    <a id="upload_file" class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
+
+    <div id="myUploader" class="modal">
+      <div class="modal-content">
+        {% include 'includes/uploader.html' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="data" style="position: absolute; bottom: 0; float: left; padding-top: 5px; padding-bottom: 5px;">
+  <div>
+    <input type="checkbox"><p style="color:white;">example task item</p><br>
+  </div>
+  <a class="text-primary hov" onclick="showTaskIn()"><strong><font size="4">New Task</font></strong></a>
+  <div id="myTaskIn" class="modal">
+    <div class="modal-content">
+      {% include 'includes/add_task.html' %}
+    </div>
+  </div>
+</div>
+
+>>>>>>> adb7dccb8c67a5bc0155fd24a440258b7960e095
 {% endblock %}
 >>>>>>> c2e5a5772f3986a49d4cc02e10a08a77330495b7

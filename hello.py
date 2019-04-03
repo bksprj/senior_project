@@ -374,22 +374,24 @@ def user(username):
     print("IN USER ROUTE", username)
     useremail = request.form['myData']
     print(useremail, "has logged in")
-    # global membership_list
-    # membership_list = list_user_groups(useremail)
-    # return jsdata
-    a = useremail.split("@")
-    # url = "loggedin/" + str(a[0])
-    # print("url is " + url)
-    # return redirect(url_for("loggedin", email=a[0]))
-    print("now to return")
-    # return render_template("user.html")
-    return render_template("index.html", name=username)
+    global membership_list
+    membership_list = list_user_groups(useremail)
+    return useremail
 
+@app.route('/loggedin/<email>/<group_name>', methods = ['GET', 'POST'])
+def loggedin(email, group_name):
+    # build membership_list
+    db = client.groups
+    list_all_groups = db.list_collection_names()
+    membership_list = [group for group in list_all_groups]
 
-@app.route('/loggedin/<email>', methods = ['GET', 'POST'])
-def loggedin(email):
-    print("Wha- hello")
-    return render_template("user.html")
+    # was there a group selected?
+    if group_name == "no_group":
+        members = ['No Team Selected']
+    else:
+        members = get_members(group_name)
+
+    return render_template("user.html", email=email, membership_list=membership_list, members=members, group_name=group_name)
 
 
 # when you click on a group name this will retrieve that group name
