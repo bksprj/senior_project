@@ -375,6 +375,13 @@ def loggedin(email, group_name):
     else:
         members = get_members(group_name)
 
+    # file uploads
+    if request.method == 'POST':
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        print("Attempting to post" + filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
     return render_template("user.html", email=email, membership_list=membership_list, members=members, group_name=group_name)
 
 
@@ -415,8 +422,8 @@ def index():
 
     response = ["No files here..."]
 
+    # grab folder of files
     file_lst = os.listdir(UPLOAD_FOLDER)
-    # members = ["Not looking at any teams..."]
 
     # forms
     create_group_form = CreateGroup()
@@ -454,7 +461,7 @@ def index():
     # print("FILE LIST TO BE PASSED", file_lst)
 
 
-    # get noto_lst
+    # get noto_lst for notifications
     print("check_group is", check_group)
     if check_group != "not checking a group":
         db = client.group_data
@@ -469,9 +476,14 @@ def index():
     else:
         noto_lst = ["No Group Selected"]
 
+    # group members
     db = client.groups
     list_all_groups = db.list_collection_names()
     membership_list = [group for group in list_all_groups]
+
+
+
+
 
     return render_template('index.html', membership_list=membership_list, \
         create_group_form=create_group_form, add_member_form=add_member_form, \
@@ -490,6 +502,7 @@ def allowed_file(filename):
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
     global useremail
+    print("Yes hello i see you're trying to upload something right?")
     if request.method == 'POST':
         print("Let's do some checking first")
         # first, check to see if the user is even allowed to post to this group
