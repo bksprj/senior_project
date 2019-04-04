@@ -5,7 +5,7 @@
 <div class="data" style="float:left;width:20%;padding-top:15px;">
   <h3 class="text-primary"><strong>Teams</strong></h3>
   <!-- List of teams goes here. -->
-  <div id="navigation">
+  <div id="navigation" style="overflow:auto;">
       {% for item in membership_list %}
         <!-- <a id="{{ item }}" class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a> -->
         <a id="{{ item }}" class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a>
@@ -41,7 +41,7 @@
 <div class="data" style="float:left;width:50%; padding-left:20px; padding-top:15px;">
   <div>
     <h3 class="text-primary"><strong>{{ group_name }} Members</strong></h3>
-    <div id="navigation">
+    <div id="navigation" style="overflow:auto;">
          <!-- Expected a list of strings i.e. [member1, member2, etc]-->
         {% if group_name != "no_group" %}
             {% for ranks_users in members %}
@@ -74,7 +74,7 @@
 
 <div class="data" style="float:right;width:30%; padding-left:20px; padding-top:15px;">
   <h3 class="text-primary"><strong>Files/Data</strong></h3>
-  <div id="navigation">
+  <div id="navigation" style="overflow:auto;">
     {%- if response|length > 1 -%}
       {% for item in response[0] %}
       <p style="color:white;"><strong><font size="4">{{ item }}</font></strong></p>
