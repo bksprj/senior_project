@@ -85,7 +85,7 @@
   <h3 class="text-primary"><strong>Files</strong></h3>
   <div id="navigation" style="overflow:auto;">
       {% for each_file in files %}
-      <p><a class="atag" href="../../uploads/{{ each_file }}" download><strong><font size="4">{{ each_file }}</font></strong></a></p>
+      <a class="atag" href="../../uploads/{{ each_file }}" download><strong><font size="4">{{ each_file }}</font></strong></a>
       {% endfor %}
       <br>
 
