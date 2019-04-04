@@ -82,16 +82,17 @@
 </div>
 
 <div class="data" style="float:right;width:30%; padding-left:20px; padding-top:15px;">
-  <h3 class="text-primary"><strong>Files/Data</strong></h3>
+  <h3 class="text-primary"><strong>Files</strong></h3>
   <div id="navigation" style="overflow:auto;">
       {% for each_file in files %}
-      <a class="atag" href="../../uploads/{{ each_file }}" download><strong><font size="4">{{ each_file }}</font></strong></a>
+      <p><a class="atag" href="../../uploads/{{ each_file }}" download><strong><font size="4">{{ each_file }}</font></strong></a></p>
       {% endfor %}
+      <br>
 
-      <!--<p class="text-primary"><strong>The files for your group are:</strong></p>-->
+      <!--<p class="text-primary"><strong>The files for your group are:</strong></p>
           {% for file_name in file_lst %}
             <a class="atag" href="uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
-          {% endfor %}
+          {% endfor %}-->
 
     <a id="upload_file" class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
 
