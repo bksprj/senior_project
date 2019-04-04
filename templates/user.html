@@ -19,22 +19,23 @@
 
   <div id="myModal" class="modal">
     <div class="modal-contents">
-      <!--{% include 'includes/mkgroup.html' %}-->
-      <form method="POST" action="/" style="float:left;">
-        <h4 class="text-primary">Form a Team</h4>
-        <div style="padding-top:5px;">
-            {{ create_group_form.group_name.label }} {{ create_group_form.group_name(size=20) }}
-        </div>
-        <div style="padding-top:5px;">
-          {{ create_group_form.email.label }} {{ create_group_form.email(size=20) }}
-        </div>
-        <div style="padding-top:10px;">
-          <input id="form-team-btn" class="btn btn-primary" type="submit" value="Form Team">
-          <span class="close" onclick="spanClick()">&times;</span>
-        </div>
-      </form>
+      <!-- {% include 'includes/mkgroup.html' %} -->
+      <form method="POST" style="float:left;">
+    		<h4 class="text-primary">Form a Team</h4>
+    		<div style="padding-top:5px;">
+    	    	{{ create_group_form.group_name.label }} {{ create_group_form.group_name(size=20) }}
+    		</div>
+    		<div style="padding-top:5px;">
+    			{{ create_group_form.email.label }} {{ create_group_form.email(size=20) }}
+    		</div>
+    		<div style="padding-top:10px;">
+    			<input id="form-team-btn" class="btn btn-primary" type="submit" value="Form Team">
+    			<span class="close" onclick="spanClick()">&times;</span>
+    		</div>
+    	</form>
     </div>
   </div>
+
 </div>
 
 <div class="data" style="float:left;width:50%; padding-left:20px; padding-top:15px;">
@@ -65,7 +66,8 @@
           {% include 'includes/add_member.html' %}
         </div>
       </div>
-    </div>
+
+
     {% endif %}
 
   </div>
@@ -83,13 +85,13 @@
           {% for file_name in file_lst %}
           <a class="atag" href="uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
       {% endfor %}
-      {% endif %}
+    {% endif %}
 
     <a id="upload_file" class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
 
     <div id="myUploader" class="modal">
       <div class="modal-content">
-        <!-- {% include 'includes/uploader.html' %} -->
+        <!-- Uploading Files -->
         <form method=post enctype=multipart/form-data>
           <h4 class="text-primary">Upload Files</h4>
           <p class="text-primary">Choose a file to upload</p>

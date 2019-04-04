@@ -157,7 +157,7 @@ def create_group(new_group_name:str, admin_email:str):
         # We'll want to create the group in the groups database
         # print("Let's create the group")
         new_group = db[new_group_name]
-        new_group.insert_one({"Admin":[admin_email], "Standard":["Visitor"]})
+        new_group.insert_one({"Admin":[admin_email], "Standard":[]})
         # Then we'll want to create a collection for that new group's data in the group_data database
         db = client.group_data
         new_group = db[new_group_name]
@@ -369,6 +369,13 @@ def loggedin(email, group_name):
     list_all_groups = db.list_collection_names()
     membership_list = [group for group in list_all_groups]
 
+    # forms
+    create_group_form = CreateGroup()
+    group_deletion_form = GroupDeletionForm()
+    add_member_form = AddNewMemberForm()
+    file_deletion_form = FileDeletionForm()
+
+
     # was there a group selected?
     if group_name == "no_group":
         members = ['No Team Selected']
@@ -377,58 +384,83 @@ def loggedin(email, group_name):
 
     # file uploads
     if request.method == 'POST':
-        file = request.files['file']
-        filename = secure_filename(file.filename)
-        print("Attempting to post: " + filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # now let's save the name to the group
-        db = client.group_data
-        the_group = db[group_name]
-        all_docs = the_group.find()
+        # let's create a group
+        if create_group_form.validate_on_submit():
+            input_name = create_group_form.group_name.data
+            input_email = create_group_form.email.data
+            create_group(input_name, input_email)
 
-        group_stuff = [i for i in all_docs]
-        print("Data for", group_name, " is ", group_stuff)
-        obj_id = []
-        files = []
-        prev_files = {}
-        new_files_list = []
-        for i in group_stuff:
-            try:
-                files = i['Files']
-                prev_files = i
-                print("printing prev_files ", prev_files)
-            except:
-                pass
-        if filename not in files:
-            print("filename,files", filename, files)
-            new_files_list = [i for i in files] + [filename]
-            new_files = {"_id":prev_files["_id"],"Files":new_files_list}
+        elif add_member_form.validate_on_submit():
+            # print("\n*******************************************")
+            group_name = add_member_form.group_name.data
+            new_members = add_member_form.member_input.data
+            # print(f"\nAttempting member addition with {group_name} and members: {new_members}")
+            add_new_member_return_msg = add_new_members(group_name, new_members)  # Currently, this would be None
+            members = get_members(group_name)
 
-            print("printing new_files ", new_files)
-            the_group.replace_one(prev_files,new_files)
+        elif group_deletion_form.validate_on_submit():
+            group_name_delete = group_deletion_form.group_name_delete.data
+            response = delete_group(group_name_delete)
 
-            all_docs = the_group.find()
-            group_stuff = [i for i in all_docs]
-            print("Data for", group_name, " is ", group_stuff)
-
+        elif file_deletion_form.validate_on_submit():
+            file_name_delete = file_deletion_form.file_name_delete.data
+            response = delete_file(file_name_delete)
 
         else:
-            # handle duplicate file names
-            # we'll still need to test this though
-            done = False
-            num = 0
-            while not done:
-                tryfile = filename + str(num)
-                print("Trying to input: ", tryfile)
-                if tryfile not in files:
-                    files.append(tryfile)
-                    new_files = {"_id":prev_files["_id"],"Files":files}
-                    the_group.update_one({"Files":prev_files["Files"]},{"Files":files})
-                    done = True
-                else:
-                    num += 1
+            file = request.files['file']
+            filename = secure_filename(file.filename)
+            print("Attempting to post: " + filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # now let's save the name to the group
+            db = client.group_data
+            the_group = db[group_name]
+            all_docs = the_group.find()
 
-    return render_template("user.html", email=email, membership_list=membership_list, members=members, group_name=group_name)
+            group_stuff = [i for i in all_docs]
+            print("Data for", group_name, " is ", group_stuff)
+            obj_id = []
+            files = []
+            prev_files = {}
+            new_files_list = []
+            for i in group_stuff:
+                try:
+                    files = i['Files']
+                    prev_files = i
+                    print("printing prev_files ", prev_files)
+                except:
+                    pass
+            if filename not in files:
+                print("filename,files", filename, files)
+                new_files_list = [i for i in files] + [filename]
+                new_files = {"_id":prev_files["_id"],"Files":new_files_list}
+
+                print("printing new_files ", new_files)
+                the_group.replace_one(prev_files,new_files)
+
+                all_docs = the_group.find()
+                group_stuff = [i for i in all_docs]
+                print("Data for", group_name, " is ", group_stuff)
+
+
+            else:
+                # handle duplicate file names
+                # we'll still need to test this though
+                done = False
+                num = 0
+                while not done:
+                    tryfile = filename + str(num)
+                    print("Trying to input: ", tryfile)
+                    if tryfile not in files:
+                        files.append(tryfile)
+                        new_files = {"_id":prev_files["_id"],"Files":files}
+                        the_group.update_one({"Files":prev_files["Files"]},{"Files":files})
+                        done = True
+                    else:
+                        num += 1
+
+    return render_template("user.html", email=email, membership_list=membership_list, \
+    members=members, group_name=group_name, create_group_form=create_group_form, \
+    add_member_form=add_member_form, group_deletion_form=group_deletion_form, file_deletion_form=file_deletion_form)
 
 
 # when you click on a group name this will retrieve that group name
