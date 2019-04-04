@@ -1,12 +1,10 @@
 {% block content %}
 
-<form method="POST" action="/">
 <p class="text-primary">You may delete files if you wish.</p>
 
 {{ group_deletion_form.group_name_delete.label }} {{ group_deletion_form.group_name_delete(size=20) }}
 
 <input id="delete-team" class="btn btn-danger" type="submit" value="Delete">
 
-</form>
 
 {% endblock %}

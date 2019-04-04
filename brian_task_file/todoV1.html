@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Tasks</title>
+    <!-- <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'> -->
+    <link rel="stylesheet" href="todoV1.css" type="text/css" media="screen" charset="utf-8">
+  </head>
+  <body>
+    <div class="add-container">
+      <p>
+        <label for="new-task">Add Task</label><input id="new-task" type="text"><button>Add</button>
+      </p>
+    </div>
+
+    <div class="task-container">
+      <h3>Tasks</h3>
+      <ul id="incomplete-tasks">
+        <!-- <li class="editMode"><input type="checkbox"><label>Go Shopping</label><input type="text" value="Go Shopping"><button class="edit">Edit</button><button class="delete">Delete</button></li> -->
+      </ul>
+    </div>
+
+    <div class="completed-container">
+      <h3>Completed</h3>
+      <ul id="completed-tasks"></ul>
+    </div>
+
+    <script type="text/javascript" src="{{url_for('static', filename='tasks.js')}}"></script>
+
+  </body>
+</html>
