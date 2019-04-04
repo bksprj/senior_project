@@ -45,7 +45,7 @@ class AddNewMemberForm(FlaskForm):
     class Meta:
         csrf = False
         locales = ('en_US', 'en')
-    group_name = StringField('Group', validators=[DataRequired()])
+    # group_name = StringField('Group', validators=[DataRequired()])
     member_input = StringField("New Members", validators=[DataRequired()])
 
 class AddTaskForm(FlaskForm):
@@ -122,11 +122,14 @@ def add_new_members(group_name:str, member_input:str):
 
 
     new_admin_members_list = list_without_dups(prev_admin, new_admin_members_list)
+    new_standard_members_list = list_without_dups(prev_standard, new_standard_members_list)
 
     new_notes = []
     db = client.group_data
     for eachadmin in new_admin_members_list:
         new_notes.append(notify("add", eachadmin, None))
+    for eachstandard in new_standard_members_list:
+        new_notes.append(notify("add", eachstandard, None))
     # new_notes = [notify("add","testboi",None)]
     names = db.list_collection_names()
     the_group = db[group_name]
@@ -143,7 +146,7 @@ def add_new_members(group_name:str, member_input:str):
     if len(new_notes) > 0:
         the_group.find_one_and_replace(notifications, new_notes_dict)
 
-    new_standard_members_list = list_without_dups(prev_standard, new_standard_members_list)
+    # new_standard_members_list = list_without_dups(prev_standard, new_standard_members_list)
 
     # print(f"Here are the final admin members {new_admin_members_list}")
     # print(f"Here are the final standard members {new_standard_members_list}")
@@ -365,7 +368,7 @@ def loggedin(email, group_name):
 
         elif add_member_form.validate_on_submit():
             # print("\n*******************************************")
-            group_name = add_member_form.group_name.data
+            # group_name = add_member_form.group_name.data
             new_members = add_member_form.member_input.data
             # print(f"\nAttempting member addition with {group_name} and members: {new_members}")
             add_new_member_return_msg = add_new_members(group_name, new_members)  # Currently, this would be None
