@@ -190,48 +190,6 @@ def delete_group(group_name_delete:str) -> list:
     drop1 = db_groups_collection.drop()
     drop2 = db_group_data_collection.drop()
 
-    # global check_group
-    #
-    # db_groups = client.groups
-    # db_group_data = client.group_data
-    # db_groups_collection = db_groups[group_name_delete]
-    # db_group_data_collection = db_group_data[group_name_delete]
-    #
-    # allowed_to_see_data = False  # start off as False
-    # # Does the group exist?
-    # names = db_groups.list_collection_names()
-    # if group_name_delete not in names:
-    #     server_message = ["The group: " + group_name_delete + " doesn't exist."]
-    #     return server_message
-    # else:
-    #     print("Group exists, moving on to the next check.")
-    #
-    # # Okay, so the group exists
-    # # Now, let's check to see if the person has the permission to add data
-    # if useremail == "No user":
-    #     server_message = ["You need to be logged in."]
-    #     return server_message
-    # else:
-    #     print("Useremail to check is: ", useremail)
-    #     if useremail in db_groups_collection.find_one()["Admin"]:
-    #         print("You are an Admin in the group")
-    #         allowed_to_see_data = True
-    #         admin = True
-    #     elif useremail in db_groups_collection.find_one()["Standard"]:
-    #         print("You are a Standard in the group")
-    #         allowed_to_see_data = True
-    #     else:
-    #         server_message = ["You are not a part of the group."]
-    #         return server_message
-    # print("Attempting to delete")
-    # # drop the group
-    # drop1 = db_groups_collection.drop()
-    # drop2 = db_group_data_collection.drop()
-    # print("Well, let's hope it worked", drop1, drop2)
-    # server_message = ["Group '" + str(group_name_delete) + "' has been deleted"]
-    # check_group = "not checking a group"
-    # return server_message
-
 def get_data(group_name:str):
     # first, let's check for permissions
     allowed_to_see_data = False  # start off as False
@@ -437,6 +395,20 @@ def loggedin(email, group_name):
                     # print("printing prev_files ", prev_files)
                 except:
                     pass
+
+            # creating a new notification
+            for i in group_stuff:
+                try:
+                    notes = i['Notifications']
+                    prev_notes = i
+                    # print("printing prev_files ", prev_files)
+                except:
+                    pass
+                new_notes_list = [n for n in notes] + [notify("delete",None,file_name_delete)]
+                new_notes = {"_id":prev_notes["_id"], "Notifications":new_notes_list}
+                the_group.replace_one(prev_notes,new_notes)
+
+
             if file_name_delete in files:
                 new_files_list = [i for i in files]
                 new_files_list.remove(file_name_delete)
@@ -481,6 +453,7 @@ def loggedin(email, group_name):
             files = []
             prev_files = {}
             new_files_list = []
+            notes = []
             for i in group_stuff:
                 try:
                     files = i['Files']
@@ -488,6 +461,18 @@ def loggedin(email, group_name):
                     # print("printing prev_files ", prev_files)
                 except:
                     pass
+            # creating a new notification
+            for i in group_stuff:
+                try:
+                    notes = i['Notifications']
+                    prev_notes = i
+                    # print("printing prev_files ", prev_files)
+                except:
+                    pass
+                new_notes_list = [n for n in notes] + [notify("add",None,filename)]
+                new_notes = {"_id":prev_notes["_id"], "Notifications":new_notes_list}
+                the_group.replace_one(prev_notes,new_notes)
+
             if filename not in files:
                 print("filename,files", filename, files)
                 new_files_list = [i for i in files] + [filename]
@@ -554,6 +539,18 @@ def loggedin(email, group_name):
         # print(group_name, "files are: ", files )
 
 
+    # grabbing notifications
+    noto_lst = ["No group selected"]
+    if group_name != "no_group":
+        for i in group_stuff:
+            try:
+                noto_lst = i['Notifications']
+            except:
+                pass
+        if len(noto_lst) == 0:
+            noto_lst = ["No notifications"]
+
+
     # admin boolean
     admin_list = members[0][1]
     admin = False
@@ -566,7 +563,7 @@ def loggedin(email, group_name):
     members=members, group_name=group_name, create_group_form=create_group_form, \
     add_member_form=add_member_form, group_deletion_form=group_deletion_form, \
     file_deletion_form=file_deletion_form, add_task_form=add_task_form, tasks=tasks, \
-    admin=admin, files=files)
+    admin=admin, files=files, noto_lst=noto_lst)
 
 
 # when you click on a group name this will retrieve that group name
