@@ -475,13 +475,18 @@ def loggedin(email, group_name):
                 # we'll still need to test this though
                 done = False
                 num = 0
+                new_files_list = []
                 while not done:
-                    tryfile = filename + str(num)
+                    # tryfile = filename + str(num)
+                    tryfile = filename.split(".")[0] + str(num) + "." + filename.split(".")[1]
                     print("Trying to input: ", tryfile)
                     if tryfile not in files:
-                        files.append(tryfile)
-                        new_files = {"_id":prev_files["_id"],"Files":files}
-                        the_group.update_one({"Files":prev_files["Files"]},{"Files":files})
+                        # files.append(tryfile)
+                        new_files_list = [i for i in files] + [tryfile]
+                        new_files = {"_id":prev_files["_id"],"Files":new_files_list}
+                        print("new_files with dup", new_files)
+                        the_group.replace_one(prev_files,new_files)
+                        file.save(os.path.join(app.config['UPLOAD_FOLDER'], tryfile))
                         done = True
                     else:
                         num += 1
@@ -502,18 +507,33 @@ def loggedin(email, group_name):
         if len(tasks) == 0:
             tasks = ["No tasks in group"]
 
+    # grabbing files
+    files = ["No group selected"]
+    if group_name != "no_group":
+        for i in group_stuff:
+            try:
+                files = i['Files']
+                print("printing prev_files ", prev_files)
+            except:
+                pass
+    if len(files) == 0:
+        files = ["No files for this group"]
+        # print(group_name, "files are: ", files )
+
+
+    # admin boolean
     admin_list = members[0][1]
     admin = False
     for user in admin_list:
         if email in user:
             admin = True
-    print("admin is", admin)
+    # print("admin is", admin)
 
     return render_template("user.html", email=email, membership_list=membership_list, \
     members=members, group_name=group_name, create_group_form=create_group_form, \
     add_member_form=add_member_form, group_deletion_form=group_deletion_form, \
     file_deletion_form=file_deletion_form, add_task_form=add_task_form, tasks=tasks, \
-    admin=admin)
+    admin=admin, files=files)
 
 
 # when you click on a group name this will retrieve that group name

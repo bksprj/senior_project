@@ -66,7 +66,7 @@
           {% include 'includes/add_member.html' %}
         </div>
       </div>
-
+    </div>
     {% endif %}
 
   </div>
@@ -75,16 +75,14 @@
 <div class="data" style="float:right;width:30%; padding-left:20px; padding-top:15px;">
   <h3 class="text-primary"><strong>Files/Data</strong></h3>
   <div id="navigation" style="overflow:auto;">
-    {%- if response|length > 1 -%}
-      {% for item in response[0] %}
-      <p style="color:white;"><strong><font size="4">{{ item }}</font></strong></p>
+      {% for each_file in files %}
+      <p><a class="atag" href="../../uploads/{{ each_file }}" download><strong><font size="4">{{ each_file }}</font></strong></a></p>
       {% endfor %}
 
       <p class="text-primary"><strong>The files for your group are:</strong></p>
           {% for file_name in file_lst %}
-          <a class="atag" href="uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
-      {% endfor %}
-    {% endif %}
+            <a class="atag" href="uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
+          {% endfor %}
 
     <a id="upload_file" class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
 
@@ -111,7 +109,7 @@
     <h3 style="color:white;">Tasks</h3>
     <!-- <input type="checkbox" style="float:left;"><p style="color:white; float:left; padding-left:5px;">example task item</p><br> -->
     {% for atask in tasks %}
-        <p style="color:white;">{{ atask }}</p>
+        <li style="color:white;">{{ atask }}</li>
     {% endfor %}
   </div>
   <a class="text-primary hov" onclick="showTaskIn()"><strong><font size="4">New Task</font></strong></a>
