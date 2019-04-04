@@ -61,9 +61,18 @@
       <a id="admin-priv" class="text-primary hov" onclick="showAdmin()"><strong><font size="4">Admin Privileges</font></strong></a>
       <div id="myAdmin" class="modal">
         <div class="modal-content">
+          <form method="POST">
           {% include 'includes/drop_collection.html' %}
+          </form>
+
+          <form method="POST">
           {% include 'includes/file_deletion.html' %}
+          </form>
+
+          <form method="POST">
           {% include 'includes/add_member.html' %}
+          </form>
+          
         </div>
       </div>
     </div>

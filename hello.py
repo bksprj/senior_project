@@ -175,55 +175,62 @@ def create_group(new_group_name:str, admin_email:str):
 
 def delete_file(filename):
     try:
-        path = UPLOAD_FOLDER + "/" +filename
+        path = UPLOAD_FOLDER + "/" + filename
         os.remove(path)
         return [f"Deleted {filename} successfully"]
     except:
         return [f"Unable to delete {filename}; perhaps it isn't stored?"]
 
 def delete_group(group_name_delete:str) -> list:
-    global check_group
-
-
     db_groups = client.groups
     db_group_data = client.group_data
     db_groups_collection = db_groups[group_name_delete]
     db_group_data_collection = db_group_data[group_name_delete]
 
-    allowed_to_see_data = False  # start off as False
-    # Does the group exist?
-    names = db_groups.list_collection_names()
-    if group_name_delete not in names:
-        server_message = ["The group: " + group_name_delete + " doesn't exist."]
-        return server_message
-    else:
-        print("Group exists, moving on to the next check.")
-
-    # Okay, so the group exists
-    # Now, let's check to see if the person has the permission to add data
-    if useremail == "No user":
-        server_message = ["You need to be logged in."]
-        return server_message
-    else:
-        print("Useremail to check is: ", useremail)
-        if useremail in db_groups_collection.find_one()["Admin"]:
-            print("You are an Admin in the group")
-            allowed_to_see_data = True
-            admin = True
-        elif useremail in db_groups_collection.find_one()["Standard"]:
-            print("You are a Standard in the group")
-            allowed_to_see_data = True
-        else:
-            server_message = ["You are not a part of the group."]
-            return server_message
-    print("Attempting to delete")
-    # drop the group
     drop1 = db_groups_collection.drop()
     drop2 = db_group_data_collection.drop()
-    print("Well, let's hope it worked", drop1, drop2)
-    server_message = ["Group '" + str(group_name_delete) + "' has been deleted"]
-    check_group = "not checking a group"
-    return server_message
+
+    # global check_group
+    #
+    # db_groups = client.groups
+    # db_group_data = client.group_data
+    # db_groups_collection = db_groups[group_name_delete]
+    # db_group_data_collection = db_group_data[group_name_delete]
+    #
+    # allowed_to_see_data = False  # start off as False
+    # # Does the group exist?
+    # names = db_groups.list_collection_names()
+    # if group_name_delete not in names:
+    #     server_message = ["The group: " + group_name_delete + " doesn't exist."]
+    #     return server_message
+    # else:
+    #     print("Group exists, moving on to the next check.")
+    #
+    # # Okay, so the group exists
+    # # Now, let's check to see if the person has the permission to add data
+    # if useremail == "No user":
+    #     server_message = ["You need to be logged in."]
+    #     return server_message
+    # else:
+    #     print("Useremail to check is: ", useremail)
+    #     if useremail in db_groups_collection.find_one()["Admin"]:
+    #         print("You are an Admin in the group")
+    #         allowed_to_see_data = True
+    #         admin = True
+    #     elif useremail in db_groups_collection.find_one()["Standard"]:
+    #         print("You are a Standard in the group")
+    #         allowed_to_see_data = True
+    #     else:
+    #         server_message = ["You are not a part of the group."]
+    #         return server_message
+    # print("Attempting to delete")
+    # # drop the group
+    # drop1 = db_groups_collection.drop()
+    # drop2 = db_group_data_collection.drop()
+    # print("Well, let's hope it worked", drop1, drop2)
+    # server_message = ["Group '" + str(group_name_delete) + "' has been deleted"]
+    # check_group = "not checking a group"
+    # return server_message
 
 def get_data(group_name:str):
     # first, let's check for permissions
@@ -383,7 +390,6 @@ def loggedin(email, group_name):
     add_task_form = AddTaskForm()
 
 
-
     # was there a group selected?
     if group_name == "no_group":
         members = ['No Team Selected']
@@ -397,6 +403,7 @@ def loggedin(email, group_name):
             input_name = create_group_form.group_name.data
             input_email = create_group_form.email.data
             create_group(input_name, input_email)
+            return redirect(url_for('index'))
 
         elif add_member_form.validate_on_submit():
             # print("\n*******************************************")
@@ -409,10 +416,34 @@ def loggedin(email, group_name):
         elif group_deletion_form.validate_on_submit():
             group_name_delete = group_deletion_form.group_name_delete.data
             response = delete_group(group_name_delete)
+            return redirect(url_for('index'))
 
         elif file_deletion_form.validate_on_submit():
             file_name_delete = file_deletion_form.file_name_delete.data
             response = delete_file(file_name_delete)
+            db = client.group_data
+            the_group = db[group_name]
+            all_docs = the_group.find()
+
+            group_stuff = [i for i in all_docs]
+            # print("Data for", group_name, " is ", group_stuff)
+            files = []
+            prev_files = {}
+            new_files_list = []
+            for i in group_stuff:
+                try:
+                    files = i['Files']
+                    prev_files = i
+                    # print("printing prev_files ", prev_files)
+                except:
+                    pass
+            if file_name_delete in files:
+                new_files_list = [i for i in files]
+                new_files_list.remove(file_name_delete)
+                new_files = {"_id":prev_files["_id"],"Files":new_files_list}
+
+                # print("printing new_files ", new_files)
+                the_group.replace_one(prev_files,new_files)
 
         elif add_task_form.validate_on_submit():
             new_task_submit = add_task_form.new_task.data
@@ -429,14 +460,13 @@ def loggedin(email, group_name):
                     try:
                         tasks = i['Tasks']
                         prev_tasks = i
-                        print("printing prev_tasks ", prev_tasks)
+                        # print("printing prev_tasks ", prev_tasks)
                     except:
                         pass
                 new_tasks_list = [i for i in tasks] + [new_task_submit]
                 new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
                 the_group.replace_one(prev_tasks,new_tasks)
-        else:
-            # we must be dealing with file uploads
+        else: # we must be dealing with file uploads
             file = request.files['file']
             filename = secure_filename(file.filename)
             print("Attempting to post: " + filename)
@@ -447,8 +477,7 @@ def loggedin(email, group_name):
             all_docs = the_group.find()
 
             group_stuff = [i for i in all_docs]
-            print("Data for", group_name, " is ", group_stuff)
-            obj_id = []
+            # print("Data for", group_name, " is ", group_stuff)
             files = []
             prev_files = {}
             new_files_list = []
@@ -456,7 +485,7 @@ def loggedin(email, group_name):
                 try:
                     files = i['Files']
                     prev_files = i
-                    print("printing prev_files ", prev_files)
+                    # print("printing prev_files ", prev_files)
                 except:
                     pass
             if filename not in files:
@@ -464,7 +493,7 @@ def loggedin(email, group_name):
                 new_files_list = [i for i in files] + [filename]
                 new_files = {"_id":prev_files["_id"],"Files":new_files_list}
 
-                print("printing new_files ", new_files)
+                # print("printing new_files ", new_files)
                 the_group.replace_one(prev_files,new_files)
 
                 all_docs = the_group.find()
@@ -501,7 +530,6 @@ def loggedin(email, group_name):
         for i in group_stuff:
             try:
                 tasks = i['Tasks']
-                # print("Here are the tasks ", tasks)
             except:
                 pass
         if len(tasks) == 0:
@@ -513,7 +541,7 @@ def loggedin(email, group_name):
         for i in group_stuff:
             try:
                 files = i['Files']
-                print("printing prev_files ", prev_files)
+                # print("printing prev_files ", prev_files)
             except:
                 pass
     if len(files) == 0:
@@ -561,6 +589,7 @@ def get_post_group_name(group_name):
     return "RETRIEVED GROUP NAME"
 
 # index page
+@app.route("/index", methods=['GET', 'POST'])
 @app.route("/", methods=['GET', 'POST'])
 def index():
     global useremail
@@ -613,7 +642,7 @@ def index():
 
 
     # get noto_lst for notifications
-    print("check_group is", check_group)
+    # print("check_group is", check_group)
     if check_group != "not checking a group":
         db = client.group_data
         the_group = db[check_group]

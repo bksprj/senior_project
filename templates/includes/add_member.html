@@ -1,6 +1,5 @@
 {% block content %}
 
-	<form method="POST" action="/">
 		<p class="text-primary">You are an admin, which means you may add members the group</p>
 		<p>The notation to use would be: "Rank:email,email|Rank:email,email"</p>
     {{ add_member_form.group_name.label }} {{ add_member_form.group_name(size=20) }}
@@ -9,6 +8,5 @@
 		<br>
 			<input id="add-mem" class="btn btn-primary" type="submit" value="Add">
 			<span class="close" onclick="spanAdmin()">&times;</span>
-	</form>
 
 {% endblock %}
