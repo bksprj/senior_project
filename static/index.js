@@ -26,9 +26,9 @@ function signOut() {
 			$(".data").css("display","none");
 			$(".goaway").css("display","block");
 			//live code
-			window.location.replace("https://data-sense.herokuapp.com/");
+			// window.location.replace("https://data-sense.herokuapp.com/");
 			//testing
-			// window.location.replace("http://localhost:5000/");
+			window.location.replace("http://localhost:5000/");
 		} else {
 			// Does nothing
 		}

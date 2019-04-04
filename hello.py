@@ -40,30 +40,6 @@ admin = False
 #===============================================================================
 # Class definitions
 
-class JSONEncoder(json.JSONEncoder):
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return str(o)
-        return json.JSONEncoder.default(self, o)
-
-class CreateGroup(FlaskForm):
-    class Meta:
-        csrf = False
-        locales = ('en_US', 'en')
-    group_name = StringField('Team', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired()])
-
-class GroupDeletionForm(FlaskForm):
-    class Meta:
-        csrf = False
-        locales = ('en_US', 'en')
-    group_name_delete = StringField('Team', validators=[DataRequired()])
-
-class FileDeletionForm(FlaskForm):
-    class Meta:
-        csrf = False
-        locales = ('en_US', 'en')
-    file_name_delete = StringField('File', validators=[DataRequired()])
 
 class AddNewMemberForm(FlaskForm):
     class Meta:
@@ -72,6 +48,36 @@ class AddNewMemberForm(FlaskForm):
     group_name = StringField('Group', validators=[DataRequired()])
     member_input = StringField("New Members", validators=[DataRequired()])
 
+class AddTaskForm(FlaskForm):
+    class Meta:
+        csrf = False
+        locales = ('en_US', 'en')
+    new_task = StringField('task', validators=[DataRequired()])
+
+class CreateGroup(FlaskForm):
+    class Meta:
+        csrf = False
+        locales = ('en_US', 'en')
+    group_name = StringField('Team', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
+
+class FileDeletionForm(FlaskForm):
+    class Meta:
+        csrf = False
+        locales = ('en_US', 'en')
+    file_name_delete = StringField('File', validators=[DataRequired()])
+
+class GroupDeletionForm(FlaskForm):
+    class Meta:
+        csrf = False
+        locales = ('en_US', 'en')
+    group_name_delete = StringField('Team', validators=[DataRequired()])
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
 
 #===============================================================================
 # Global functions
@@ -374,6 +380,8 @@ def loggedin(email, group_name):
     group_deletion_form = GroupDeletionForm()
     add_member_form = AddNewMemberForm()
     file_deletion_form = FileDeletionForm()
+    add_task_form = AddTaskForm()
+
 
 
     # was there a group selected?
@@ -406,7 +414,29 @@ def loggedin(email, group_name):
             file_name_delete = file_deletion_form.file_name_delete.data
             response = delete_file(file_name_delete)
 
+        elif add_task_form.validate_on_submit():
+            new_task_submit = add_task_form.new_task.data
+            print("Received task: ", new_task_submit)
+            db = client.group_data
+            the_group = db[group_name]
+            all_docs = the_group.find()
+            group_stuff = [i for i in all_docs]
+            print("group stuff", group_stuff)
+            prev_tasks = {}
+            print("Entering task for loop")
+            if group_name != "no_group":
+                for i in group_stuff:
+                    try:
+                        tasks = i['Tasks']
+                        prev_tasks = i
+                        print("printing prev_tasks ", prev_tasks)
+                    except:
+                        pass
+                new_tasks_list = [i for i in tasks] + [new_task_submit]
+                new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
+                the_group.replace_one(prev_tasks,new_tasks)
         else:
+            # we must be dealing with file uploads
             file = request.files['file']
             filename = secure_filename(file.filename)
             print("Attempting to post: " + filename)
@@ -440,8 +470,6 @@ def loggedin(email, group_name):
                 all_docs = the_group.find()
                 group_stuff = [i for i in all_docs]
                 print("Data for", group_name, " is ", group_stuff)
-
-
             else:
                 # handle duplicate file names
                 # we'll still need to test this though
@@ -458,9 +486,34 @@ def loggedin(email, group_name):
                     else:
                         num += 1
 
+    # Grab task data
+    tasks = ["No tasks"]
+    if group_name != "no_group":
+        db = client.group_data
+        the_group = db[group_name]
+        all_docs = the_group.find()
+        group_stuff = [i for i in all_docs]
+        for i in group_stuff:
+            try:
+                tasks = i['Tasks']
+                # print("Here are the tasks ", tasks)
+            except:
+                pass
+        if len(tasks) == 0:
+            tasks = ["No tasks in group"]
+
+    admin_list = members[0][1]
+    admin = False
+    for user in admin_list:
+        if email in user:
+            admin = True
+    print("admin is", admin)
+
     return render_template("user.html", email=email, membership_list=membership_list, \
     members=members, group_name=group_name, create_group_form=create_group_form, \
-    add_member_form=add_member_form, group_deletion_form=group_deletion_form, file_deletion_form=file_deletion_form)
+    add_member_form=add_member_form, group_deletion_form=group_deletion_form, \
+    file_deletion_form=file_deletion_form, add_task_form=add_task_form, tasks=tasks, \
+    admin=admin)
 
 
 # when you click on a group name this will retrieve that group name
