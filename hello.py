@@ -537,11 +537,16 @@ def loggedin(email, group_name):
 
     # grabbing files
     files = ["No group selected"]
+    check_missing = []
     if group_name != "no_group":
         for i in group_stuff:
             try:
                 files = i['Files']
-                # print("printing prev_files ", prev_files)
+                for j in files:
+                    print("os.listdir: ", os.listdir("uploads"))
+                    if j not in os.listdir("uploads"):
+                        check_missing.append(j)
+                files = set(files)-set(check_missing)
             except:
                 pass
     if len(files) == 0:
