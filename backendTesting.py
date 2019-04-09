@@ -33,18 +33,11 @@ class TestStringMethods(unittest.TestCase):
         print(hello.get_data(test_group))
         print("*=============================================================*")
 
-    # def test_get_team_member_file(self):
-    # not yet implemented
-    #     print("test_get_team_member_file")
-    #     test_group = "test_group_01"
-    #     self.assertEqual(type(hello.get_team_member_file(test_group)), type(list()))
-    #     print(hello.get_team_member_file(test_group))
-
     def test_delete_team(self):
         print("test_delete_team")
         test_group = "test_group_01"
-        self.assertEqual(type(hello.delete_group(test_group)),type(list()))
-        # I need to be logged in so that I can delete it; admin privileges needed
+        self.assertEqual(hello.delete_group(test_group),None)
+        print("*=============================================================*")
 
 
 if __name__ == '__main__':

@@ -184,7 +184,7 @@ def delete_file(filename):
     except:
         return [f"Unable to delete {filename}; perhaps it isn't stored?"]
 
-def delete_group(group_name_delete:str) -> list:
+def delete_group(group_name_delete:str):
     db_groups = client.groups
     db_group_data = client.group_data
     db_groups_collection = db_groups[group_name_delete]
