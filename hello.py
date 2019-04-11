@@ -82,7 +82,6 @@ class JSONEncoder(json.JSONEncoder):
 #===============================================================================
 # Global functions
 def add_new_members(group_name:str, member_input:str):
-    global check_group
     def list_without_dups(list1:list, list2:list) -> list:
         result = list1
         for i in list2:
@@ -117,9 +116,6 @@ def add_new_members(group_name:str, member_input:str):
     prev_id_data = prev_member_data["_id"]
     prev_admin = prev_member_data["Admin"]
     prev_standard = prev_member_data["Standard"]
-
-
-
 
     new_admin_members_list = list_without_dups(prev_admin, new_admin_members_list)
     new_standard_members_list = list_without_dups(prev_standard, new_standard_members_list)
@@ -173,8 +169,10 @@ def create_group(new_group_name:str, admin_email:str):
         new_group.insert_one({"Notifications":[]})
         new_group.insert_one({"Files":[]}) # names of files that belong to the group
         new_group.insert_one({"Tasks":[]})
+        return [f"The team {new_group_name} has been created"]
     else:
         print("That team already exists!")
+        return ["That team already exists."]
 
 def delete_file(filename):
     try:
@@ -187,11 +185,15 @@ def delete_file(filename):
 def delete_group(group_name_delete:str):
     db_groups = client.groups
     db_group_data = client.group_data
-    db_groups_collection = db_groups[group_name_delete]
-    db_group_data_collection = db_group_data[group_name_delete]
-
-    drop1 = db_groups_collection.drop()
-    drop2 = db_group_data_collection.drop()
+    listed_group_names = db_groups.list_collection_names()
+    if group_name_delete in listed_group_names:
+        db_groups_collection = db_groups[group_name_delete]
+        db_group_data_collection = db_group_data[group_name_delete]
+        drop1 = db_groups_collection.drop()
+        drop2 = db_group_data_collection.drop()
+        return [f"The group {group_name_delete} has been deleted."]
+    else:
+        return [f"The group {group_name_delete} does not exist."]
 
 def get_data(group_name:str):
     # first, let's check for permissions
@@ -202,8 +204,8 @@ def get_data(group_name:str):
     if group_name not in names:
         # retrieve_data = ["The group: " + group_name + " does not exist."]
         return [["The group: " + group_name + " does not exist."], admin]
-    else:
-        print("Group exists, moving on to the next check.")
+    # Group exists, moving on to the next check."
+
 
     # Okay, so the group exists
     # Now, let's check to see if the person has the permission to add data
@@ -213,13 +215,13 @@ def get_data(group_name:str):
         return [["You need to be logged in."], admin]
     else:
         # this is to determine the rank, in case different actions are allowed
-        print("Useremail to check is: ", useremail)
+        # print("Useremail to check is: ", useremail)
         if useremail in group_collection.find_one()["Admin"]:
-            print("You are an Admin in the group")
+            # print("You are an Admin in the group")
             allowed_to_see_data = True
             admin = True
         elif useremail in group_collection.find_one()["Standard"]:
-            print("You are a Standard in the group")
+            # print("You are a Standard in the group")
             allowed_to_see_data = True
         else:
             retrieve_data = ["You are not a part of the group."]
@@ -237,12 +239,29 @@ def get_data(group_name:str):
         if count == 0:
             retrieve_data = ["There are no data documents in this group"]
 
-        dirs = os.listdir(UPLOAD_FOLDER)
+
+        db = client.group_data
+        the_group = db[group_name]
+        all_docs = the_group.find()
+
+        group_stuff = [i for i in all_docs]
+        # print("Data for", group_name, " is ", group_stuff)
         file_list = []
-        # This would print all the files and directories
-        for file in dirs:
-            print(file)
-            file_list.append(file)
+        for i in group_stuff:
+            try:
+                file_list = i['Files']
+                prev_files = i
+                # print("printing prev_files ", prev_files)
+            except:
+                pass
+
+
+        # dirs = os.listdir(UPLOAD_FOLDER)
+        # file_list = []
+        # # This would print all the files and directories
+        # for file in dirs:
+        #     # print(file)
+        #     file_list.append(file)
     else:
         file_list = ["Not allowed to see this group's data"]
 
