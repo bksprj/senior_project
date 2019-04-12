@@ -120,8 +120,8 @@
     <h3 style="color:white;">Tasks</h3>
     <!-- <input type="checkbox" style="float:left;"><p style="color:white; float:left; padding-left:5px;">example task item</p><br> -->
     {% for atask in tasks %}
-        <li class="tk" style="color:white; float: left;">{{ atask }}</li>
-        <img class="data" style="float:left;" src="{{url_for('static', filename='img/garbage.png')}}" class="img-circle" width="2" height="2"/>
+        <li class="tk" style="color:white; float: left;padding-right: 2px;">{{ atask }}</li>
+        <img class="delete" style="float:left; padding-right: 5px;" src="{{url_for('static', filename='img/garbage.png')}}" class="img-circle" width="2" height="2"/>
     {% endfor %}
   </div>
   <a id="newTask" class="text-primary hov" onclick="showTaskIn()"><strong><font size="4">New Task</font></strong></a>

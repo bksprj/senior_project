@@ -51,7 +51,6 @@ $(document).ready(function(){
         $(this).parent().remove();
         return false;
     });
-
 });
 
 // Overlay function to turn on
