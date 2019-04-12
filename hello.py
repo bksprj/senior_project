@@ -89,36 +89,67 @@ def add_new_members(group_name:str, member_input:str):
                 result.append(i)
         return result
 
-    # format: Rank:email,email|Rank:email,email
-    # first, get a list of each email input for each rank
-    member_input = member_input.replace(" ", "")  # get rid of spaces
-    separate_ranks = member_input.split("|")
-    # ["rank", "email,email,email"]
-    admin_rank_list = separate_ranks[0].split(":")
-    if len(admin_rank_list) > 1:
-        new_admin_members_list = admin_rank_list[1].split(",")
-    standard_rank_list = separate_ranks[1].split(":")
-    if len(standard_rank_list) > 1:
-        new_standard_members_list = standard_rank_list[1].split(",")
+    def get_new_member_list(input_string):
+        # expects Rank:email or Rank:email,email
+        input_string = input_string.replace(" ", "")  # get rid of spaces
+        if input_string.count(",") >= input_string.count("@"):
+            # The point of this is to prevent random commas messing up processing
+            print("Issue: count(',') >= count('@')")
+            return ["Issue with extra commas"]
+        if "," in input_string:
+            new_members = input_string.split(":")[1].split(",")
+        else:
+            new_members = list(input_string.split(":")) + [""]
+            new_members = new_members[1:]
+            print(f"what's going on? {new_members}")
+        return new_members
 
-    # The email lists requested to be added:
-    # print(f"new_admin_members_list is: {new_admin_members_list}")
-    # print(f"new_standard_members_list is: {new_standard_members_list}")
-
-    # now that we have the lists of email addresses to potentially add for each
-    # rank, now let's get the current member data
     db = client.groups
     names = db.list_collection_names()
     if group_name not in names:
         return [f"The group {group_name} does not exist"]
+
+
+    new_admin_members = []
+    new_standard_members = []
+
+    if "Admin:" in member_input and "Standard:" not in member_input:
+        # then we have Admin:email or Admin:email,email
+        new_admin_members = get_new_member_list(member_input)
+    elif "Admin:" not in member_input and "Standard:" in member_input:
+        # then we have Standard:email
+        new_standard_members = get_new_member_list(member_input)
+    else:
+        # Admin:email|Standard:email
+        if "|" not in member_input:
+            return ["'|' separator missing"]
+        new_admin_members = get_new_member_list(member_input.split("|")[0])
+        new_standard_members = get_new_member_list(member_input.split("|")[1])
+    # Issues?
+    if new_standard_members == ["Issue with extra commas"] or new_admin_members == ["Issue with extra commas"]:
+        return ["Issue with extra commas"]
+
+    # admin_rank_list = separate_ranks[0].split(":")
+    # if len(admin_rank_list) > 1:
+    #     new_admin_members_list = admin_rank_list[1].split(",")
+    # standard_rank_list = separate_ranks[1].split(":")
+    # if len(standard_rank_list) > 1:
+    #     new_standard_members_list = standard_rank_list[1].split(",")
+
+
+    # now that we have the lists of email addresses to potentially add for each
+    # rank, now let's get the current member data
+
     query_group = db[group_name]
     prev_member_data = query_group.find_one()  # here's the object to update
     prev_id_data = prev_member_data["_id"]
     prev_admin = prev_member_data["Admin"]
     prev_standard = prev_member_data["Standard"]
 
-    new_admin_members_list = list_without_dups(prev_admin, new_admin_members_list)
-    new_standard_members_list = list_without_dups(prev_standard, new_standard_members_list)
+    new_admin_members_list = list_without_dups(prev_admin, new_admin_members)
+    new_standard_members_list = list_without_dups(prev_standard, new_standard_members)
+
+    # notes
 
     new_notes = []
     db = client.group_data
@@ -146,7 +177,6 @@ def add_new_members(group_name:str, member_input:str):
 
     # print(f"Here are the final admin members {new_admin_members_list}")
     # print(f"Here are the final standard members {new_standard_members_list}")
-
 
     new_member_info = {"_id":prev_id_data, "Admin":new_admin_members_list, "Standard":new_standard_members_list}
     # print(f"New member info is: {new_member_info}")
