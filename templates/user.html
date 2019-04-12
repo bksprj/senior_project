@@ -22,9 +22,10 @@
       <!-- {% include 'includes/mkgroup.html' %} -->
       <form method="POST" style="float:left;">
     		<h4 class="text-primary">Form a Team</h4>
-    		<div style="padding-top:5px;">
+    		<div style="padding-top:5px; padding-bottom: 5px;">
     	    	{{ create_group_form.group_name.label }} {{ create_group_form.group_name(size=20) }}
-    		</div>
+        </div>
+        <br>
     		<div style="padding-top:5px;">
     			{{ create_group_form.email.label }} {{ create_group_form.email(size=20) }}
     		</div>
