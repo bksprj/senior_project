@@ -40,6 +40,14 @@ nav {
 	text-align: center;
 }
 
+.delete {
+	display: none;
+}
+
+.tk:hover .delete {
+	display:block  
+}
+
 .column {
 	float: left;
 	width: 30%;

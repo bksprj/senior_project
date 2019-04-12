@@ -46,6 +46,14 @@ function query_data(group_name){
 	};
 }
 
+$(document).ready(function(){
+    $('.delete').click(function(){
+        $(this).parent().remove();
+        return false;
+    });
+
+});
+
 // Overlay function to turn on
 function on() {
 	document.getElementById("overlay").style.display = "block";
