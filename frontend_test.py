@@ -9,10 +9,11 @@ count = 0
 
 # Username and Pass to sign in to gmail.
 
-# Do not use with a gmail account that has two step verification!
+print("Do not use with a gmail account that has two step verification!")
 
-#user = str(input("Enter gmail account:\n"))
-#passw = str(input("Enter Password:\n"))
+# user = str(input("Enter gmail account:\n"))
+# passw = str(input("Enter Password:\n"))
+
 user = "keegan.husom@gmail.com"
 passw = "R3dSkull"
 
