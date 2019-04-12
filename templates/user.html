@@ -102,10 +102,10 @@
         <form method=post enctype=multipart/form-data>
           <h4 class="text-primary">Upload Files</h4>
           <p class="text-primary">Choose a file to upload</p>
-          <input type=file name=file>
+          <input id="fileUpload" type=file name=file>
           <div style="padding-top:5px;">
-            <input class="btn btn-primary" type=submit value=Upload>
-            <span class="close" onclick="spanClickUploader()">&times;</span>
+            <input id="enterUp" class="btn btn-primary" type=submit value=Upload>
+            <span id="closeUP" class="close" onclick="spanClickUploader()">&times;</span>
           </div>
         </form>
       </div>
@@ -122,7 +122,7 @@
         <li style="color:white;">{{ atask }}</li>
     {% endfor %}
   </div>
-  <a class="text-primary hov" onclick="showTaskIn()"><strong><font size="4">New Task</font></strong></a>
+  <a id="newTask" class="text-primary hov" onclick="showTaskIn()"><strong><font size="4">New Task</font></strong></a>
   <div id="myTaskIn" class="modal">
     <div class="modal-content">
 
