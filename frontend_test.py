@@ -4,6 +4,8 @@ import urllib.request
 import random
 import os
 
+count = 0
+
 # Start of Test
 
 # Username and Pass to sign in to gmail.
@@ -54,6 +56,8 @@ admin.send_keys(user)
 time.sleep(2)
 driver.find_element_by_id("form-team-btn").click()
 
+count = count + 1
+
 time.sleep(5)
 driver.refresh()
 time.sleep(5)
@@ -71,6 +75,8 @@ memberName.send_keys("Standard:husoke01@luther.edu")
 time.sleep(2)
 driver.find_element_by_id("add-mem").click()
 
+count = count + 1
+
 time.sleep(5)
 driver.refresh()
 time.sleep(5)
@@ -82,6 +88,8 @@ driver.find_element_by_id("fileUpload").send_keys(os.getcwd()+"/Senior Project N
 time.sleep(2)
 driver.find_element_by_id("enterUp").click()
 
+count = count + 1
+
 time.sleep(5)
 
 # Add task
@@ -90,6 +98,8 @@ time.sleep(2)
 driver.find_element_by_id("new_task").send_keys("This is a simple task")
 time.sleep(2)
 driver.find_element_by_id("enterTask").click()
+
+count = count + 1
 
 time.sleep(5)
 
@@ -100,6 +110,8 @@ driver.find_element_by_id("file_name_delete").send_keys("Senior_Project_Notes.pd
 time.sleep(2)
 driver.find_element_by_id("dropFile").click()
 
+count = count + 1
+
 time.sleep(5)
 
 # Delete Group
@@ -108,13 +120,15 @@ time.sleep(2)
 deleteteam = driver.find_element_by_id("group_name_delete")
 time.sleep(2)
 deleteteam.send_keys(name)
-
 driver.find_element_by_id("delete-team").click()
 
-time.sleep(2)
-driver.refresh()
+count = count + 1
+
 
 
 time.sleep(10)
 # Stop driver
 driver.close()
+result = count / 6
+result = result * 100
+print("Results from Front End Testing were " + str(result) + "%")
