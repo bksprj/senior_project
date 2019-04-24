@@ -85,8 +85,11 @@
 <div class="data" style="float:right;width:30%; padding-left:20px; padding-top:15px;">
   <h3 class="text-primary"><strong>Files</strong></h3>
   <div id="navigation" style="overflow:auto;">
+      {% if len of files == 0 %}
+        <p><strong><font size="4">No files here...</font></strong></p>
+      {% endfor %}
       {% for each_file in files %}
-      <p><a class="atag" href="../../uploads/{{ each_file }}" download><strong><font size="4">{{ each_file }}</font></strong></a></p>
+        <p><a class="atag" href="../../uploads/{{ each_file }}" download><strong><font size="4">{{ each_file }}</font></strong></a></p>
       {% endfor %}
       <br>
 
@@ -120,8 +123,8 @@
     <h3 style="color:white;">Tasks</h3>
     <!-- <input type="checkbox" style="float:left;"><p style="color:white; float:left; padding-left:5px;">example task item</p><br> -->
     {% for atask in tasks %}
-        <ul class="tk" style="color:white; float: left;padding-right: 2px; list-style-type: none;">{{ atask }}</ul>
-        <img class="delete" style="float:left; padding-right: 5px;" src="{{url_for('static', filename='img/garbage.png')}}" class="img-circle" width="2" height="2"/>
+        <ul class="tk" style="color:white; float: left; list-style-type: none;">{{ atask }}</ul>
+        <img class="delete" style="float:left; padding-right: 5px;" src="{{url_for('static', filename='img/garbage.png')}}" class="img-circle" width="10" height="10"/>
     {% endfor %}
   </div>
   <a id="newTask" class="text-primary hov" onclick="showTaskIn()"><strong><font size="4">New Task</font></strong></a>
