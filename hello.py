@@ -532,7 +532,6 @@ def loggedin(email, group_name):
             the_group.replace_one(prev_tasks,new_tasks)
 
         else: # we must be dealing with file uploads
-            print(f"request.data is: {request.data}")
             file = request.files['file']
             filename = secure_filename(file.filename)
             print("Attempting to post: " + filename)
