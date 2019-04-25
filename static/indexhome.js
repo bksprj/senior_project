@@ -36,8 +36,14 @@ function signOut() {
 }
 
 function query_data(group_name){
-	$.post("/grab_group/" + group_name);
-	// setTimeout(function(){location.reload(true)}, 1000);
+	var append_here = 0;
+	if (window.location.href.slice(-8) == "no_group"){
+		window.location.href = window.location.href.slice(0,-9) + "/" + group_name;
+	}
+	else{
+		append_here = window.location.href.lastIndexOf("/");
+		window.location.href = window.location.href.slice(0,append_here) + "/" + group_name
+	};
 }
 
 // Overlay function to turn on

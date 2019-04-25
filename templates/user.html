@@ -119,8 +119,11 @@
   <h3 style="color:white;">Tasks</h3>
   <div>
     <!-- <input type="checkbox" style="float:left;"><p style="color:white; float:left; padding-left:5px;">example task item</p><br> -->
+    {% set count = [1] %}
     {% for atask in tasks %}
-        <ul class="tk" style="color:white; float: left; list-style-type: none;">{{ atask }} <p class="delete" style="float:right; padding-left: 5px;">Del</p></ul>
+        {% set task_id = "task" + count[0]|string %}
+        <ul class="tk" style="color:white; float: left; list-style-type: none;"><div id="{{ task_id }}">{{ atask }} </div> <p class="delete" onclick="del_task('http://localhost:5000/loggedin/{{ email }}/{{ group_name }}','{{ task_id}}')" style="float:right; padding-left: 5px;">Del</p></ul>
+        {% if count.append(count.pop() + 1) %}{% endif %}
     {% endfor %}
   </div>
   <div>

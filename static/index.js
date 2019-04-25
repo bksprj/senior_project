@@ -46,6 +46,12 @@ function query_data(group_name){
 	};
 }
 
+function del_task(path,task){
+	console.log(path,task);
+	var task_str = document.getElementById(task).innerHTML;
+	$.post(path,{"del_task":task_str});
+}
+
 $(document).ready(function(){
     $('.delete').click(function(){
         $(this).parent().remove();
