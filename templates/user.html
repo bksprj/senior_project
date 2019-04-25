@@ -116,11 +116,11 @@
 
 
 <div class="data" style="position: absolute; bottom: 0; float: right; padding-top: 5px; padding-bottom: 5px; border-top: 2px solid white;">
-  <div>
+  <div style="padding-bottom:5px;">
     <h3 style="color:white;">Tasks</h3>
     <!-- <input type="checkbox" style="float:left;"><p style="color:white; float:left; padding-left:5px;">example task item</p><br> -->
     {% for atask in tasks %}
-        <ul class="tk" style="color:white; float: left; list-style-type: none; padding-bottom:5px;">{{ atask }} <p class="delete" style="float:right; padding-left: 2px;">Del</p></ul>
+        <ul class="tk" style="color:white; float: left; list-style-type: none;">{{ atask }} <p class="delete" style="float:right; padding-left: 2px;">Del</p></ul>
     {% endfor %}
   </div>
   <a id="newTask" class="text-primary hov" style="position:fixed;" onclick="showTaskIn()"><strong><font size="4">New Task</font></strong></a>
