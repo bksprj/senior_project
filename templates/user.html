@@ -120,8 +120,7 @@
     <h3 style="color:white;">Tasks</h3>
     <!-- <input type="checkbox" style="float:left;"><p style="color:white; float:left; padding-left:5px;">example task item</p><br> -->
     {% for atask in tasks %}
-        <ul class="tk" style="color:white; float: left; list-style-type: none;">{{ atask }}</ul>
-        <p class="delete">Del</p>
+        <ul class="tk" style="color:white; float: left; list-style-type: none;">{{ atask }} <p class="delete">Del</p></ul>
     {% endfor %}
   </div>
   <a id="newTask" class="text-primary hov" onclick="showTaskIn()"><strong><font size="4">New Task</font></strong></a>
