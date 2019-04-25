@@ -121,7 +121,7 @@
     <!-- <input type="checkbox" style="float:left;"><p style="color:white; float:left; padding-left:5px;">example task item</p><br> -->
     {% for atask in tasks %}
         <ul class="tk" style="color:white; float: left; list-style-type: none;">{{ atask }}</ul>
-        <img class="delete" style="float:left; padding-right: 5px;" src="{{url_for('static', filename='img/garbage.png')}}" class="img-circle" width="10" height="10"/>
+        <img class="delete img-circle" style="float:left; padding-right: 5px;" src="{{url_for('static', filename='img/garbage.png')}}" width="10" height="10"/>
     {% endfor %}
   </div>
   <a id="newTask" class="text-primary hov" onclick="showTaskIn()"><strong><font size="4">New Task</font></strong></a>
