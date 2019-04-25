@@ -41,6 +41,7 @@ nav {
 }
 
 .delete {
+	color:red;
 	display: none;
 }
 
