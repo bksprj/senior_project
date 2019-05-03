@@ -211,7 +211,7 @@ def delete_file(filename):
         return [f"Deleted {filename} successfully"]
     except:
         return [f"Unable to delete {filename}; perhaps it isn't stored?"]
-        
+
 ###################################################################
 
 def delete_member(member:str):
