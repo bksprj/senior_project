@@ -125,7 +125,9 @@
             <div class="modal-content">
               <p>{{ atask }}</p>
               <p>Complete By: </p>
+              {% if admin %}
               <input id="delete-task" class="btn btn-danger" type=submit value=Delete>
+              {% endif %}
               <span id="closeUp" class="close" onclick="spanTaskM()">&times;</span>
             </div>
         </div>
