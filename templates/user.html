@@ -94,8 +94,9 @@
           {% for file_name in file_lst %}
             <a class="atag" href="uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
           {% endfor %}-->
-
+    {% if human in group_name %}
     <a id="upload_file" class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
+    {% endif %}
 
     <div id="myUploader" class="modal">
       <div class="modal-content">
@@ -115,7 +116,7 @@
 </div>
 
 
-<div class="data" style="position: absolute; bottom: 0; float: right; padding-top: 5px; padding-bottom: 5px; border-top: 2px solid white;">
+<div class="data" style="position: absolute; bottom: 0; float: right; padding-top: 5px; padding-bottom: 10px; border-top: 2px solid white;">
   <h3 style="color:white;">Tasks</h3>
   <div>
     <!-- <input type="checkbox" style="float:left;"><p style="color:white; float:left; padding-left:5px;">example task item</p><br> -->
