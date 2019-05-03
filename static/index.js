@@ -103,6 +103,16 @@ function spanClickUploader() {
 }
 
 // When the user clicks the button, open the modal
+function showTaskM() {
+	document.getElementById("taskM").style.display = "block";
+  }
+
+  // When the user clicks on <span> (x), close the modal
+  function spanTaskM() {
+	document.getElementById("taskM").style.display = "none";
+  }
+
+// When the user clicks the button, open the modal
 function showTaskIn() {
 	document.getElementById("myTaskIn").style.display = "block";
   }
