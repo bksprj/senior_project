@@ -134,9 +134,11 @@
     {% endfor %}
   </div>
   <br>
+  {% if admin %}
   <div>
       <a id="newTask" class="text-primary hov" style="float:left;" onclick="showTaskIn()"><strong><font size="4">New Task</font></strong></a>
   </div>
+  {% endif %}
   <div id="myTaskIn" class="modal">
     <div class="modal-content">
 
