@@ -94,9 +94,8 @@
           {% for file_name in file_lst %}
             <a class="atag" href="uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
           {% endfor %}-->
-    {% if ranks_users in members or human in ranks_users[1] %}
+
     <a id="upload_file" class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
-    {% endif %}
 
     <div id="myUploader" class="modal">
       <div class="modal-content">
