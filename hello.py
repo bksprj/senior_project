@@ -211,6 +211,16 @@ def delete_file(filename):
         return [f"Deleted {filename} successfully"]
     except:
         return [f"Unable to delete {filename}; perhaps it isn't stored?"]
+        
+###################################################################
+
+def delete_member(member:str):
+    pass
+
+def delete_task(task:str):
+    pass
+
+###################################################################
 
 def delete_group(group_name_delete:str):
     db_groups = client.groups
