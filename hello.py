@@ -386,7 +386,7 @@ def get_post_javascript_data():
     return useremail
 
 @app.route('/loggedin/<email>/<group_name>', methods = ['GET', 'POST'])
-def loggedin(email, group_name, task_info):
+def loggedin(email, group_name):
     # build membership_list
     db = client.groups
     list_all_groups = db.list_collection_names()
@@ -615,7 +615,7 @@ def loggedin(email, group_name, task_info):
     members=members, group_name=group_name, create_group_form=create_group_form, \
     add_member_form=add_member_form, group_deletion_form=group_deletion_form, \
     file_deletion_form=file_deletion_form, add_task_form=add_task_form, tasks=tasks, \
-    task_info=task_info, admin=admin, files=files, noto_lst=noto_lst)
+    admin=admin, files=files, noto_lst=noto_lst)
 
 
 # when you click on a group name this will retrieve that group name
