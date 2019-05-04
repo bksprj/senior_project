@@ -597,7 +597,7 @@ def loggedin(email, group_name):
             except:
                 pass
     if len(files) == 0:
-        files = []
+        files = ["No files uploaded"]
         # print(group_name, "files are: ", files )
 
 
