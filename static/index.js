@@ -15,6 +15,9 @@ function onSignIn(googleUser) {
 	$("#email").text(profile.getEmail());
 	$('#name').text(profile.getName());
 	$('#name2').text(profile.getName());
+
+	$.post("/user");
+
 }
 
 // Used to sign out of profile
@@ -26,9 +29,9 @@ function signOut() {
 			$(".data").css("display","none");
 			$(".goaway").css("display","block");
 			//live code
-			// window.location.replace("https://data-sense.herokuapp.com/");
+			window.location.replace("https://data-sense.herokuapp.com/");
 			//testing
-			window.location.replace("http://localhost:5000/");
+			// window.location.replace("http://localhost:5000/");
 		} else {
 			// Does nothing
 		}
@@ -44,6 +47,12 @@ function query_data(group_name){
 		append_here = window.location.href.lastIndexOf("/");
 		window.location.href = window.location.href.slice(0,append_here) + "/" + group_name
 	};
+}
+
+function del_task(path,task){
+	console.log(path,task);
+	var task_str = document.getElementById(task).innerHTML;
+	$.post(path,{"del_task":task_str});
 }
 
 $(document).ready(function(){
@@ -104,20 +113,12 @@ function spanClickUploader() {
 
 // When the user clicks the button, open the modal
 function showTaskM() {
-	document.getElementById("taskM").style.display = "block";
-}
-
-function spanATask(task){
-	document.getElementById(task).style.display = "block";
-}
-
-function showATask(task){
-	document.getElementById(task).style.display = "block";
-}
+	document.getElementById("{{ counter }}").style.display = "block";
+  }
 
   // When the user clicks on <span> (x), close the modal
-function spanTaskM() {
-	document.getElementById("taskM").style.display = "none";
+  function spanTaskM() {
+	document.getElementById("{{ counter }}").style.display = "none";
   }
 
 // When the user clicks the button, open the modal

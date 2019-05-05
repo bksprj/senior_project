@@ -2,10 +2,14 @@
 
 {% block content %}
 
+<h1> {{ content }} </h1>
+
+
+
 <div class="data" style="float:left;width:20%;padding-top:15px;">
   <h3 class="text-primary"><strong>Teams</strong></h3>
   <!-- List of teams goes here. -->
-  <div id="navigation" style="overflow:scroll;height:450px;">
+  <div id="navigation" style="overflow:auto;height:450px;">
       {% for item in membership_list %}
         <!-- <a id="{{ item }}" class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a> -->
         <a id="{{ item }}" class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a>
@@ -42,7 +46,7 @@
 <div class="data" style="float:left;width:50%; padding-left:20px; padding-top:15px; border-left: 2px solid white;">
   <div>
     <h3 class="text-primary"><strong>{{ group_name }} Members</strong></h3>
-    <div id="navigation" style="overflow:scroll;height:450px;">
+    <div id="navigation" style="overflow:auto;height:450px;">
          <!-- Expected a list of strings i.e. [member1, member2, etc]-->
         {% if group_name != "no_group" %}
             {% for ranks_users in members %}
@@ -84,9 +88,9 @@
 
 <div class="data" style="float:right;width:30%; padding-left:20px; padding-top:15px; border-left: 2px solid white;">
   <h3 class="text-primary"><strong>Files</strong></h3>
-  <div id="navigation" style="overflow:scroll;height:450px;">
+  <div id="navigation" style="overflow:auto;height:450px;">
       {% for each_file in files %}
-        <p><a class="atag" href="../../uploads/{{ each_file }}" download><strong><font size="4">{{ each_file }}</font></strong></a></p>
+        <p><a class="atag" href="../../uploads/{{ each_file }}" download><font size="4">{{ each_file }}</font></a></p>
       {% endfor %}
   </div>
   <a id="upload_file" class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
@@ -106,13 +110,6 @@
     </div>
 </div>
 
-{% set count = [1] %}
-{% for atask in tasks %}
-    {% set task_id = "task" + count[0]|string %}
-    <ul class="tk" style="color:white; float: left; list-style-type: none;"><div id="{{ task_id }}">{{ atask }} </div> <p class="delete" onclick="del_task('https://data-sense.herokuapp.com/loggedin/{{ email }}/{{ group_name }}','{{ task_id}}')" style="float:right; padding-left: 5px;">Del</p></ul>
-    {% if count.append(count.pop() + 1) %}{% endif %}
-{% endfor %}
-
 
 <div class="data" style="position: absolute; bottom: 0; float: right; padding-top: 5px; padding-bottom: 10px; border-top: 2px solid white;">
   <h3 style="color:white;">Tasks</h3>
@@ -121,17 +118,9 @@
     {% set count = [1] %}
     {% for atask in tasks %}
         {% set task_id = "task" + count[0]|string %}
-        <a class="tk" style="color:white; float:left; padding:5px; border: 1px solid	#888; border-radius: 10px;" onclick="showATask("{{ task_id }}")">{{ atask }}</a>
-        <div id="{{ atask }}" class="modal">
-            <div class="modal-content">
-              <p>{{ atask }}</p>
-              <p>Complete By: {{ time }}</p>
-              {% if admin %}
-              <input id="delete-task" class="btn btn-danger" type=submit value=Delete>
-              {% endif %}
-              <span id="closeUp" class="close" style="padding-bottom:10px;" onclick="spanATask("{{ task_id }}")">&times;</span>
-            </div>
-        </div>
+        <ul class="tk" style="color:white; float: left; list-style-type: none;"><div id="{{ task_id }}">{{ atask }} </div> <p class="delete" onclick="del_task('https://data-sense.herokuapp.com/loggedin/{{ email }}/{{ group_name }}','{{ task_id}}')" style="float:right; padding-left: 5px;">Del</p></ul>
+        <!-- <ul class="tk" style="color:white; float: left; list-style-type: none;"><div id="{{ task_id }}">{{ atask }} </div> <p class="delete" onclick="del_task('http://localhost:5000/loggedin/{{ email }}/{{ group_name }}','{{ task_id}}')" style="float:right; padding-left: 5px;">Del</p></ul> -->
+
         {% if count.append(count.pop() + 1) %}{% endif %}
     {% endfor %}
   </div>
