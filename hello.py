@@ -212,16 +212,6 @@ def delete_file(filename):
     except:
         return [f"Unable to delete {filename}; perhaps it isn't stored?"]
 
-###################################################################
-
-def delete_member(member:str):
-    pass
-
-def delete_task(task:str):
-    pass
-
-###################################################################
-
 def delete_group(group_name_delete:str):
     db_groups = client.groups
     db_group_data = client.group_data
@@ -516,6 +506,47 @@ def loggedin(email, group_name):
                 new_tasks_list = [i for i in tasks] + [new_task_submit]
                 new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
                 the_group.replace_one(prev_tasks,new_tasks)
+        elif request.values != None and request.values["del_task"]:
+            # print(f"request.values is {request.values}")
+            print(f"request.values['del_task'] is {request.values['del_task']}")
+            task_name = request.values['del_task']
+
+            db = client.group_data
+            the_group = db[group_name]
+            all_docs = the_group.find()
+            group_stuff = [i for i in all_docs]
+
+            tasks = []
+            prev_tasks = {}
+            new_tasks_list = []
+            notes = []
+            for i in group_stuff:
+                try:
+                    tasks = i['Tasks']
+                    prev_tasks = i
+                    # print("printing prev_files ", prev_files)
+                except:
+                    pass
+            # try:
+            #     if task_name[-1] in tasks:
+            #         print("Look it's in there!!")
+            #     else:
+            #         print("What the heck?!")
+            #         print(f"len: {len(i)} and {len(task_name[-1])}")
+            #     tasks.remove(task_name[])
+            #     new_tasks_list = tasks
+            # except:
+            #     new_tasks_list = tasks
+            for j in tasks:
+                print(f"len: {len(j)} and {len(task_name[-1])}")
+                if str(j) != str(task_name[:-1]):
+                    # print(f"Types: {type(j)} and {type(task_name)}")
+                    new_tasks_list.append(j)
+            new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
+
+            print("printing new_tasks ", new_tasks)
+            the_group.replace_one(prev_tasks,new_tasks)
+
         else: # we must be dealing with file uploads
             file = request.files['file']
             filename = secure_filename(file.filename)
