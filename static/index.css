@@ -11,12 +11,11 @@
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #f1f1f1;
   min-width: 75px;
 }
 
 .dropdown-content a {
-  padding: 12px 16px;
+  padding: 5px;
   text-decoration: none;
   display: block;
 }
