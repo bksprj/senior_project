@@ -126,7 +126,7 @@
         {% if admin %}
       		<div class="dropdown-content">
       			<!-- <a class="text-danger" onclick="del_task('https://data-sense.herokuapp.com/loggedin/{{ email }}/{{ group_name }}','{{ task_id}}')">Delete Task</a> -->
-            <a class="text-danger" onclick="del_task('http://localhost:5000/loggedin/{{ email }}/{{ group_name }}','{{ task_id}}')">Delete Task</a>
+            <a class="text-danger" onclick="del_task('{{ task_id}}')">Delete Task</a>
           </div>
         {% endif %}
 	    </div>
