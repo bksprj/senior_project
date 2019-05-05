@@ -538,8 +538,8 @@ def loggedin(email, group_name):
             # except:
             #     new_tasks_list = tasks
             for j in tasks:
-                print(f"len: {len(j)} and {len(task_name[-1])}")
-                if str(j) != str(task_name[:-1]):
+                print(f"len: {str(j)} and {str(task_name)}")
+                if str(j) != str(task_name):
                     # print(f"Types: {type(j)} and {type(task_name)}")
                     new_tasks_list.append(j)
             new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}

@@ -115,15 +115,21 @@
   <h3 style="color:white;">Tasks</h3>
   <div>
     <!-- <input type="checkbox" style="float:left;"><p style="color:white; float:left; padding-left:5px;">example task item</p><br> -->
+    {% set count = [1] %}
     {% for atask in tasks %}
-	<div class="dropdown">
-		<a id="parent" class="tk" style="color:white; float:left; padding:5px; border: 1px solid #888; border-radius: 10px;">{{ atask }}</a>
-		{% if admin %}
-		<div class="dropdown-content">
-			<a class="text-danger">Delete Task</a>
-		</div>
-		{% endif %}
-	</div>
+      {% set task_id = "task" + count[0]|string %}
+    	<div class="dropdown">
+    		<a id="parent" class="tk" style="color:white; float:left; padding:5px; border: 1px solid #888; border-radius: 10px;"><div id="{{ task_id }}">{{ atask }}</div></a>
+        {% if count.append(count.pop() + 1) %}
+        {% endif %}
+
+        {% if admin %}
+      		<div class="dropdown-content">
+      			<a class="text-danger" onclick="del_task('https://data-sense.herokuapp.com/loggedin/{{ email }}/{{ group_name }}','{{ task_id}}')">Delete Task</a>
+            <!-- <a class="text-danger" onclick="del_task('http://localhost:5000/loggedin/{{ email }}/{{ group_name }}','{{ task_id}}')">Delete Task</a> -->
+          </div>
+        {% endif %}
+	    </div>
     {% endfor %}
   </div>
   <br>
