@@ -49,6 +49,13 @@ function query_data(group_name){
 	};
 }
 
+$(document).ready(function(){
+    $('.delete').click(function(){
+        $(this).parent().remove();
+        return false;
+    });
+});
+
 // Overlay function to turn on
 function on() {
 	document.getElementById("overlay").style.display = "block";
@@ -97,6 +104,16 @@ function showUploader() {
 function spanClickUploader() {
 	document.getElementById("myUploader").style.display = "none";
 }
+
+// When the user clicks the button, open the modal
+function showTaskM() {
+	document.getElementById("taskM").style.display = "block";
+  }
+
+  // When the user clicks on <span> (x), close the modal
+  function spanTaskM() {
+	document.getElementById("taskM").style.display = "none";
+  }
 
 // When the user clicks the button, open the modal
 function showTaskIn() {
