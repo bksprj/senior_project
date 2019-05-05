@@ -2,10 +2,14 @@
 
 {% block content %}
 
-<div class="data" style="float:left;width:20%;padding-top:15px; border-right: 2px solid white;">
+<h1> {{ content }} </h1>
+
+
+
+<div class="data" style="float:left;width:20%;padding-top:15px;">
   <h3 class="text-primary"><strong>Teams</strong></h3>
   <!-- List of teams goes here. -->
-  <div id="navigation" style="overflow:auto;">
+  <div id="navigation" style="overflow:auto;height:450px;">
       {% for item in membership_list %}
         <!-- <a id="{{ item }}" class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a> -->
         <a id="{{ item }}" class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a>
@@ -39,10 +43,10 @@
 
 </div>
 
-<div class="data" style="float:left;width:50%; padding-left:20px; padding-top:15px; border-right: 2px solid white;">
+<div class="data" style="float:left;width:50%; padding-left:20px; padding-top:15px; border-left: 2px solid white;">
   <div>
     <h3 class="text-primary"><strong>{{ group_name }} Members</strong></h3>
-    <div id="navigation" style="overflow:auto;">
+    <div id="navigation" style="overflow:auto;height:450px;">
          <!-- Expected a list of strings i.e. [member1, member2, etc]-->
         {% if group_name != "no_group" %}
             {% for ranks_users in members %}
@@ -82,24 +86,17 @@
   </div>
 </div>
 
-<div class="data" style="float:right;width:30%; padding-left:20px; padding-top:15px;">
+<div class="data" style="float:right;width:30%; padding-left:20px; padding-top:15px; border-left: 2px solid white;">
   <h3 class="text-primary"><strong>Files</strong></h3>
-  <div id="navigation" style="overflow:auto;">
+  <div id="navigation" style="overflow:auto;height:450px;">
       {% for each_file in files %}
-        <p><a class="atag" href="../../uploads/{{ each_file }}" download><strong><font size="4">{{ each_file }}</font></strong></a></p>
+        <p><a class="atag" href="../../uploads/{{ each_file }}" download><font size="4">{{ each_file }}</font></a></p>
       {% endfor %}
-      <br>
-
-      <!--<p class="text-primary"><strong>The files for your group are:</strong></p>
-          {% for file_name in file_lst %}
-            <a class="atag" href="uploads/{{ file_name }}" download><strong><font size="4">{{ file_name }}</font></strong></a>
-          {% endfor %}-->
-
-    <a id="upload_file" class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
+  </div>
+  <a id="upload_file" class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
 
     <div id="myUploader" class="modal">
       <div class="modal-content">
-        <!-- Uploading Files -->
         <form method=post enctype=multipart/form-data>
           <h4 class="text-primary">Upload Files</h4>
           <p class="text-primary">Choose a file to upload</p>
@@ -111,31 +108,47 @@
         </form>
       </div>
     </div>
-  </div>
 </div>
 
 
-<div class="data" style="position: absolute; bottom: 0; float: right; padding-top: 5px; padding-bottom: 5px; border-top: 2px solid white;">
+<div class="data" style="position: absolute; bottom: 0; float: right; padding-top: 5px; padding-bottom: 10px; border-top: 2px solid white;">
   <h3 style="color:white;">Tasks</h3>
   <div>
     <!-- <input type="checkbox" style="float:left;"><p style="color:white; float:left; padding-left:5px;">example task item</p><br> -->
     {% set count = [1] %}
     {% for atask in tasks %}
+<<<<<<< HEAD
         {% set task_id = "task" + count[0]|string %}
         <ul class="tk" style="color:white; float: left; list-style-type: none;"><div id="{{ task_id }}">{{ atask }} </div> <p class="delete" onclick="del_task('https://data-sense.herokuapp.com/loggedin/{{ email }}/{{ group_name }}','{{ task_id}}')" style="float:right; padding-left: 5px;">Del</p></ul>
         <!-- <ul class="tk" style="color:white; float: left; list-style-type: none;"><div id="{{ task_id }}">{{ atask }} </div> <p class="delete" onclick="del_task('http://localhost:5000/loggedin/{{ email }}/{{ group_name }}','{{ task_id}}')" style="float:right; padding-left: 5px;">Del</p></ul> -->
 
         {% if count.append(count.pop() + 1) %}{% endif %}
+=======
+        <a class="tk" style="color:white; float:left; padding:5px; border: 1px solid	#888; border-radius: 10px;" onclick="showTaskM()">{{ atask }}</a>
+        <div id="{{ counter }}" class="modal">
+            <div class="modal-content">
+              <p>{{ atask }}</p>
+              <p>Complete By: {{ time }}</p>
+              {% if admin %}
+              <input id="delete-task" class="btn btn-danger" type=submit value=Delete>
+              {% endif %}
+              <span id="closeUp" class="close" style="padding-bottom:10px;" onclick="spanTaskM()">&times;</span>
+            </div>
+        </div>
+>>>>>>> de0007b9ec449aba85eed7bcaf2cfdf448d305cf
     {% endfor %}
   </div>
+  <br>
+  {% if admin %}
   <div>
       <a id="newTask" class="text-primary hov" style="float:left;" onclick="showTaskIn()"><strong><font size="4">New Task</font></strong></a>
   </div>
+  {% endif %}
   <div id="myTaskIn" class="modal">
     <div class="modal-content">
 
       <form method="POST">
-          {% include 'includes/add_task.html' %}
+        {% include 'includes/add_task.html' %}
       </form>
 
     </div>

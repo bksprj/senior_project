@@ -379,6 +379,22 @@ def read_csv_file(file):
 # when you log in, we will get that email address here
 @app.route('/getemail', methods = ['POST'])
 def get_post_javascript_data():
+    jsdata = request.form['myData']
+    print(jsdata, "has logged in")
+    global useremail
+    global membership_list
+    useremail = jsdata
+    membership_list = list_user_groups(useremail)
+    # return jsdata
+    user = jsdata.split("@")[0]
+
+    print("USERNAME", user)
+
+    return redirect(url_for('user', username=user))
+
+@app.route('/user/<username>', methods = ['GET', 'POST'])
+def user(username):
+    print("IN USER ROUTE", username)
     useremail = request.form['myData']
     print(useremail, "has logged in")
     global membership_list
@@ -611,7 +627,7 @@ def loggedin(email, group_name):
             except:
                 pass
         if len(tasks) == 0:
-            tasks = ["No tasks in group"]
+            tasks = []
 
     # grabbing files
     files = ["No group selected"]
@@ -628,7 +644,7 @@ def loggedin(email, group_name):
             except:
                 pass
     if len(files) == 0:
-        files = ["No files for this group"]
+        files = ["No files uploaded"]
         # print(group_name, "files are: ", files )
 
 
