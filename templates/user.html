@@ -116,8 +116,8 @@
   <div>
     <!-- <input type="checkbox" style="float:left;"><p style="color:white; float:left; padding-left:5px;">example task item</p><br> -->
     {% for atask in tasks %}
-        <a id="{{ atask }}" class="tk" style="color:white; float:left; padding:5px; border: 1px solid	#888; border-radius: 10px;" onclick="showTaskM()">{{ atask }}</a>
-        <div id="taskM" class="modal">
+        <a class="tk" style="color:white; float:left; padding:5px; border: 1px solid	#888; border-radius: 10px;" onclick="showTaskM()">{{ atask }}</a>
+        <div id="{{ counter }}" class="modal">
             <div class="modal-content">
               <p>{{ atask }}</p>
               <p>Complete By: {{ time }}</p>
