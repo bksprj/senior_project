@@ -3,6 +3,14 @@
 	padding-top: 7.5px;
 }
 
+#parent #popup {
+  display: none;
+}
+
+#parent:hover #popup {
+  display: block;
+}
+
 .data {
 	display: none;
 }

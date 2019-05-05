@@ -1,7 +1,10 @@
 // When the user clicks on div, open the popup
-function myFunction() {
-	var popup = document.getElementById("myPopup");
-	popup.classList.toggle("show");
+var e = document.getElementById('parent');
+e.onmouseover = function() {
+  document.getElementById('popup').style.display = 'block';
+}
+e.onmouseout = function() {
+  document.getElementById('popup').style.display = 'none';
 }
 
 // Used to sign in to Google Profile
