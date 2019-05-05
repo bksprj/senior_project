@@ -26,9 +26,9 @@ function signOut() {
 			$(".data").css("display","none");
 			$(".goaway").css("display","block");
 			//live code
-			window.location.replace("https://data-sense.herokuapp.com/");
+			// window.location.replace("https://data-sense.herokuapp.com/");
 			//testing
-			// window.location.replace("http://localhost:5000/");
+			window.location.replace("http://localhost:5000/");
 		} else {
 			// Does nothing
 		}
@@ -105,10 +105,18 @@ function spanClickUploader() {
 // When the user clicks the button, open the modal
 function showTaskM() {
 	document.getElementById("taskM").style.display = "block";
-  }
+}
+
+function spanATask(task){
+	document.getElementById(task).style.display = "block";
+}
+
+function showATask(task){
+	document.getElementById(task).style.display = "block";
+}
 
   // When the user clicks on <span> (x), close the modal
-  function spanTaskM() {
+function spanTaskM() {
 	document.getElementById("taskM").style.display = "none";
   }
 

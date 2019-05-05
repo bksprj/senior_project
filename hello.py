@@ -295,7 +295,6 @@ def get_data(group_name:str):
             except:
                 pass
 
-
         # dirs = os.listdir(UPLOAD_FOLDER)
         # file_list = []
         # # This would print all the files and directories
