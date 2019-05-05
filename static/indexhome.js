@@ -13,15 +13,12 @@ function onSignIn(googleUser) {
 	$("#pic").attr('src',profile.getImageUrl());
 	$("#pic2").attr('src',profile.getImageUrl());
 	//live code
-	window.location.replace("https://data-sense.herokuapp.com/loggedin/" + profile.getEmail().slice(0,-10) + "/no_group");
+	// window.location.replace("https://data-sense.herokuapp.com/loggedin/" + profile.getEmail().slice(0,-10) + "/no_group");
   //testing
-	// window.location.replace("http://localhost:5000/loggedin/" + profile.getEmail().slice(0,-10) + "/no_group");
+	window.location.replace("http://localhost:5000/loggedin/" + profile.getEmail().slice(0,-10) + "/no_group");
 	$("#email").text(profile.getEmail());
 	$('#name').text(profile.getName());
 	$('#name2').text(profile.getName());
-
-	//$.post("/user");
-
 }
 
 // Used to sign out of profile

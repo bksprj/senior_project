@@ -503,7 +503,10 @@ def loggedin(email, group_name):
                         # print("printing prev_tasks ", prev_tasks)
                     except:
                         pass
-                new_tasks_list = [i for i in tasks] + [new_task_submit]
+                # new_tasks_list = [i for i in tasks] + [new_task_submit]
+                new_tasks_list = [i for i in tasks]
+                if new_task_submit not in tasks:
+                    new_tasks_list + new_task_submit                
                 new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
                 the_group.replace_one(prev_tasks,new_tasks)
         elif request.values != None and request.values["del_task"]:

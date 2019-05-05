@@ -11,8 +11,6 @@ function onSignIn(googleUser) {
 	$('#name').text(profile.getName());
 	$('#name2').text(profile.getName());
 
-	$.post("/user");
-
 }
 
 // Used to sign out of profile
@@ -24,9 +22,9 @@ function signOut() {
 			$(".data").css("display","none");
 			$(".goaway").css("display","block");
 			//live code
-			window.location.replace("https://data-sense.herokuapp.com/");
+			// window.location.replace("https://data-sense.herokuapp.com/");
 			//testing
-			// window.location.replace("http://localhost:5000/");
+			window.location.replace("http://localhost:5000/");
 		} else {
 			// Does nothing
 		}
@@ -49,6 +47,10 @@ function del_task(path,task){
 	var task_str = document.getElementById(task).innerHTML;
 	$.post(path,{"del_task":task_str});
 	location.reload();
+}
+
+function reload_page(){
+	window.location.href = window.location.href;
 }
 
 $(document).ready(function(){
