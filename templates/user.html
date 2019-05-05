@@ -118,7 +118,11 @@
     {% for atask in tasks %}
         <a id="parent" class="tk" style="color:white; float:left; padding:5px; border: 1px solid #888; border-radius: 10px;">{{ atask }}</a>
 		{% if admin %}
-		<a id="popup" class="text-danger">Del</a>
+		<ul class="dropdown-menu" style="text-align:center;">
+			<li>
+				<a class="text-danger">Delete Task</a>
+			</li>
+		</ul>
 		{% endif %}
     {% endfor %}
   </div>
