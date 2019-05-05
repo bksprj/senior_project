@@ -115,20 +115,11 @@
   <h3 style="color:white;">Tasks</h3>
   <div>
     <!-- <input type="checkbox" style="float:left;"><p style="color:white; float:left; padding-left:5px;">example task item</p><br> -->
-    {% set count = [1] %}
     {% for atask in tasks %}
-<<<<<<< HEAD
         <a id="parent" class="tk" style="color:white; float:left; padding:5px; border: 1px solid #888; border-radius: 10px;">{{ atask }}</a>
 		{% if admin %}
 		<a id="popup" class="text-danger">Del</a>
 		{% endif %}
-=======
-        {% set task_id = "task" + count[0]|string %}
-        <ul class="tk" style="color:white; float: left; list-style-type: none;"><div id="{{ task_id }}">{{ atask }} </div> <p class="delete" onclick="del_task('https://data-sense.herokuapp.com/loggedin/{{ email }}/{{ group_name }}','{{ task_id}}')" style="float:right; padding-left: 5px;">Del</p></ul>
-        <!-- <ul class="tk" style="color:white; float: left; list-style-type: none;"><div id="{{ task_id }}">{{ atask }} </div> <p class="delete" onclick="del_task('http://localhost:5000/loggedin/{{ email }}/{{ group_name }}','{{ task_id}}')" style="float:right; padding-left: 5px;">Del</p></ul> -->
-
-        {% if count.append(count.pop() + 1) %}{% endif %}
->>>>>>> 92c51632afb82bd3d2a835adc7e4f3e85632e64d
     {% endfor %}
   </div>
   <br>
