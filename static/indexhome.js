@@ -19,9 +19,6 @@ function onSignIn(googleUser) {
 	$("#email").text(profile.getEmail());
 	$('#name').text(profile.getName());
 	$('#name2').text(profile.getName());
-
-	//$.post("/user");
-
 }
 
 // Used to sign out of profile

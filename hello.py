@@ -615,7 +615,10 @@ def loggedin(email, group_name):
                         # print("printing prev_tasks ", prev_tasks)
                     except:
                         pass
-                new_tasks_list = [i for i in tasks] + [new_task_submit]
+                # new_tasks_list = [i for i in tasks] + [new_task_submit]
+                new_tasks_list = [i for i in tasks]
+                if new_task_submit not in tasks:
+                    new_tasks_list.append(new_task_submit)
                 new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
                 the_group.replace_one(prev_tasks,new_tasks)
         elif request.values != None and request.values["del_task"]:
@@ -650,13 +653,13 @@ def loggedin(email, group_name):
             # except:
             #     new_tasks_list = tasks
             for j in tasks:
-                print(f"len: {len(j)} and {len(task_name[-1])}")
-                if str(j) != str(task_name[:-1]):
+                print(f"len: {str(j)} and {str(task_name)}")
+                if str(j) != str(task_name):
                     # print(f"Types: {type(j)} and {type(task_name)}")
                     new_tasks_list.append(j)
             new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
-
-            print("printing new_tasks ", new_tasks)
+            print("prev_tasks", prev_tasks)
+            print("new_tasks", new_tasks)
             the_group.replace_one(prev_tasks,new_tasks)
 
         else: # we must be dealing with file uploads

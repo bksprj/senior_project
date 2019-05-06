@@ -42,10 +42,19 @@ function query_data(group_name){
 	};
 }
 
-function del_task(path,task){
-	console.log(path,task);
+function del_task(task){
+	console.log(task);
 	var task_str = document.getElementById(task).innerHTML;
-	$.post(path,{"del_task":task_str});
+	$.post(window.location.href,{"del_task":task_str});
+	// location.reload();
+	reload_page();
+}
+
+function reload_page(){
+	// window.location.href = window.location.href;
+	var page = window.location.href;
+	window.location.href = window.location.href + "redirect";
+	window.location.href = page;
 }
 
 $(document).ready(function(){
