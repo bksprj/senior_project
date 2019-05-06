@@ -1,0 +1,9 @@
+{% block content %}
+
+	<br />
+    {{ remove_member_form.member_input_del.label }} {{ remove_member_form.member_input_del(size=30) }}
+	<br>
+	    <input id="del-mem" style="padding-top: 5px;" class="btn btn-primary" type="submit" value="Remove">
+		<span class="close" onclick="spanAdmin()">&times;</span>
+
+{% endblock %}
