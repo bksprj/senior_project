@@ -48,6 +48,13 @@ class AddNewMemberForm(FlaskForm):
     # group_name = StringField('Group', validators=[DataRequired()])
     member_input = StringField("New Members", validators=[DataRequired()])
 
+class RemoveMemberForm(FlaskForm):
+    class Meta:
+        csrf = False
+        locales = ('en_US', 'en')
+    # group_name = StringField('Group', validators=[DataRequired()])
+    member_input_del = StringField("Remove Members", validators=[DataRequired()])
+
 class AddTaskForm(FlaskForm):
     class Meta:
         csrf = False
@@ -81,6 +88,102 @@ class JSONEncoder(json.JSONEncoder):
 
 #===============================================================================
 # Global functions
+def remove_members(group_name:str, member_input:str):
+    def list_without_dups(list1:list, list2:list) -> list:
+        result = list1
+        for i in list2:
+            if i in list1:
+                result.remove(i)
+        return result
+
+    def get_new_member_list(input_string):
+        # expects Rank:email or Rank:email,email
+        input_string = input_string.replace(" ", "")  # get rid of spaces
+        if input_string.count(",") >= input_string.count("@"):
+            # The point of this is to prevent random commas messing up processing
+            print("Issue: count(',') >= count('@')")
+            return ["Issue with extra commas"]
+        if "," in input_string:
+            new_members = input_string.split(":")[1].split(",")
+        else:
+            new_members = list(input_string.split(":")) + [""]
+            new_members = new_members[1:]
+            print(f"what's going on? {new_members}")
+        return new_members
+
+    db = client.groups
+    names = db.list_collection_names()
+    if group_name not in names:
+        return [f"The group {group_name} does not exist"]
+
+
+    new_admin_members = []
+    new_standard_members = []
+
+    if "Admin:" in member_input and "Standard:" not in member_input:
+        # then we have Admin:email or Admin:email,email
+        new_admin_members = get_new_member_list(member_input)
+    elif "Admin:" not in member_input and "Standard:" in member_input:
+        # then we have Standard:email
+        new_standard_members = get_new_member_list(member_input)
+    else:
+        # Admin:email|Standard:email
+        if "|" not in member_input:
+            return ["'|' separator missing"]
+        new_admin_members = get_new_member_list(member_input.split("|")[0])
+        new_standard_members = get_new_member_list(member_input.split("|")[1])
+    # Issues?
+    if new_standard_members == ["Issue with extra commas"] or new_admin_members == ["Issue with extra commas"]:
+        return ["Issue with extra commas"]
+
+    # now that we have the lists of email addresses to potentially remove for each
+    # rank, now let's get the current member data
+
+    query_group = db[group_name]
+    prev_member_data = query_group.find_one()  # here's the object to update
+    prev_id_data = prev_member_data["_id"]
+    prev_admin = prev_member_data["Admin"]
+    prev_standard = prev_member_data["Standard"]
+
+    new_admin_members_list = list_without_dups(prev_admin, new_admin_members)
+    new_standard_members_list = list_without_dups(prev_standard, new_standard_members)
+
+    # notes
+
+    new_notes = []
+    db = client.group_data
+    for eachadmin in new_admin_members_list:
+        new_notes.append(notify("delete", eachadmin, None))
+    for eachstandard in new_standard_members_list:
+        new_notes.append(notify("delete", eachstandard, None))
+    # new_notes = [notify("add","testboi",None)]
+    names = db.list_collection_names()
+    the_group = db[group_name]
+    all_docs = the_group.find()
+    group_data_list = [i for i in all_docs]
+    notifications = group_data_list[0]
+    prev_notes = notifications["Notifications"]
+
+    new_notes = prev_notes + new_notes
+    if len(new_notes) > 10:
+        new_notes = new_notes[-10:]
+    new_notes_dict = {"_id":notifications["_id"], "Notifications":new_notes}
+    # print(f"Before, notifications were {prev_notes}")
+    if len(new_notes) > 0:
+        the_group.find_one_and_replace(notifications, new_notes_dict)
+
+    # new_standard_members_list = list_without_dups(prev_standard, new_standard_members_list)
+
+    # print(f"Here are the final admin members {new_admin_members_list}")
+    # print(f"Here are the final standard members {new_standard_members_list}")
+
+    new_member_info = {"_id":prev_id_data, "Admin":new_admin_members_list, "Standard":new_standard_members_list}
+    # print(f"New member info is: {new_member_info}")
+
+    # print("Previous member data:",query_group.find_one())
+    query_group.find_one_and_replace({"_id":prev_id_data}, new_member_info)
+    # print("Current member data:",query_group.find_one())
+
 def add_new_members(group_name:str, member_input:str):
     def list_without_dups(list1:list, list2:list) -> list:
         result = list1
@@ -412,6 +515,7 @@ def loggedin(email, group_name):
     create_group_form = CreateGroup()
     group_deletion_form = GroupDeletionForm()
     add_member_form = AddNewMemberForm()
+    remove_member_form = RemoveMemberForm()
     file_deletion_form = FileDeletionForm()
     add_task_form = AddTaskForm()
 
@@ -437,6 +541,14 @@ def loggedin(email, group_name):
             new_members = add_member_form.member_input.data
             # print(f"\nAttempting member addition with {group_name} and members: {new_members}")
             add_new_member_return_msg = add_new_members(group_name, new_members)  # Currently, this would be None
+            members = get_members(group_name)
+
+        elif remove_member_form.validate_on_submit():
+            print("\n*******************************************")
+            # group_name = remove_member_form.group_name.data
+            removed_members = remove_member_form.member_input_del.data
+            print(f"\nAttempting member removal with {group_name} and members: {removed_members}")
+            removed_member_return_msg = remove_members(group_name, removed_members)  # Currently, this would be None
             members = get_members(group_name)
 
         elif group_deletion_form.validate_on_submit():
@@ -673,9 +785,9 @@ def loggedin(email, group_name):
 
     return render_template("user.html", email=email, membership_list=membership_list, \
     members=members, group_name=group_name, create_group_form=create_group_form, \
-    add_member_form=add_member_form, group_deletion_form=group_deletion_form, \
-    file_deletion_form=file_deletion_form, add_task_form=add_task_form, tasks=tasks, \
-    admin=admin, files=files, noto_lst=noto_lst)
+    remove_member_form=remove_member_form, add_member_form=add_member_form, \
+    group_deletion_form=group_deletion_form, file_deletion_form=file_deletion_form, \
+    add_task_form=add_task_form, tasks=tasks, admin=admin, files=files, noto_lst=noto_lst)
 
 
 # when you click on a group name this will retrieve that group name
@@ -724,6 +836,7 @@ def index(group_name):
     create_group_form = CreateGroup()
     group_deletion_form = GroupDeletionForm()
     add_member_form = AddNewMemberForm()
+    remove_member_form = RemoveMemberForm()
     file_deletion_form = FileDeletionForm()
     add_task_form = AddTaskForm()
 
@@ -733,201 +846,6 @@ def index(group_name):
         members = ['No Team Selected']
     else:
         members = get_members(group_name)
-
-    # file uploads
-    # if request.method == 'POST':
-    #     # let's create a group
-    #     if create_group_form.validate_on_submit():
-    #         input_name = create_group_form.group_name.data
-    #         input_email = create_group_form.email.data
-    #         create_group(input_name, input_email)
-    #         return redirect(url_for('index'))
-    #
-    #     elif add_member_form.validate_on_submit():
-    #         # print("\n*******************************************")
-    #         # group_name = add_member_form.group_name.data
-    #         new_members = add_member_form.member_input.data
-    #         # print(f"\nAttempting member addition with {group_name} and members: {new_members}")
-    #         add_new_member_return_msg = add_new_members(group_name, new_members)  # Currently, this would be None
-    #         members = get_members(group_name)
-    #
-    #     elif group_deletion_form.validate_on_submit():
-    #         group_name_delete = group_deletion_form.group_name_delete.data
-    #         response = delete_group(group_name_delete)
-    #         return redirect(url_for('index'))
-    #
-    #     elif file_deletion_form.validate_on_submit():
-    #         file_name_delete = file_deletion_form.file_name_delete.data
-    #         response = delete_file(file_name_delete)
-    #         db = client.group_data
-    #         the_group = db[group_name]
-    #         all_docs = the_group.find()
-    #
-    #         group_stuff = [i for i in all_docs]
-    #         # print("Data for", group_name, " is ", group_stuff)
-    #         files = []
-    #         prev_files = {}
-    #         new_files_list = []
-    #         for i in group_stuff:
-    #             try:
-    #                 files = i['Files']
-    #                 prev_files = i
-    #                 # print("printing prev_files ", prev_files)
-    #             except:
-    #                 pass
-    #
-    #         # creating a new notification
-    #         for i in group_stuff:
-    #             try:
-    #                 notes = i['Notifications']
-    #                 prev_notes = i
-    #                 # print("printing prev_files ", prev_files)
-    #             except:
-    #                 pass
-    #             new_notes_list = [n for n in notes] + [notify("delete",None,file_name_delete)]
-    #             new_notes = {"_id":prev_notes["_id"], "Notifications":new_notes_list}
-    #             the_group.replace_one(prev_notes,new_notes)
-    #
-    #
-    #         if file_name_delete in files:
-    #             new_files_list = [i for i in files]
-    #             new_files_list.remove(file_name_delete)
-    #             new_files = {"_id":prev_files["_id"],"Files":new_files_list}
-    #
-    #             # print("printing new_files ", new_files)
-    #             the_group.replace_one(prev_files,new_files)
-    #
-    #     elif add_task_form.validate_on_submit():
-    #         new_task_submit = add_task_form.new_task.data
-    #         print("Received task: ", new_task_submit)
-    #         db = client.group_data
-    #         the_group = db[group_name]
-    #         all_docs = the_group.find()
-    #         group_stuff = [i for i in all_docs]
-    #         print("group stuff", group_stuff)
-    #         prev_tasks = {}
-    #         print("Entering task for loop")
-    #         if group_name != "no_group":
-    #             for i in group_stuff:
-    #                 try:
-    #                     tasks = i['Tasks']
-    #                     prev_tasks = i
-    #                     # print("printing prev_tasks ", prev_tasks)
-    #                 except:
-    #                     pass
-    #             # new_tasks_list = [i for i in tasks] + [new_task_submit]
-    #             new_tasks_list = [i for i in tasks]
-    #             if new_task_submit not in tasks:
-    #                 new_tasks_list.append(new_task_submit)
-    #             new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
-    #             the_group.replace_one(prev_tasks,new_tasks)
-    #     elif request.values != None and request.values["del_task"]:
-    #         # print(f"request.values is {request.values}")
-    #         print(f"request.values['del_task'] is {request.values['del_task']}")
-    #         task_name = request.values['del_task']
-    #
-    #         db = client.group_data
-    #         the_group = db[group_name]
-    #         all_docs = the_group.find()
-    #         group_stuff = [i for i in all_docs]
-    #
-    #         tasks = []
-    #         prev_tasks = {}
-    #         new_tasks_list = []
-    #         notes = []
-    #         for i in group_stuff:
-    #             try:
-    #                 tasks = i['Tasks']
-    #                 prev_tasks = i
-    #                 # print("printing prev_files ", prev_files)
-    #             except:
-    #                 pass
-    #         # try:
-    #         #     if task_name[-1] in tasks:
-    #         #         print("Look it's in there!!")
-    #         #     else:
-    #         #         print("What the heck?!")
-    #         #         print(f"len: {len(i)} and {len(task_name[-1])}")
-    #         #     tasks.remove(task_name[])
-    #         #     new_tasks_list = tasks
-    #         # except:
-    #         #     new_tasks_list = tasks
-    #         for j in tasks:
-    #             print(f"len: {str(j)} and {str(task_name)}")
-    #             if str(j) != str(task_name):
-    #                 # print(f"Types: {type(j)} and {type(task_name)}")
-    #                 new_tasks_list.append(j)
-    #         new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
-    #         print("prev_tasks", prev_tasks)
-    #         print("new_tasks", new_tasks)
-    #         the_group.replace_one(prev_tasks,new_tasks)
-    #
-    #     else: # we must be dealing with file uploads
-    #         file = request.files['file']
-    #         filename = secure_filename(file.filename)
-    #         print("Attempting to post: " + filename)
-    #         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    #         # now let's save the name to the group
-    #         db = client.group_data
-    #         the_group = db[group_name]
-    #         all_docs = the_group.find()
-    #
-    #         group_stuff = [i for i in all_docs]
-    #         # print("Data for", group_name, " is ", group_stuff)
-    #         files = []
-    #         prev_files = {}
-    #         new_files_list = []
-    #         notes = []
-    #         for i in group_stuff:
-    #             try:
-    #                 files = i['Files']
-    #                 prev_files = i
-    #                 # print("printing prev_files ", prev_files)
-    #             except:
-    #                 pass
-    #         # creating a new notification
-    #         for i in group_stuff:
-    #             try:
-    #                 notes = i['Notifications']
-    #                 prev_notes = i
-    #                 # print("printing prev_files ", prev_files)
-    #             except:
-    #                 pass
-    #             new_notes_list = [n for n in notes] + [notify("add",None,filename)]
-    #             new_notes = {"_id":prev_notes["_id"], "Notifications":new_notes_list}
-    #             the_group.replace_one(prev_notes,new_notes)
-    #
-    #         if filename not in files:
-    #             print("filename,files", filename, files)
-    #             new_files_list = [i for i in files] + [filename]
-    #             new_files = {"_id":prev_files["_id"],"Files":new_files_list}
-    #
-    #             # print("printing new_files ", new_files)
-    #             the_group.replace_one(prev_files,new_files)
-    #
-    #             all_docs = the_group.find()
-    #             group_stuff = [i for i in all_docs]
-    #             print("Data for", group_name, " is ", group_stuff)
-    #         else:
-    #             # handle duplicate file names
-    #             # we'll still need to test this though
-    #             done = False
-    #             num = 0
-    #             new_files_list = []
-    #             while not done:
-    #                 # tryfile = filename + str(num)
-    #                 tryfile = filename.split(".")[0] + str(num) + "." + filename.split(".")[1]
-    #                 print("Trying to input: ", tryfile)
-    #                 if tryfile not in files:
-    #                     # files.append(tryfile)
-    #                     new_files_list = [i for i in files] + [tryfile]
-    #                     new_files = {"_id":prev_files["_id"],"Files":new_files_list}
-    #                     print("new_files with dup", new_files)
-    #                     the_group.replace_one(prev_files,new_files)
-    #                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], tryfile))
-    #                     done = True
-    #                 else:
-    #                     num += 1
 
     # Grab task data
     tasks = ["No tasks"]
@@ -974,19 +892,8 @@ def index(group_name):
         if len(noto_lst) == 0:
             noto_lst = ["No notifications"]
 
-
-    # admin boolean
-    # admin_list = members[0][1]
-    # admin = False
-    # for user in admin_list:
-    #     if email in user:
-    #         admin = True
-    # print("admin is", admin)
-
     return render_template("redirect_index.html", membership_list=membership_list, \
-    members=members, group_name=group_name, \
-    tasks=tasks, \
-    files=files, noto_lst=noto_lst)
+    members=members, group_name=group_name, tasks=tasks, files=files, noto_lst=noto_lst)
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
