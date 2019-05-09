@@ -624,103 +624,135 @@ def loggedin(email, group_name):
                     new_tasks_list.append(new_task_submit)
                 new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
                 the_group.replace_one(prev_tasks,new_tasks)
-        elif request.values != None and request.values["del_task"]:
-            # print(f"request.values is {request.values}")
-            print(f"request.values['del_task'] is {request.values['del_task']}")
-            task_name = request.values['del_task']
+        # elif request.values != None and request.values["del_task"]:
+        #     # print(f"request.values is {request.values}")
+        #     print(f"request.values['del_task'] is {request.values['del_task']}")
+        #     task_name = request.values['del_task']
+        #
+        #     db = client.group_data
+        #     the_group = db[group_name]
+        #     all_docs = the_group.find()
+        #     group_stuff = [i for i in all_docs]
+        #
+        #     tasks = []
+        #     prev_tasks = {}
+        #     new_tasks_list = []
+        #     notes = []
+        #     for i in group_stuff:
+        #         try:
+        #             tasks = i['Tasks']
+        #             prev_tasks = i
+        #             # print("printing prev_files ", prev_files)
+        #         except:
+        #             pass
+        #     for j in tasks:
+        #         print(f"len: {str(j)} and {str(task_name)}")
+        #         if str(j) != str(task_name):
+        #             # print(f"Types: {type(j)} and {type(task_name)}")
+        #             new_tasks_list.append(j)
+        #     new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
+        #     print("prev_tasks", prev_tasks)
+        #     print("new_tasks", new_tasks)
+        #     the_group.replace_one(prev_tasks,new_tasks)
 
-            db = client.group_data
-            the_group = db[group_name]
-            all_docs = the_group.find()
-            group_stuff = [i for i in all_docs]
+        else:
+            try:
+                # print(f"request.values is {request.values}")
+                print(f"request.values['del_task'] is {request.values['del_task']}")
+                task_name = request.values['del_task']
 
-            tasks = []
-            prev_tasks = {}
-            new_tasks_list = []
-            notes = []
-            for i in group_stuff:
-                try:
-                    tasks = i['Tasks']
-                    prev_tasks = i
-                    # print("printing prev_files ", prev_files)
-                except:
-                    pass
-            for j in tasks:
-                print(f"len: {str(j)} and {str(task_name)}")
-                if str(j) != str(task_name):
-                    # print(f"Types: {type(j)} and {type(task_name)}")
-                    new_tasks_list.append(j)
-            new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
-            print("prev_tasks", prev_tasks)
-            print("new_tasks", new_tasks)
-            the_group.replace_one(prev_tasks,new_tasks)
-
-        else: # we must be dealing with file uploads
-            file = request.files['file']
-            filename = secure_filename(file.filename)
-            print("Attempting to post: " + filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            # now let's save the name to the group
-            db = client.group_data
-            the_group = db[group_name]
-            all_docs = the_group.find()
-
-            group_stuff = [i for i in all_docs]
-            # print("Data for", group_name, " is ", group_stuff)
-            files = []
-            prev_files = {}
-            new_files_list = []
-            notes = []
-            for i in group_stuff:
-                try:
-                    files = i['Files']
-                    prev_files = i
-                    # print("printing prev_files ", prev_files)
-                except:
-                    pass
-            # creating a new notification
-            for i in group_stuff:
-                try:
-                    notes = i['Notifications']
-                    prev_notes = i
-                    # print("printing prev_files ", prev_files)
-                except:
-                    pass
-                new_notes_list = [n for n in notes] + [notify("add",None,filename)]
-                new_notes = {"_id":prev_notes["_id"], "Notifications":new_notes_list}
-                the_group.replace_one(prev_notes,new_notes)
-
-            if filename not in files:
-                print("filename,files", filename, files)
-                new_files_list = [i for i in files] + [filename]
-                new_files = {"_id":prev_files["_id"],"Files":new_files_list}
-
-                # print("printing new_files ", new_files)
-                the_group.replace_one(prev_files,new_files)
-
+                db = client.group_data
+                the_group = db[group_name]
                 all_docs = the_group.find()
                 group_stuff = [i for i in all_docs]
-                print("Data for", group_name, " is ", group_stuff)
-            else:
-                # handle duplicate file names
-                # we'll still need to test this though
-                done = False
-                num = 0
+
+                tasks = []
+                prev_tasks = {}
+                new_tasks_list = []
+                notes = []
+                for i in group_stuff:
+                    try:
+                        tasks = i['Tasks']
+                        prev_tasks = i
+                        # print("printing prev_files ", prev_files)
+                    except:
+                        pass
+                for j in tasks:
+                    print(f"len: {str(j)} and {str(task_name)}")
+                    if str(j) != str(task_name):
+                        # print(f"Types: {type(j)} and {type(task_name)}")
+                        new_tasks_list.append(j)
+                new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
+                print("prev_tasks", prev_tasks)
+                print("new_tasks", new_tasks)
+                the_group.replace_one(prev_tasks,new_tasks)
+            except:
+                # we must be dealing with file uploads
+                file = request.files['file']
+                filename = secure_filename(file.filename)
+                print("Attempting to post: " + filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                # now let's save the name to the group
+                db = client.group_data
+                the_group = db[group_name]
+                all_docs = the_group.find()
+
+                group_stuff = [i for i in all_docs]
+                # print("Data for", group_name, " is ", group_stuff)
+                files = []
+                prev_files = {}
                 new_files_list = []
-                while not done:
-                    # tryfile = filename + str(num)
-                    tryfile = filename.split(".")[0] + str(num) + "." + filename.split(".")[1]
-                    print("Trying to input: ", tryfile)
-                    if tryfile not in files:
-                        # files.append(tryfile)
-                        new_files_list = [i for i in files] + [tryfile]
-                        new_files = {"_id":prev_files["_id"],"Files":new_files_list}
-                        print("new_files with dup", new_files)
-                        the_group.replace_one(prev_files,new_files)
-                        file.save(os.path.join(app.config['UPLOAD_FOLDER'], tryfile))
-                        done = True
-                    else:
-                        num += 1
+                notes = []
+                for i in group_stuff:
+                    try:
+                        files = i['Files']
+                        prev_files = i
+                        # print("printing prev_files ", prev_files)
+                    except:
+                        pass
+                # creating a new notification
+                for i in group_stuff:
+                    try:
+                        notes = i['Notifications']
+                        prev_notes = i
+                        # print("printing prev_files ", prev_files)
+                    except:
+                        pass
+                    new_notes_list = [n for n in notes] + [notify("add",None,filename)]
+                    new_notes = {"_id":prev_notes["_id"], "Notifications":new_notes_list}
+                    the_group.replace_one(prev_notes,new_notes)
+
+                if filename not in files:
+                    print("filename,files", filename, files)
+                    new_files_list = [i for i in files] + [filename]
+                    new_files = {"_id":prev_files["_id"],"Files":new_files_list}
+
+                    # print("printing new_files ", new_files)
+                    the_group.replace_one(prev_files,new_files)
+
+                    all_docs = the_group.find()
+                    group_stuff = [i for i in all_docs]
+                    print("Data for", group_name, " is ", group_stuff)
+                else:
+                    # handle duplicate file names
+                    # we'll still need to test this though
+                    done = False
+                    num = 0
+                    new_files_list = []
+                    while not done:
+                        # tryfile = filename + str(num)
+                        tryfile = filename.split(".")[0] + str(num) + "." + filename.split(".")[1]
+                        print("Trying to input: ", tryfile)
+                        if tryfile not in files:
+                            # files.append(tryfile)
+                            new_files_list = [i for i in files] + [tryfile]
+                            new_files = {"_id":prev_files["_id"],"Files":new_files_list}
+                            print("new_files with dup", new_files)
+                            the_group.replace_one(prev_files,new_files)
+                            file.save(os.path.join(app.config['UPLOAD_FOLDER'], tryfile))
+                            done = True
+                        else:
+                            num += 1
 
     # Grab task data
     tasks = ["No tasks"]
