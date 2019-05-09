@@ -101,7 +101,7 @@ def add_new_members(group_name:str, member_input:str):
         else:
             new_members = list(input_string.split(":")) + [""]
             new_members = new_members[1:]
-            print(f"what's going on? {new_members}")
+            # print(f"what's going on? {new_members}")
         return new_members
 
     db = client.groups
@@ -703,86 +703,290 @@ def get_post_group_name(group_name):
     return "RETRIEVED GROUP NAME"
 
 # index page
-@app.route("/index", methods=['GET', 'POST'])
-@app.route("/", methods=['GET', 'POST'])
-def index():
-    global useremail
-    global membership_list
-    global group_data
-    global group_members
-    global check_group
-    global admin
+@app.route("/index")
+@app.route("/")
+def start():
+    return redirect("/no_group")
 
 
-    response = ["No files here..."]
+@app.route("/index/<group_name>", methods=['GET', 'POST'])
+@app.route("/<group_name>", methods=['GET', 'POST'])
+def index(group_name):
+    # email = "debrsa01@luther.edu"
+    # group_name = "new_team"
 
-    # grab folder of files
-    file_lst = os.listdir(UPLOAD_FOLDER)
+    # build membership_list
+    db = client.groups
+    list_all_groups = db.list_collection_names()
+    membership_list = [group for group in list_all_groups]
 
     # forms
     create_group_form = CreateGroup()
     group_deletion_form = GroupDeletionForm()
     add_member_form = AddNewMemberForm()
     file_deletion_form = FileDeletionForm()
+    add_task_form = AddTaskForm()
 
-    # let's create a group
-    if create_group_form.validate_on_submit():
-        input_name = create_group_form.group_name.data
-        input_email = create_group_form.email.data
-        create_group(input_name, input_email)
 
-    elif add_member_form.validate_on_submit():
-        # print("\n*******************************************")
-        group_name = add_member_form.group_name.data
-        new_members = add_member_form.member_input.data
-        # print(f"\nAttempting member addition with {group_name} and members: {new_members}")
-        add_new_member_return_msg = add_new_members(group_name, new_members)  # Currently, this would be None
+    # was there a group selected?
+    if group_name == "no_group":
+        members = ['No Team Selected']
+    else:
         members = get_members(group_name)
 
-    elif group_deletion_form.validate_on_submit():
-        group_name_delete = group_deletion_form.group_name_delete.data
-        response = delete_group(group_name_delete)
+    # file uploads
+    # if request.method == 'POST':
+    #     # let's create a group
+    #     if create_group_form.validate_on_submit():
+    #         input_name = create_group_form.group_name.data
+    #         input_email = create_group_form.email.data
+    #         create_group(input_name, input_email)
+    #         return redirect(url_for('index'))
+    #
+    #     elif add_member_form.validate_on_submit():
+    #         # print("\n*******************************************")
+    #         # group_name = add_member_form.group_name.data
+    #         new_members = add_member_form.member_input.data
+    #         # print(f"\nAttempting member addition with {group_name} and members: {new_members}")
+    #         add_new_member_return_msg = add_new_members(group_name, new_members)  # Currently, this would be None
+    #         members = get_members(group_name)
+    #
+    #     elif group_deletion_form.validate_on_submit():
+    #         group_name_delete = group_deletion_form.group_name_delete.data
+    #         response = delete_group(group_name_delete)
+    #         return redirect(url_for('index'))
+    #
+    #     elif file_deletion_form.validate_on_submit():
+    #         file_name_delete = file_deletion_form.file_name_delete.data
+    #         response = delete_file(file_name_delete)
+    #         db = client.group_data
+    #         the_group = db[group_name]
+    #         all_docs = the_group.find()
+    #
+    #         group_stuff = [i for i in all_docs]
+    #         # print("Data for", group_name, " is ", group_stuff)
+    #         files = []
+    #         prev_files = {}
+    #         new_files_list = []
+    #         for i in group_stuff:
+    #             try:
+    #                 files = i['Files']
+    #                 prev_files = i
+    #                 # print("printing prev_files ", prev_files)
+    #             except:
+    #                 pass
+    #
+    #         # creating a new notification
+    #         for i in group_stuff:
+    #             try:
+    #                 notes = i['Notifications']
+    #                 prev_notes = i
+    #                 # print("printing prev_files ", prev_files)
+    #             except:
+    #                 pass
+    #             new_notes_list = [n for n in notes] + [notify("delete",None,file_name_delete)]
+    #             new_notes = {"_id":prev_notes["_id"], "Notifications":new_notes_list}
+    #             the_group.replace_one(prev_notes,new_notes)
+    #
+    #
+    #         if file_name_delete in files:
+    #             new_files_list = [i for i in files]
+    #             new_files_list.remove(file_name_delete)
+    #             new_files = {"_id":prev_files["_id"],"Files":new_files_list}
+    #
+    #             # print("printing new_files ", new_files)
+    #             the_group.replace_one(prev_files,new_files)
+    #
+    #     elif add_task_form.validate_on_submit():
+    #         new_task_submit = add_task_form.new_task.data
+    #         print("Received task: ", new_task_submit)
+    #         db = client.group_data
+    #         the_group = db[group_name]
+    #         all_docs = the_group.find()
+    #         group_stuff = [i for i in all_docs]
+    #         print("group stuff", group_stuff)
+    #         prev_tasks = {}
+    #         print("Entering task for loop")
+    #         if group_name != "no_group":
+    #             for i in group_stuff:
+    #                 try:
+    #                     tasks = i['Tasks']
+    #                     prev_tasks = i
+    #                     # print("printing prev_tasks ", prev_tasks)
+    #                 except:
+    #                     pass
+    #             # new_tasks_list = [i for i in tasks] + [new_task_submit]
+    #             new_tasks_list = [i for i in tasks]
+    #             if new_task_submit not in tasks:
+    #                 new_tasks_list.append(new_task_submit)
+    #             new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
+    #             the_group.replace_one(prev_tasks,new_tasks)
+    #     elif request.values != None and request.values["del_task"]:
+    #         # print(f"request.values is {request.values}")
+    #         print(f"request.values['del_task'] is {request.values['del_task']}")
+    #         task_name = request.values['del_task']
+    #
+    #         db = client.group_data
+    #         the_group = db[group_name]
+    #         all_docs = the_group.find()
+    #         group_stuff = [i for i in all_docs]
+    #
+    #         tasks = []
+    #         prev_tasks = {}
+    #         new_tasks_list = []
+    #         notes = []
+    #         for i in group_stuff:
+    #             try:
+    #                 tasks = i['Tasks']
+    #                 prev_tasks = i
+    #                 # print("printing prev_files ", prev_files)
+    #             except:
+    #                 pass
+    #         # try:
+    #         #     if task_name[-1] in tasks:
+    #         #         print("Look it's in there!!")
+    #         #     else:
+    #         #         print("What the heck?!")
+    #         #         print(f"len: {len(i)} and {len(task_name[-1])}")
+    #         #     tasks.remove(task_name[])
+    #         #     new_tasks_list = tasks
+    #         # except:
+    #         #     new_tasks_list = tasks
+    #         for j in tasks:
+    #             print(f"len: {str(j)} and {str(task_name)}")
+    #             if str(j) != str(task_name):
+    #                 # print(f"Types: {type(j)} and {type(task_name)}")
+    #                 new_tasks_list.append(j)
+    #         new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
+    #         print("prev_tasks", prev_tasks)
+    #         print("new_tasks", new_tasks)
+    #         the_group.replace_one(prev_tasks,new_tasks)
+    #
+    #     else: # we must be dealing with file uploads
+    #         file = request.files['file']
+    #         filename = secure_filename(file.filename)
+    #         print("Attempting to post: " + filename)
+    #         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    #         # now let's save the name to the group
+    #         db = client.group_data
+    #         the_group = db[group_name]
+    #         all_docs = the_group.find()
+    #
+    #         group_stuff = [i for i in all_docs]
+    #         # print("Data for", group_name, " is ", group_stuff)
+    #         files = []
+    #         prev_files = {}
+    #         new_files_list = []
+    #         notes = []
+    #         for i in group_stuff:
+    #             try:
+    #                 files = i['Files']
+    #                 prev_files = i
+    #                 # print("printing prev_files ", prev_files)
+    #             except:
+    #                 pass
+    #         # creating a new notification
+    #         for i in group_stuff:
+    #             try:
+    #                 notes = i['Notifications']
+    #                 prev_notes = i
+    #                 # print("printing prev_files ", prev_files)
+    #             except:
+    #                 pass
+    #             new_notes_list = [n for n in notes] + [notify("add",None,filename)]
+    #             new_notes = {"_id":prev_notes["_id"], "Notifications":new_notes_list}
+    #             the_group.replace_one(prev_notes,new_notes)
+    #
+    #         if filename not in files:
+    #             print("filename,files", filename, files)
+    #             new_files_list = [i for i in files] + [filename]
+    #             new_files = {"_id":prev_files["_id"],"Files":new_files_list}
+    #
+    #             # print("printing new_files ", new_files)
+    #             the_group.replace_one(prev_files,new_files)
+    #
+    #             all_docs = the_group.find()
+    #             group_stuff = [i for i in all_docs]
+    #             print("Data for", group_name, " is ", group_stuff)
+    #         else:
+    #             # handle duplicate file names
+    #             # we'll still need to test this though
+    #             done = False
+    #             num = 0
+    #             new_files_list = []
+    #             while not done:
+    #                 # tryfile = filename + str(num)
+    #                 tryfile = filename.split(".")[0] + str(num) + "." + filename.split(".")[1]
+    #                 print("Trying to input: ", tryfile)
+    #                 if tryfile not in files:
+    #                     # files.append(tryfile)
+    #                     new_files_list = [i for i in files] + [tryfile]
+    #                     new_files = {"_id":prev_files["_id"],"Files":new_files_list}
+    #                     print("new_files with dup", new_files)
+    #                     the_group.replace_one(prev_files,new_files)
+    #                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], tryfile))
+    #                     done = True
+    #                 else:
+    #                     num += 1
 
-    elif file_deletion_form.validate_on_submit():
-        file_name_delete = file_deletion_form.file_name_delete.data
-        response = delete_file(file_name_delete)
-    # print("\nGroup data is:\n", group_data)
-
-    dirs = os.listdir(UPLOAD_FOLDER)
-    file_lst = []
-    for file_name in dirs:
-        file_lst.append(file_name)
-    # print("FILE LIST TO BE PASSED", file_lst)
-
-
-    # get noto_lst for notifications
-    # print("check_group is", check_group)
-    if check_group != "not checking a group":
+    # Grab task data
+    tasks = ["No tasks"]
+    if group_name != "no_group":
         db = client.group_data
-        the_group = db[check_group]
+        the_group = db[group_name]
         all_docs = the_group.find()
         group_stuff = [i for i in all_docs]
-        group_notes = group_stuff[0]
-        noto_lst = group_notes["Notifications"]
+        for i in group_stuff:
+            try:
+                tasks = i['Tasks']
+            except:
+                pass
+        if len(tasks) == 0:
+            tasks = []
+
+    # grabbing files
+    files = ["No group selected"]
+    check_missing = []
+    if group_name != "no_group":
+        for i in group_stuff:
+            try:
+                files = i['Files']
+                for j in files:
+                    print("os.listdir: ", os.listdir("uploads"))
+                    if j not in os.listdir("uploads"):
+                        check_missing.append(j)
+                files = set(files)-set(check_missing)
+            except:
+                pass
+    if len(files) == 0:
+        files = ["No files uploaded"]
+        # print(group_name, "files are: ", files )
+
+
+    # grabbing notifications
+    noto_lst = ["No group selected"]
+    if group_name != "no_group":
+        for i in group_stuff:
+            try:
+                noto_lst = i['Notifications']
+            except:
+                pass
         if len(noto_lst) == 0:
-            noto_lst = ["There are no notifications"]
-        print(f" here are the notifications {noto_lst}")
-    else:
-        noto_lst = ["No Group Selected"]
-
-    # group members
-    db = client.groups
-    list_all_groups = db.list_collection_names()
-    membership_list = [group for group in list_all_groups]
+            noto_lst = ["No notifications"]
 
 
+    # admin boolean
+    # admin_list = members[0][1]
+    # admin = False
+    # for user in admin_list:
+    #     if email in user:
+    #         admin = True
+    # print("admin is", admin)
 
-
-
-    return render_template('index.html', membership_list=membership_list, \
-        create_group_form=create_group_form, add_member_form=add_member_form, \
-        group_deletion_form=group_deletion_form, response=response, file_lst=file_lst, \
-        admin=admin, members=group_members, file_deletion_form=file_deletion_form, noto_lst=noto_lst)
+    return render_template("redirect_index.html", membership_list=membership_list, \
+    members=members, group_name=group_name, \
+    tasks=tasks, \
+    files=files, noto_lst=noto_lst)
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
