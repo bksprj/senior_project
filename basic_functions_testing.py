@@ -31,13 +31,18 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(hello.create_group(test_group, admin), [f"The team {test_group} has been created"])
         print("*=============================================================*")
 
+    def test_aa_create_group_again(self):
+        print("test_create_group")
+        admin = "test2@admin.com"
+        test_group = "test_group_01"
+        self.assertEqual(hello.create_group(test_group, admin), ["That team already exists."])
+        print("*=============================================================*")
+
     def test_b_get_data(self):
         print("test_get_data")
         test_group = "test_group_01"
         result = hello.get_data(test_group)
         self.assertEqual(result, [[[{'Notifications': []}, {'Files': []}, {'Tasks': []}], []], True])
-        # print("Let's see what the return value is:")
-        # print(result)
         print("*=============================================================*")
 
     def test_bb_add_members(self):
@@ -46,9 +51,42 @@ class TestStringMethods(unittest.TestCase):
         test_members = "Admin:debrsa01@luther.edu|Standard:standarduser@gmail.com"
         hello.add_new_members(test_group,test_members)
         result = hello.get_data(test_group)
-        print(f"the result of adding members is: {result}")
+        # print(f"the result of adding members is: {result}")
         self.assertEqual(hello.get_members(test_group), \
         [['Admin', ['test@admin.com', 'debrsa01@luther.edu']], ['Standard', ['standarduser@gmail.com']]])
+        print("*=============================================================*")
+
+    def test_bbb_remove_standard_members(self):
+        print("test_add_members")
+        test_group = "test_group_01"
+        test_members = "Standard:standarduser@gmail.com"
+        hello.remove_members(test_group,test_members)
+        result = hello.get_data(test_group)
+        # print(f"the result of adding members is: {result}")
+        self.assertEqual(hello.get_members(test_group), \
+        [['Admin', ['test@admin.com', 'debrsa01@luther.edu']], ['Standard', ['There are no standard users']]])
+        print("*=============================================================*")
+
+    def test_bbbb_remove_admin_members(self):
+        print("test_add_members")
+        test_group = "test_group_01"
+        test_members = "Admin:debrsa01@luther.edu"
+        hello.remove_members(test_group,test_members)
+        result = hello.get_data(test_group)
+        # print(f"the result of adding members is: {result}")
+        self.assertEqual(hello.get_members(test_group), \
+        [['Admin', ['test@admin.com']], ['Standard', ['There are no standard users']]])
+        print("*=============================================================*")
+
+    def test_bbbbb_remove_nonexistent_members(self):
+        print("test_add_members")
+        test_group = "test_group_01"
+        test_members = "Admin:nobody@luther.edu"
+        hello.remove_members(test_group,test_members)
+        result = hello.get_data(test_group)
+        # print(f"the result of adding members is: {result}")
+        self.assertEqual(hello.get_members(test_group), \
+        [['Admin', ['test@admin.com']], ['Standard', ['There are no standard users']]])
         print("*=============================================================*")
 
     def test_c_delete_team(self):
