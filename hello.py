@@ -107,7 +107,7 @@ def remove_members(group_name:str, member_input:str):
             new_members = input_string.split(":")[1].split(",")
         else:
             new_members = list(input_string.split(":")) + [""]
-            new_members = new_members[1:]
+            new_members = new_members[1:-1]
             print(f"what's going on? {new_members}")
         return new_members
 
@@ -202,7 +202,8 @@ def add_new_members(group_name:str, member_input:str):
         if "," in input_string:
             new_members = input_string.split(":")[1].split(",")
         else:
-            new_members = list(input_string.split(":")) + [""]
+            # new_members = list(input_string.split(":")) + [""]
+            new_members = list(input_string.split(":"))
             new_members = new_members[1:]
             # print(f"what's going on? {new_members}")
         return new_members
@@ -533,7 +534,8 @@ def loggedin(email, group_name):
             input_name = create_group_form.group_name.data
             input_email = create_group_form.email.data
             create_group(input_name, input_email)
-            return redirect(url_for('index'))
+            # return redirect(url_for('index', "no_group"))
+            return redirect("/no_group")
 
         elif add_member_form.validate_on_submit():
             # print("\n*******************************************")
@@ -554,7 +556,8 @@ def loggedin(email, group_name):
         elif group_deletion_form.validate_on_submit():
             group_name_delete = group_deletion_form.group_name_delete.data
             response = delete_group(group_name_delete)
-            return redirect(url_for('index'))
+            # return redirect(url_for('index'))
+            return redirect("/no_group")
 
         elif file_deletion_form.validate_on_submit():
             file_name_delete = file_deletion_form.file_name_delete.data
@@ -642,16 +645,6 @@ def loggedin(email, group_name):
                     # print("printing prev_files ", prev_files)
                 except:
                     pass
-            # try:
-            #     if task_name[-1] in tasks:
-            #         print("Look it's in there!!")
-            #     else:
-            #         print("What the heck?!")
-            #         print(f"len: {len(i)} and {len(task_name[-1])}")
-            #     tasks.remove(task_name[])
-            #     new_tasks_list = tasks
-            # except:
-            #     new_tasks_list = tasks
             for j in tasks:
                 print(f"len: {str(j)} and {str(task_name)}")
                 if str(j) != str(task_name):
@@ -823,7 +816,7 @@ def start():
 
 @app.route("/index/<group_name>", methods=['GET', 'POST'])
 @app.route("/<group_name>", methods=['GET', 'POST'])
-def index(group_name):
+def index(group_name="no_group"):
     # email = "debrsa01@luther.edu"
     # group_name = "new_team"
 

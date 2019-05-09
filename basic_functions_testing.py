@@ -48,7 +48,7 @@ class TestStringMethods(unittest.TestCase):
         result = hello.get_data(test_group)
         print(f"the result of adding members is: {result}")
         self.assertEqual(hello.get_members(test_group), \
-        [['Admin', ['test@admin.com', 'debrsa01@luther.edu', '']], ['Standard', ['standarduser@gmail.com', '']]])
+        [['Admin', ['test@admin.com', 'debrsa01@luther.edu']], ['Standard', ['standarduser@gmail.com']]])
         print("*=============================================================*")
 
     def test_c_delete_team(self):
