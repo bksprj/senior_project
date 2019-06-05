@@ -511,6 +511,7 @@ def loggedin(email, group_name):
     db = client.groups
     list_all_groups = db.list_collection_names()
     membership_list = [group for group in list_all_groups]
+    membership_list.sort()
 
     # forms
     create_group_form = CreateGroup()
