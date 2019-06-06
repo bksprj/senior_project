@@ -524,7 +524,6 @@ def loggedin(email, group_name):
     file_deletion_form = FileDeletionForm()
     add_task_form = AddTaskForm()
 
-
     # was there a group selected?
     if group_name == "no_group":
         members = ['No Team Selected']
@@ -895,20 +894,21 @@ def index(group_name="no_group"):
     files = ["No group selected"]
     check_missing = []
     if group_name != "no_group":
-        for i in group_stuff:
-            try:
-                files = i['Files']
-                for j in files:
-                    print("os.listdir: ", os.listdir("uploads"))
-                    if j not in os.listdir("uploads"):
-                        check_missing.append(j)
-                files = set(files)-set(check_missing)
-            except:
-                pass
+        # for i in group_stuff:
+        #     try:
+        #         files = i['Files']
+        #         for j in files:
+        #             print("os.listdir: ", os.listdir("uploads"))
+        #             if j not in os.listdir("uploads"):
+        #                 check_missing.append(j)
+        #         files = set(files)-set(check_missing)
+        #     except:
+        #         pass
+        files = os.listdir(f"uploads/{group_name}/public")
+        print("os.listdir: ", files)
+
     if len(files) == 0:
         files = ["No files uploaded"]
-        # print(group_name, "files are: ", files )
-
 
     # grabbing notifications
     noto_lst = ["No group selected"]
