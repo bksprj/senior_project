@@ -303,6 +303,9 @@ def create_group(new_group_name:str, admin_email:str):
         new_group.insert_one({"Notifications":[]})
         new_group.insert_one({"Files":[]}) # names of files that belong to the group
         new_group.insert_one({"Tasks":[]})
+        os.mkdir(f"{UPLOAD_FOLDER}/{new_group_name}")
+        os.mkdir(f"{UPLOAD_FOLDER}/{new_group_name}/public")
+        os.mkdir(f"{UPLOAD_FOLDER}/{new_group_name}/private")
         return [f"The team {new_group_name} has been created"]
     else:
         print("That team already exists!")
