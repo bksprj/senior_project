@@ -92,8 +92,8 @@
     <div  style="float:right;width:30%; padding-left:20px; padding-top:15px; border-left: 2px solid white;">
       <h3 class="text-primary"><strong>Files</strong></h3>
       <div id="navigation" style="overflow:auto;height:450px;">
-          {% for each_file in files %}
-            <p><a class="atag" href="../../uploads/{{ each_file }}" download><font size="4">{{ each_file }}</font></a></p>
+          {% for each_file in public_files %}
+            <p><a class="atag" href="../../uploads/public/{{ each_file }}" download><font size="4">{{ each_file }}</font></a></p>
           {% endfor %}
       </div>
     </div>

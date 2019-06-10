@@ -530,7 +530,7 @@ def loggedin(email, group_name):
     else:
         members = get_members(group_name)
 
-    # file uploads
+    # Posting
     if request.method == 'POST':
         # let's create a group
         if create_group_form.validate_on_submit():
@@ -694,7 +694,8 @@ def loggedin(email, group_name):
                 file = request.files['file']
                 filename = secure_filename(file.filename)
                 print("Attempting to post: " + filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                file.save(os.path.join(f"{UPLOAD_FOLDER}/{group_name}/private/",filename))
                 # now let's save the name to the group
                 db = client.group_data
                 the_group = db[group_name]
@@ -752,7 +753,8 @@ def loggedin(email, group_name):
                             new_files = {"_id":prev_files["_id"],"Files":new_files_list}
                             print("new_files with dup", new_files)
                             the_group.replace_one(prev_files,new_files)
-                            file.save(os.path.join(app.config['UPLOAD_FOLDER'], tryfile))
+                            # file.save(os.path.join(app.config[f'{UPLOAD_FOLDER}/{group_name}/private/'], tryfile))
+                            file.save(os.path.join(f"{UPLOAD_FOLDER}/{group_name}/private/",tryfile))
                             done = True
                         else:
                             num += 1
@@ -773,23 +775,20 @@ def loggedin(email, group_name):
             tasks = []
 
     # grabbing files
-    files = ["No group selected"]
+    public_files = ["No group selected"]
     check_missing = []
     if group_name != "no_group":
-        for i in group_stuff:
-            try:
-                files = i['Files']
-                for j in files:
-                    print("os.listdir: ", os.listdir("uploads"))
-                    if j not in os.listdir("uploads"):
-                        check_missing.append(j)
-                files = set(files)-set(check_missing)
-            except:
-                pass
-    if len(files) == 0:
-        files = ["No files uploaded"]
-        # print(group_name, "files are: ", files )
+        public_files = os.listdir(f"{UPLOAD_FOLDER}/{group_name}/public")
+        private_files = os.listdir(f"{UPLOAD_FOLDER}/{group_name}/private")
+    else:
+        public_files = ["No group selected"]
+        private_files = ["No group selected"]
+        # print("os.listdir: ", files)
 
+    if len(public_files) == 0:
+        public_files = ["No files uploaded"]
+    if len(private_files) == 0:
+        private_files = ["No files uploaded"]
 
     # grabbing notifications
     noto_lst = ["No group selected"]
@@ -801,7 +800,6 @@ def loggedin(email, group_name):
                 pass
         if len(noto_lst) == 0:
             noto_lst = ["No notifications"]
-
 
     # admin boolean
     admin_list = members[0][1]
@@ -815,32 +813,9 @@ def loggedin(email, group_name):
     members=members, group_name=group_name, create_group_form=create_group_form, \
     remove_member_form=remove_member_form, add_member_form=add_member_form, \
     group_deletion_form=group_deletion_form, file_deletion_form=file_deletion_form, \
-    add_task_form=add_task_form, tasks=tasks, admin=admin, files=files, noto_lst=noto_lst)
+    add_task_form=add_task_form, tasks=tasks, admin=admin, public_files=public_files, \
+    private_files=private_files, noto_lst=noto_lst)
 
-
-# when you click on a group name this will retrieve that group name
-@app.route('/grab_group/<group_name>', methods = ['POST'])
-def get_post_group_name(group_name):
-    # print(group_name)
-    global useremail
-    global membership_list
-    global group_data
-    global group_members
-    global check_group
-    global admin
-    check_group = group_name
-    group_data = get_data(group_name)
-    group_members = get_members(group_name)
-    # admin check
-    db = client.groups
-    group_collection = db[group_name]
-    if useremail in group_collection.find_one()["Admin"]:
-        # print("You are an Admin in the group")
-        admin = True
-    else:
-        admin = False
-
-    return "RETRIEVED GROUP NAME"
 
 # index page
 @app.route("/index")
@@ -891,24 +866,15 @@ def index(group_name="no_group"):
             tasks = []
 
     # grabbing files
-    files = ["No group selected"]
+    public_files = ["No group selected"]
     check_missing = []
     if group_name != "no_group":
-        # for i in group_stuff:
-        #     try:
-        #         files = i['Files']
-        #         for j in files:
-        #             print("os.listdir: ", os.listdir("uploads"))
-        #             if j not in os.listdir("uploads"):
-        #                 check_missing.append(j)
-        #         files = set(files)-set(check_missing)
-        #     except:
-        #         pass
-        files = os.listdir(f"uploads/{group_name}/public")
-        print("os.listdir: ", files)
+        public_files = os.listdir(f"{UPLOAD_FOLDER}/{group_name}/public")
+    else:
+        public_files = ["No group selected"]
 
-    if len(files) == 0:
-        files = ["No files uploaded"]
+    if len(public_files) == 0:
+        public_files = ["No files uploaded"]
 
     # grabbing notifications
     noto_lst = ["No group selected"]
@@ -922,7 +888,33 @@ def index(group_name="no_group"):
             noto_lst = ["No notifications"]
 
     return render_template("redirect_index.html", membership_list=membership_list, \
-    members=members, group_name=group_name, tasks=tasks, files=files, noto_lst=noto_lst)
+    members=members, group_name=group_name, tasks=tasks, public_files=public_files, noto_lst=noto_lst)
+
+
+# when you click on a group name this will retrieve that group name
+@app.route('/grab_group/<group_name>', methods = ['POST'])
+def get_post_group_name(group_name):
+    # print(group_name)
+    global useremail
+    global membership_list
+    global group_data
+    global group_members
+    global check_group
+    global admin
+    check_group = group_name
+    group_data = get_data(group_name)
+    group_members = get_members(group_name)
+    # admin check
+    db = client.groups
+    group_collection = db[group_name]
+    if useremail in group_collection.find_one()["Admin"]:
+        # print("You are an Admin in the group")
+        admin = True
+    else:
+        admin = False
+
+    return "RETRIEVED GROUP NAME"
+
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
