@@ -57,7 +57,7 @@
             {% endfor %}
         {% endif %}
         {% if group_name == "no_group" %}
-            <p><strong><font size="4">No group selected</font></strong></p>
+            <p><font size="4">No group selected</font></p>
         {% endif %}
     </div>
 
@@ -99,7 +99,7 @@
   <h3 class="text-primary"><strong>Files</strong></h3>
   <div id="navigation" style="overflow:auto;height:50%;">
       {% for each_file in files %}
-        <p><a href="../../uploads/{{ each_file }}" download><font size="4">{{ each_file }}</font></a></p>
+        <p style="color:black;"><a style="color:black;" href="../../uploads/{{ each_file }}" download><font size="4">{{ each_file }}</font></a></p>
       {% endfor %}
   </div>
   <a id="upload_file" class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
