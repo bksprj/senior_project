@@ -9,13 +9,12 @@
 		<script src="https://apis.google.com/js/platform.js" async defer></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<link rel="icon" href="{{url_for('static', filename='img/ds_logo.png')}}">
 		<script src="{{url_for('static', filename='index.js')}}"></script>
 		<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" />
 	</head>
 
 	<header>
-		<nav class="navbar navbar-fixed-top admin-menu bg-light" role="navigation">
+		<nav style="border-bottom: 1px solid grey;" class="navbar navbar-fixed-top admin-menu bg-light" role="navigation">
 			<a class="navbar-brand" style="color:#DD7500;" href="/"><strong><font size="5">RMI Data</font></strong></a>
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<a class="navbar-brand" style="color:#DD7500;" href="/about"><strong><font size="5">About</font></strong></a>
