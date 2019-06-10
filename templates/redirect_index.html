@@ -2,26 +2,28 @@
 
 <html>
 	<head>
-		<title>Data Sense</title>
+		<title>RMI Data</title>
 		<meta charset="utf-8" />
 		<meta name="google-signin-client_id" content="798265448710-nqo7h881abf59cn9oghng9erq841tbq1.apps.googleusercontent.com">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://apis.google.com/js/platform.js" async defer></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<link rel="icon" href="{{url_for('static', filename='img/ds_logo.png')}}">
-		<script src="{{url_for('static', filename='indexhome.js')}}"></script>
+		<script src="{{url_for('static', filename='index.js')}}"></script>
 		<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" />
 	</head>
 
 	<header>
-		<nav class="navbar navbar-fixed-top admin-menu bg-light" role="navigation">
-			<a class="navbar-brand" href="/"><strong><font size="5">Data Sense</font></strong></a>
+		<nav style="border-bottom: 1px solid grey;" class="navbar navbar-fixed-top admin-menu bg-light" role="navigation">
+			<a class="navbar-brand" style="color:#DD7500;" href="/"><strong><font size="5">RMI Data</font></strong></a>
 			<!-- Collect the nav links, forms, and other content for toggling -->
-			<a class="navbar-brand" href="/about"><strong><font size="5">About</font></strong></a>
-			<a class="navbar-brand" onclick="reload_page()"><strong><font size="5">Refresh Page</font></strong></a>
+			<a class="navbar-brand" style="color:#DD7500;" href="/about"><strong><font size="5">About</font></strong></a>
+			<a class="navbar-brand" style="color:#DD7500;" onclick="reload_page()"><strong><font size="5">Refresh Page</font></strong></a>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right:15px;">
 				<ul class="nav navbar-nav navbar-right">
+					<!-- <li>
+							<a class="navbar-brand" href="https://www.eppso.org"><strong><font size="5">EPPSO</font></strong></a>
+					</li> -->
 					<li class="dropdown" style="padding-top:7.5px;padding-right:5px;">
 						<img class="data" src="{{url_for('static', filename='img/new_blue.png')}}" style="float:right" width="37.5" height="37.5" />
 						<ul class="dropdown-menu" style="text-align:center; overflow: scroll; height:400px;">
@@ -52,6 +54,7 @@
 		</nav>
 	</header>
 
+
 	<body>
 
     <h1> {{ content }} </h1>
@@ -62,7 +65,7 @@
       <div id="navigation" style="overflow:auto;height:450px;">
           {% for item in membership_list %}
             <!-- <a id="{{ item }}" class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a> -->
-            <a id="{{ item }}" class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a>
+            <a id="{{ item }}" style="color:black;" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a>
             <br>
           {% endfor %}
       </div>
@@ -76,14 +79,14 @@
              <!-- Expected a list of strings i.e. [member1, member2, etc]-->
             {% if group_name != "no_group" %}
                 {% for ranks_users in members %}
-                    <p style="color:white;"><strong><font size="4">{{ ranks_users[0] }}</font></strong></p>
+                    <p style="color:black;"><strong><font size="4">{{ ranks_users[0] }}</font></strong></p>
                     {% for human in ranks_users[1] %}
-                      <p style="color:white;"><font size="4">{{ human }}</font></p>
+                      <p style="color:black;"><font size="4">{{ human }}</font></p>
                     {% endfor %}
                 {% endfor %}
             {% endif %}
             {% if group_name == "no_group" %}
-                <p style="color:white;"><strong><font size="4">No group selected</font></strong></p>
+                <p style="color:black;"><strong><font size="4">No group selected</font></strong></p>
             {% endif %}
         </div>
       </div>
@@ -93,30 +96,10 @@
       <h3 class="text-primary"><strong>Files</strong></h3>
       <div id="navigation" style="overflow:auto;height:450px;">
           {% for each_file in public_files %}
-            <p><a class="atag" href="../../uploads/public/{{ each_file }}" download><font size="4">{{ each_file }}</font></a></p>
+            <p><a style="color:black;" href="../../uploads/public/{{ each_file }}" download><font size="4">{{ each_file }}</font></a></p>
           {% endfor %}
       </div>
     </div>
-
-
-    <div style="position: absolute; bottom: 0; float: right; padding-top: 5px; padding-bottom: 10px; border-top: 2px solid white;">
-      <h3 style="color:white;">Tasks</h3>
-      <div>
-        <!-- <input type="checkbox" style="float:left;"><p style="color:white; float:left; padding-left:5px;">example task item</p><br> -->
-        {% set count = [1] %}
-        {% for atask in tasks %}
-          {% set task_id = "task" + count[0]|string %}
-        	<div class="dropdown">
-        		<a id="parent" class="tk" style="color:white; float:left; padding:5px; border: 1px solid #888; border-radius: 10px;"><div id="{{ task_id }}">{{ atask }}</div></a>
-            {% if count.append(count.pop() + 1) %}
-            {% endif %}
-    	    </div>
-        {% endfor %}
-      </div>
-      <br>
-    </div>
-
-
 
 	</body>
 </html>
