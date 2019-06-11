@@ -108,9 +108,17 @@ function showUploader() {
 	document.getElementById("myUploader").style.display = "block";
 }
 
+function showFolder() {
+	document.getElementById("myFolder").style.display = "block";
+}
+
 // When the user clicks on <span> (x), close the modal
 function spanClickUploader() {
 	document.getElementById("myUploader").style.display = "none";
+}
+
+function spanFolder() {
+	document.getElementById("myFolder").style.display = "none";
 }
 
 // When the user clicks the button, open the modal
