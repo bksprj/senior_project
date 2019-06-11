@@ -22,7 +22,8 @@ app = Flask(__name__, static_url_path='/static')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-team_creators = {"jthenry9@gmail.com","scott.keju@gmail.com","debrumsage@gmail.com","husoke01@luther.edu","ramibr01@luther.edu"}
+team_creators = {"jthenry9@gmail.com","scott.keju@gmail.com","debrumsage@gmail.com", \
+"husoke01@luther.edu","ramibr01@luther.edu", "mightbesage@gmail.com"}
 
 # database setup stuff
 username = "debrsa01"
@@ -843,6 +844,10 @@ def loggedin(email, group_name):
     else:
         admin = False
         standard = False
+    team_creator = False
+    if email in team_creators:
+        team_creator = True
+
 
 
     return render_template("user.html", email=email, membership_list=membership_list, \
@@ -850,7 +855,8 @@ def loggedin(email, group_name):
     remove_member_form=remove_member_form, add_member_form=add_member_form, \
     group_deletion_form=group_deletion_form, file_deletion_form=file_deletion_form, \
     add_task_form=add_task_form, tasks=tasks, admin=admin, standard=standard, \
-    public_files=public_files, private_files=private_files, noto_lst=noto_lst)
+    public_files=public_files, private_files=private_files, noto_lst=noto_lst, \
+    team_creator=team_creator)
 
 
 # index page
