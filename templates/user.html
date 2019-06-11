@@ -102,9 +102,9 @@
       <a onclick="showFolder()" style="color:black;">Test Folder</a>
       <div id="myFolder" class="modal">
         <div class="modal-content">
-          <p style="color:black;float:left;"><a style="color:black;" href="../../uploads/{{ group_name }}/private/{{ each_file }}" download><font size="4">{{ each_file }}</font></a></p>
+          <p style="color:black;float:left;"><a style="color:black;" href="" download><font size="4">Test File</font></a></p>
           <button style="float:right;" type="button" class="btn btn-warning btn-xs">Make Public</button>
-        
+          <span id="closeUp" class="close" onclick="spanFolder()">&times;</span>
       </div>
   </div>
   {% if group_name != "no_group" %}
