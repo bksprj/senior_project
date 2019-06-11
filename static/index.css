@@ -40,7 +40,7 @@ body {
 	padding-top: 20px;
 	padding-left: 10px;
 	padding-right:10px;
-	/*background: #2C2F33;*/
+	background: #eee
 }
 
 ul.nav li.dropdown:hover ul.dropdown-menu {
