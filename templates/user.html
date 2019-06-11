@@ -97,8 +97,8 @@
         <p><a href="../../uploads/{{ group_name }}/private/{{ each_file }}" download><font size="4">{{ each_file }}</font></a></p>
       {% endfor %}
   </div>
+  {% if group_name != "no_group" %}
   <a id="upload_file" class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
-
     <div id="myUploader" class="modal">
       <div class="modal-content">
         <form method=post enctype=multipart/form-data>
@@ -111,8 +111,8 @@
           </div>
         </form>
       </div>
-    </div>
-
+  </div>
+  {% endif %}
 </div>
 
 <div class="data" style="float:right;width:20%; padding-left:5px; padding-top:15px; border-left: 2px solid white;">
@@ -122,23 +122,9 @@
         <p><a href="../../uploads/{{ group_name }}/public/{{ each_file }}" download><font size="4">{{ each_file }}</font></a></p>
       {% endfor %}
   </div>
-  <a id="upload_file" class="text-primary hov" onclick="showUploader()"><strong><font size="4">Upload a File</font></strong></a>
-
-    <div id="myUploader" class="modal">
-      <div class="modal-content">
-        <form method=post enctype=multipart/form-data>
-          <h4 class="text-primary">Upload Files</h4>
-          <p class="text-primary">Choose a file to upload</p>
-          <input id="fileUpload" type=file name=file>
-          <div style="padding-top:5px;">
-            <input id="enterUp" class="btn btn-primary" type=submit value=Upload>
-            <span id="closeUp" class="close" onclick="spanClickUploader()">&times;</span>
-          </div>
-        </form>
-      </div>
-    </div>
 </div>
 
+{% if admin or standard %}
 <div class="data" style="position: absolute; bottom: 0; float: right; padding-top: 5px; padding-bottom: 10px; border-top: 2px solid white;">
 	<h3 class="text-primary"><strong>Tasks</strong></h3>
   <div>
@@ -159,7 +145,9 @@
 	    </div>
     {% endfor %}
   </div>
+
   <br>
+
   {% if admin %}
   <div>
       <a id="newTask" class="text-primary hov" style="float:left;" onclick="showTaskIn()"><strong><font size="4">New Task</font></strong></a>
@@ -175,5 +163,6 @@
     </div>
   </div>
 </div>
+{% endif %}
 
 {% endblock %}

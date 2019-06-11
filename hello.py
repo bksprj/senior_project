@@ -22,10 +22,12 @@ app = Flask(__name__, static_url_path='/static')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
+team_creators = {"jthenry9@gmail.com","scott.keju@gmail.com","debrumsage@gmail.com","husoke01@luther.edu","ramibr01@luther.edu"}
+
+# database setup stuff
 username = "debrsa01"
 password = "imdaBEST65"
 client = pymongo.MongoClient("mongodb://%s:%s@cluster0-shard-00-00-mhqmc.mongodb.net:27017,cluster0-shard-00-01-mhqmc.mongodb.net:27017,cluster0-shard-00-02-mhqmc.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true" % (username, password))
-
 db = client.test_database
 test_database = db.test_database
 
@@ -801,20 +803,37 @@ def loggedin(email, group_name):
         if len(noto_lst) == 0:
             noto_lst = ["No notifications"]
 
-    # admin boolean
-    admin_list = members[0][1]
-    admin = False
-    for user in admin_list:
-        if email in user:
-            admin = True
-    # print("admin is", admin)
+    if group_name != "no_group":
+        # admin boolean
+        admin_list = members[0][1]
+        admin = False
+        for user in admin_list:
+            if email in user:
+                admin = True
+        # standard boolean
+        # print(f"members are: {get_members(group_name)}")
+        if len(members) > 1:
+            standard_list = members[1][1]
+            standard = False
+            for user in standard_list:
+                if email in user:
+                    # while someone could be both an admin and standard user
+                    # we'll have it so only the admin one is recognized, if both
+                    if admin == False:
+                        standard = True
+        else:
+            standard = False
+    else:
+        admin = False
+        standard = False
+
 
     return render_template("user.html", email=email, membership_list=membership_list, \
     members=members, group_name=group_name, create_group_form=create_group_form, \
     remove_member_form=remove_member_form, add_member_form=add_member_form, \
     group_deletion_form=group_deletion_form, file_deletion_form=file_deletion_form, \
-    add_task_form=add_task_form, tasks=tasks, admin=admin, public_files=public_files, \
-    private_files=private_files, noto_lst=noto_lst)
+    add_task_form=add_task_form, tasks=tasks, admin=admin, standard=standard, \
+    public_files=public_files, private_files=private_files, noto_lst=noto_lst)
 
 
 # index page
