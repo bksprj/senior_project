@@ -65,7 +65,7 @@
       <div id="navigation" style="overflow:auto;height:450px;">
           {% for item in membership_list %}
             <!-- <a id="{{ item }}" class="atag" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a> -->
-            <a id="{{ item }}" style="color:black;" onclick="query_data('{{ item }}');"><strong><font size="4">{{ item }}</font></strong></a>
+            <a id="{{ item }}" style="color:black;" onclick="query_data('{{ item }}');"><font size="4">{{ item }}</font>\</a>
             <br>
           {% endfor %}
       </div>
@@ -79,14 +79,14 @@
              <!-- Expected a list of strings i.e. [member1, member2, etc]-->
             {% if group_name != "no_group" %}
                 {% for ranks_users in members %}
-                    <p style="color:black;"><strong><font size="4">{{ ranks_users[0] }}</font></strong></p>
+                    <p style="color:black;"><font size="4">{{ ranks_users[0] }}</font></p>
                     {% for human in ranks_users[1] %}
                       <p style="color:black;"><font size="4">{{ human }}</font></p>
                     {% endfor %}
                 {% endfor %}
             {% endif %}
             {% if group_name == "no_group" %}
-                <p style="color:black;"><strong><font size="4">No group selected</font></strong></p>
+                <p style="color:black;"><font size="4">No group selected</font></p>
             {% endif %}
         </div>
       </div>
