@@ -99,7 +99,7 @@
       {% for each_file in private_files %}
         <p style="color:black;"><a style="color:black;" href="../../uploads/{{ group_name }}/private/{{ each_file }}" download><font size="4">{{ each_file }}</font></a></p>
       {% endfor %}
-      <a onclick="showFolder()" style="color:black;">Test Folder</a>
+	  <a onclick="showFolder()" style="color:black;"><font size="4">Test Folder</font></a>
       <div id="myFolder" class="modal">
         <div class="modal-content">
           <p style="color:black;float:left;"><a style="color:black;" href="" download><font size="4">Test File</font></a></p>
@@ -127,6 +127,7 @@
   {% endif %}
 </div>
 {% endif %}
+<br>
 
 <div class="data" style="float:right;width:20%; padding-left:5px; padding-top:15px; border-left: 2px solid white;">
 	<h3 class="text-primary"><strong><u>Public</u></strong></h3>
