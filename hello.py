@@ -307,7 +307,13 @@ def create_group(new_group_name:str, admin_email:str):
         new_group.insert_one({"Tasks":[]})
         os.mkdir(f"{UPLOAD_FOLDER}/{new_group_name}")
         os.mkdir(f"{UPLOAD_FOLDER}/{new_group_name}/public")
+        # file.save(f"{UPLOAD_FOLDER}/{group_name}/public/placeholder.txt")
+        f = open(f"{UPLOAD_FOLDER}/{new_group_name}/public/placeholder.txt", "w")
+        f.close()
         os.mkdir(f"{UPLOAD_FOLDER}/{new_group_name}/private")
+        # file.save(f"{UPLOAD_FOLDER}/{group_name}/private/placeholder.txt")
+        f2 = open(f"{UPLOAD_FOLDER}/{new_group_name}/private/placeholder.txt", "w")
+        f2.close()
         return [f"The team {new_group_name} has been created"]
     else:
         print("That team already exists!")
@@ -512,6 +518,8 @@ def user(username):
 
 @app.route('/loggedin/<email>/<group_name>', methods = ['GET', 'POST'])
 def loggedin(email, group_name):
+    full_email = email + "@gmail.com"
+
     # build membership_list
     db = client.groups
     list_all_groups = db.list_collection_names()
@@ -806,23 +814,32 @@ def loggedin(email, group_name):
     if group_name != "no_group":
         # admin boolean
         admin_list = members[0][1]
+        print(f"admin list is: {admin_list}")
         admin = False
-        for user in admin_list:
-            if email in user:
-                admin = True
+        if full_email in admin_list:
+            admin = True
+        print(f"full_email is: {full_email}")
+        print(f"admin boolean is: {admin}")
+        # for user in admin_list:
+        #     if email in user:
+        #         admin = True
+
         # standard boolean
         print(f"********members are: {members}")
+        standard = False
         if len(members) > 1:
             standard_list = members[1][1]
-            standard = False
-            for user in standard_list:
-                if email in user:
-                    # while someone could be both an admin and standard user
-                    # we'll have it so only the admin one is recognized, if both
-                    if admin == False:
-                        standard = True
-        else:
-            standard = False
+            if full_email in standard_list and admin == False:
+                standard = True
+
+            # for user in standard_list:
+            #     if email in user:
+            #         print(f"**********email in user: {email}")
+            #         # while someone could be both an admin and standard user
+            #         # we'll have it so only the admin one is recognized, if both
+            #         if admin == False:
+            #             standard = True
+
     else:
         admin = False
         standard = False
