@@ -811,7 +811,7 @@ def loggedin(email, group_name):
             if email in user:
                 admin = True
         # standard boolean
-        # print(f"members are: {get_members(group_name)}")
+        print(f"********members are: {members}")
         if len(members) > 1:
             standard_list = members[1][1]
             standard = False
