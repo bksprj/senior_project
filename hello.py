@@ -261,6 +261,8 @@ def delete_group(group_name_delete:str):
                 os.unlink(name, dir_fd=rootfd)
             for name in dirs:
                 os.rmdir(name, dir_fd=rootfd)
+        # next, remove the group's directory, now that it's empty
+        os.rmdir(f"uploads/test2")
 
         return [f"The group {group_name_delete} has been deleted."]
     else:
