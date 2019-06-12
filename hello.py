@@ -43,6 +43,14 @@ admin = False
 #===============================================================================
 # Class definitions
 
+# In implementing a new form, follow the checklist:
+# 1. Define the class below, inheriting from the FlaskForm class
+# 2. Instantiate the class in the route that you'd like it
+# 3. (Optional) Create a separate file in the templates directory
+#    in order to have the form simply included (via jinja) on the
+#    page that you'd want
+# 4. Pass in the class object into the route's return statement
+
 
 class AddNewMemberForm(FlaskForm):
     class Meta:
@@ -91,101 +99,7 @@ class JSONEncoder(json.JSONEncoder):
 
 #===============================================================================
 # Global functions
-def remove_members(group_name:str, member_input:str):
-    def list_without_dups(list1:list, list2:list) -> list:
-        result = list1
-        for i in list2:
-            if i in list1:
-                result.remove(i)
-        return result
 
-    def get_new_member_list(input_string):
-        # expects Rank:email or Rank:email,email
-        input_string = input_string.replace(" ", "")  # get rid of spaces
-        if input_string.count(",") >= input_string.count("@"):
-            # The point of this is to prevent random commas messing up processing
-            print("Issue: count(',') >= count('@')")
-            return ["Issue with extra commas"]
-        if "," in input_string:
-            new_members = input_string.split(":")[1].split(",")
-        else:
-            new_members = list(input_string.split(":")) + [""]
-            new_members = new_members[1:-1]
-            print(f"what's going on? {new_members}")
-        return new_members
-
-    db = client.groups
-    names = db.list_collection_names()
-    if group_name not in names:
-        return [f"The group {group_name} does not exist"]
-
-
-    new_admin_members = []
-    new_standard_members = []
-
-    if "Admin:" in member_input and "Standard:" not in member_input:
-        # then we have Admin:email or Admin:email,email
-        new_admin_members = get_new_member_list(member_input)
-    elif "Admin:" not in member_input and "Standard:" in member_input:
-        # then we have Standard:email
-        new_standard_members = get_new_member_list(member_input)
-    else:
-        # Admin:email|Standard:email
-        if "|" not in member_input:
-            return ["'|' separator missing"]
-        new_admin_members = get_new_member_list(member_input.split("|")[0])
-        new_standard_members = get_new_member_list(member_input.split("|")[1])
-    # Issues?
-    if new_standard_members == ["Issue with extra commas"] or new_admin_members == ["Issue with extra commas"]:
-        return ["Issue with extra commas"]
-
-    # now that we have the lists of email addresses to potentially remove for each
-    # rank, now let's get the current member data
-
-    query_group = db[group_name]
-    prev_member_data = query_group.find_one()  # here's the object to update
-    prev_id_data = prev_member_data["_id"]
-    prev_admin = prev_member_data["Admin"]
-    prev_standard = prev_member_data["Standard"]
-
-    new_admin_members_list = list_without_dups(prev_admin, new_admin_members)
-    new_standard_members_list = list_without_dups(prev_standard, new_standard_members)
-
-    # notes
-
-    new_notes = []
-    db = client.group_data
-    for eachadmin in new_admin_members_list:
-        new_notes.append(notify("delete", eachadmin, None))
-    for eachstandard in new_standard_members_list:
-        new_notes.append(notify("delete", eachstandard, None))
-    # new_notes = [notify("add","testboi",None)]
-    names = db.list_collection_names()
-    the_group = db[group_name]
-    all_docs = the_group.find()
-    group_data_list = [i for i in all_docs]
-    notifications = group_data_list[0]
-    prev_notes = notifications["Notifications"]
-
-    new_notes = prev_notes + new_notes
-    if len(new_notes) > 10:
-        new_notes = new_notes[-10:]
-    new_notes_dict = {"_id":notifications["_id"], "Notifications":new_notes}
-    # print(f"Before, notifications were {prev_notes}")
-    if len(new_notes) > 0:
-        the_group.find_one_and_replace(notifications, new_notes_dict)
-
-    # new_standard_members_list = list_without_dups(prev_standard, new_standard_members_list)
-
-    # print(f"Here are the final admin members {new_admin_members_list}")
-    # print(f"Here are the final standard members {new_standard_members_list}")
-
-    new_member_info = {"_id":prev_id_data, "Admin":new_admin_members_list, "Standard":new_standard_members_list}
-    # print(f"New member info is: {new_member_info}")
-
-    # print("Previous member data:",query_group.find_one())
-    query_group.find_one_and_replace({"_id":prev_id_data}, new_member_info)
-    # print("Current member data:",query_group.find_one())
 
 def add_new_members(group_name:str, member_input:str):
     def list_without_dups(list1:list, list2:list) -> list:
@@ -308,11 +222,9 @@ def create_group(new_group_name:str, admin_email:str):
         new_group.insert_one({"Tasks":[]})
         os.mkdir(f"{UPLOAD_FOLDER}/{new_group_name}")
         os.mkdir(f"{UPLOAD_FOLDER}/{new_group_name}/public")
-        # file.save(f"{UPLOAD_FOLDER}/{group_name}/public/placeholder.txt")
         f = open(f"{UPLOAD_FOLDER}/{new_group_name}/public/placeholder.txt", "w")
         f.close()
         os.mkdir(f"{UPLOAD_FOLDER}/{new_group_name}/private")
-        # file.save(f"{UPLOAD_FOLDER}/{group_name}/private/placeholder.txt")
         f2 = open(f"{UPLOAD_FOLDER}/{new_group_name}/private/placeholder.txt", "w")
         f2.close()
         return [f"The team {new_group_name} has been created"]
@@ -337,6 +249,19 @@ def delete_group(group_name_delete:str):
         db_group_data_collection = db_group_data[group_name_delete]
         drop1 = db_groups_collection.drop()
         drop2 = db_group_data_collection.drop()
+        # now let's delete the files for the group
+
+        # Delete everything reachable from the directory named in "top",
+        # assuming there are no symbolic links.
+        # CAUTION:  This is dangerous!  For example, if top == '/', it
+        # could delete all your disk files.
+        top = f"uploads/{group_name_delete}"
+        for root, dirs, files, rootfd in os.fwalk(top, topdown=False):
+            for name in files:
+                os.unlink(name, dir_fd=rootfd)
+            for name in dirs:
+                os.rmdir(name, dir_fd=rootfd)
+
         return [f"The group {group_name_delete} has been deleted."]
     else:
         return [f"The group {group_name_delete} does not exist."]
@@ -461,6 +386,13 @@ def list_user_groups(email:str) -> list:
         membership_list = membership_list[1:]
     return membership_list
 
+def move_file_private_public(group_name:str,file_name:str):
+    # moves the file from private to public
+    # ex: file_path == f"uploads/{group_name}/private/{file_name}"
+    src = f"uploads/{group_name}/private/{file_name}"
+    dest = f"uploads/{group_name}/public/{file_name}"
+    os.rename(src, dest)
+
 def notify(noto_type:str,name=None,file_name=None) -> str:
     # we want notifications for 2 groups of cases: regarding user and regarding files
     # noto_type can be "add" or "delete"
@@ -489,6 +421,103 @@ def read_csv_file(file):
         print("LOOK HERE")
         print(testDict)
         return testDict
+
+def remove_members(group_name:str, member_input:str):
+    def list_without_dups(list1:list, list2:list) -> list:
+        result = list1
+        for i in list2:
+            if i in list1:
+                result.remove(i)
+        return result
+
+    def get_new_member_list(input_string):
+        # expects Rank:email or Rank:email,email
+        input_string = input_string.replace(" ", "")  # get rid of spaces
+        if input_string.count(",") >= input_string.count("@"):
+            # The point of this is to prevent random commas messing up processing
+            print("Issue: count(',') >= count('@')")
+            return ["Issue with extra commas"]
+        if "," in input_string:
+            new_members = input_string.split(":")[1].split(",")
+        else:
+            new_members = list(input_string.split(":")) + [""]
+            new_members = new_members[1:-1]
+            print(f"what's going on? {new_members}")
+        return new_members
+
+    db = client.groups
+    names = db.list_collection_names()
+    if group_name not in names:
+        return [f"The group {group_name} does not exist"]
+
+
+    new_admin_members = []
+    new_standard_members = []
+
+    if "Admin:" in member_input and "Standard:" not in member_input:
+        # then we have Admin:email or Admin:email,email
+        new_admin_members = get_new_member_list(member_input)
+    elif "Admin:" not in member_input and "Standard:" in member_input:
+        # then we have Standard:email
+        new_standard_members = get_new_member_list(member_input)
+    else:
+        # Admin:email|Standard:email
+        if "|" not in member_input:
+            return ["'|' separator missing"]
+        new_admin_members = get_new_member_list(member_input.split("|")[0])
+        new_standard_members = get_new_member_list(member_input.split("|")[1])
+    # Issues?
+    if new_standard_members == ["Issue with extra commas"] or new_admin_members == ["Issue with extra commas"]:
+        return ["Issue with extra commas"]
+
+    # now that we have the lists of email addresses to potentially remove for each
+    # rank, now let's get the current member data
+
+    query_group = db[group_name]
+    prev_member_data = query_group.find_one()  # here's the object to update
+    prev_id_data = prev_member_data["_id"]
+    prev_admin = prev_member_data["Admin"]
+    prev_standard = prev_member_data["Standard"]
+
+    new_admin_members_list = list_without_dups(prev_admin, new_admin_members)
+    new_standard_members_list = list_without_dups(prev_standard, new_standard_members)
+
+    # notes
+
+    new_notes = []
+    db = client.group_data
+    for eachadmin in new_admin_members_list:
+        new_notes.append(notify("delete", eachadmin, None))
+    for eachstandard in new_standard_members_list:
+        new_notes.append(notify("delete", eachstandard, None))
+    # new_notes = [notify("add","testboi",None)]
+    names = db.list_collection_names()
+    the_group = db[group_name]
+    all_docs = the_group.find()
+    group_data_list = [i for i in all_docs]
+    notifications = group_data_list[0]
+    prev_notes = notifications["Notifications"]
+
+    new_notes = prev_notes + new_notes
+    if len(new_notes) > 10:
+        new_notes = new_notes[-10:]
+    new_notes_dict = {"_id":notifications["_id"], "Notifications":new_notes}
+    # print(f"Before, notifications were {prev_notes}")
+    if len(new_notes) > 0:
+        the_group.find_one_and_replace(notifications, new_notes_dict)
+
+    # new_standard_members_list = list_without_dups(prev_standard, new_standard_members_list)
+
+    # print(f"Here are the final admin members {new_admin_members_list}")
+    # print(f"Here are the final standard members {new_standard_members_list}")
+
+    new_member_info = {"_id":prev_id_data, "Admin":new_admin_members_list, "Standard":new_standard_members_list}
+    # print(f"New member info is: {new_member_info}")
+
+    # print("Previous member data:",query_group.find_one())
+    query_group.find_one_and_replace({"_id":prev_id_data}, new_member_info)
+    # print("Current member data:",query_group.find_one())
+
 #===============================================================================
 # Routes
 
@@ -638,37 +667,6 @@ def loggedin(email, group_name):
                     new_tasks_list.append(new_task_submit)
                 new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
                 the_group.replace_one(prev_tasks,new_tasks)
-        # elif request.values != None and request.values["del_task"]:
-        #     # print(f"request.values is {request.values}")
-        #     print(f"request.values['del_task'] is {request.values['del_task']}")
-        #     task_name = request.values['del_task']
-        #
-        #     db = client.group_data
-        #     the_group = db[group_name]
-        #     all_docs = the_group.find()
-        #     group_stuff = [i for i in all_docs]
-        #
-        #     tasks = []
-        #     prev_tasks = {}
-        #     new_tasks_list = []
-        #     notes = []
-        #     for i in group_stuff:
-        #         try:
-        #             tasks = i['Tasks']
-        #             prev_tasks = i
-        #             # print("printing prev_files ", prev_files)
-        #         except:
-        #             pass
-        #     for j in tasks:
-        #         print(f"len: {str(j)} and {str(task_name)}")
-        #         if str(j) != str(task_name):
-        #             # print(f"Types: {type(j)} and {type(task_name)}")
-        #             new_tasks_list.append(j)
-        #     new_tasks = {"_id":prev_tasks["_id"],"Tasks":new_tasks_list}
-        #     print("prev_tasks", prev_tasks)
-        #     print("new_tasks", new_tasks)
-        #     the_group.replace_one(prev_tasks,new_tasks)
-
         else:
             try:
                 # print(f"request.values is {request.values}")
@@ -831,23 +829,16 @@ def loggedin(email, group_name):
         if len(members) > 1:
             standard_list = members[1][1]
             if full_email in standard_list and admin == False:
+                # in case someone is both an admin and a standard user,
+                # we'll treat them just as an admin
                 standard = True
-
-            # for user in standard_list:
-            #     if email in user:
-            #         print(f"**********email in user: {email}")
-            #         # while someone could be both an admin and standard user
-            #         # we'll have it so only the admin one is recognized, if both
-            #         if admin == False:
-            #             standard = True
-
     else:
         admin = False
         standard = False
+
     team_creator = False
     if email in team_creators:
         team_creator = True
-
 
 
     return render_template("user.html", email=email, membership_list=membership_list, \
@@ -967,105 +958,105 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/uploader', methods = ['GET', 'POST'])
-def upload_file():
-    global useremail
-    print("Yes hello i see you're trying to upload something right?")
-    if request.method == 'POST':
-        print("Let's do some checking first")
-        # first, check to see if the user is even allowed to post to this group
-        allowed_to_add_data = False  # start off as False
-        group_name = request.form['group_insert']
-        db = client.groups
-        names = db.list_collection_names()
-        if group_name not in names:
-            print("The group: ", group_name, "doesn't exist.")
-            return render_template('/includes/uploader.html')
-        else:
-            print("Group exists, moving on to the next check.")
-        # Okay, so the group exists
-        # Now, let's check to see if the person has the permission to add data
-        group_collection = db[group_name]
-        if useremail == "No user":
-            print("The user needs to be logged in.")
-            return render_template('uploader.html')
-        else:
-            print("Useremail to check is: ", useremail)
-            if useremail in group_collection.find_one()["Admin"]:
-                print("The user is an Admin in the group")
-                allowed_to_add_data = True
-            elif useremail in group_collection.find_one()["Standard"]:
-                print("The user is a Standard in the group")
-                allowed_to_add_data = True
-            else:
-                print("The user is not a part of the group.")
-                return render_template('uploader.html')
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename) and allowed_to_add_data:
-            print("Everything checks out, let's get the data")
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            # print(filename[-3:])
-            db = client.group_data
-            groupDataCollection = db[group_name]
-            if filename[-3:] == "csv":
-                processfile = read_csv_file(filename)  # type is a dictionary
-
-                # put in database
-                groupDataCollection.insert_one(processfile)
-                # print(processfile)
-
-                return redirect(url_for('index'))
-            # return redirect(url_for('uploaded_file',filename=filename)) # perhaps we don't need to redirect again
-    return render_template('includes/uploader.html')
-
-@app.route("/uploads/<filename>")
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
-# let's try some rank checking
-@app.route('/rankinput')
-def my_form():
-    return render_template('rankinput.html')
-
-@app.route("/rankinput", methods=['POST'])
-def rank_check():
-    username = urllib.parse.quote_plus('debrsa01')
-    password = urllib.parse.quote_plus('imdaBEST65')
-    client = pymongo.MongoClient("mongodb://%s:%s@cluster0-shard-00-00-mhqmc.mongodb.net:27017,cluster0-shard-00-01-mhqmc.mongodb.net:27017,cluster0-shard-00-02-mhqmc.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true" % (username, password))
-    db = client.groups
-    # dictionary for all the groups that we have
-    group_dict = {"aniministry":db.aniministry,"bigbrother":db.bigbrother}
-    # let' get the text from the input box
-    text = request.form['text']
-    group,email = text.split(",")
-    # print("group, email:", group, email)
-
-    # Now let's see if the user is in the group
-    if group_dict[group].find_one():
-        check_group = group_dict[group].find_one()
-        if email in check_group['Admin']:
-            result = "You are an Admin"
-        elif email in check_group['Standard']:
-            result = "You are a Standard"
-        elif email in check_group['Admin'] and email in check_group['Standard']:
-            # We don't yet have a way to prevent names from being in both, so this'll be our reminder
-            result = "Somehow, you are both an Admin AND a Standard. We should probably get that fixed."
-        else:
-            result = "You are not registered in this group"
-    else:
-        result = "Group name not found"
-
-    return result
+# @app.route('/uploader', methods = ['GET', 'POST'])
+# def upload_file():
+#     global useremail
+#     print("Yes hello i see you're trying to upload something right?")
+#     if request.method == 'POST':
+#         print("Let's do some checking first")
+#         # first, check to see if the user is even allowed to post to this group
+#         allowed_to_add_data = False  # start off as False
+#         group_name = request.form['group_insert']
+#         db = client.groups
+#         names = db.list_collection_names()
+#         if group_name not in names:
+#             print("The group: ", group_name, "doesn't exist.")
+#             return render_template('/includes/uploader.html')
+#         else:
+#             print("Group exists, moving on to the next check.")
+#         # Okay, so the group exists
+#         # Now, let's check to see if the person has the permission to add data
+#         group_collection = db[group_name]
+#         if useremail == "No user":
+#             print("The user needs to be logged in.")
+#             return render_template('uploader.html')
+#         else:
+#             print("Useremail to check is: ", useremail)
+#             if useremail in group_collection.find_one()["Admin"]:
+#                 print("The user is an Admin in the group")
+#                 allowed_to_add_data = True
+#             elif useremail in group_collection.find_one()["Standard"]:
+#                 print("The user is a Standard in the group")
+#                 allowed_to_add_data = True
+#             else:
+#                 print("The user is not a part of the group.")
+#                 return render_template('uploader.html')
+#         # check if the post request has the file part
+#         if 'file' not in request.files:
+#             flash('No file part')
+#             return redirect(request.url)
+#         file = request.files['file']
+#         # if user does not select file, browser also
+#         # submit an empty part without filename
+#         if file.filename == '':
+#             flash('No selected file')
+#             return redirect(request.url)
+#         if file and allowed_file(file.filename) and allowed_to_add_data:
+#             print("Everything checks out, let's get the data")
+#             filename = secure_filename(file.filename)
+#             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+#             # print(filename[-3:])
+#             db = client.group_data
+#             groupDataCollection = db[group_name]
+#             if filename[-3:] == "csv":
+#                 processfile = read_csv_file(filename)  # type is a dictionary
+#
+#                 # put in database
+#                 groupDataCollection.insert_one(processfile)
+#                 # print(processfile)
+#
+#                 return redirect(url_for('index'))
+#             # return redirect(url_for('uploaded_file',filename=filename)) # perhaps we don't need to redirect again
+#     return render_template('includes/uploader.html')
+#
+# @app.route("/uploads/<filename>")
+# def uploaded_file(filename):
+#     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+#
+# # let's try some rank checking
+# @app.route('/rankinput')
+# def my_form():
+#     return render_template('rankinput.html')
+#
+# @app.route("/rankinput", methods=['POST'])
+# def rank_check():
+#     username = urllib.parse.quote_plus('debrsa01')
+#     password = urllib.parse.quote_plus('imdaBEST65')
+#     client = pymongo.MongoClient("mongodb://%s:%s@cluster0-shard-00-00-mhqmc.mongodb.net:27017,cluster0-shard-00-01-mhqmc.mongodb.net:27017,cluster0-shard-00-02-mhqmc.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true" % (username, password))
+#     db = client.groups
+#     # dictionary for all the groups that we have
+#     group_dict = {"aniministry":db.aniministry,"bigbrother":db.bigbrother}
+#     # let' get the text from the input box
+#     text = request.form['text']
+#     group,email = text.split(",")
+#     # print("group, email:", group, email)
+#
+#     # Now let's see if the user is in the group
+#     if group_dict[group].find_one():
+#         check_group = group_dict[group].find_one()
+#         if email in check_group['Admin']:
+#             result = "You are an Admin"
+#         elif email in check_group['Standard']:
+#             result = "You are a Standard"
+#         elif email in check_group['Admin'] and email in check_group['Standard']:
+#             # We don't yet have a way to prevent names from being in both, so this'll be our reminder
+#             result = "Somehow, you are both an Admin AND a Standard. We should probably get that fixed."
+#         else:
+#             result = "You are not registered in this group"
+#     else:
+#         result = "Group name not found"
+#
+#     return result
 
 @app.route("/google08f628c29bd0d05f.html")
 def aftersignin():
